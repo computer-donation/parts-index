@@ -55,7 +55,7 @@ class IndexCpuCommandTest extends KernelTestCase
             '0BB0F8B0AC'
         );
     }
-    
+
     public function assertCpu(string $id, Vendor $vendor, string $model, string $probe)
     {
         $cpu = $this->entityManager

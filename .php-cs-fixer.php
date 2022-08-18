@@ -12,8 +12,6 @@ return $config
     ->setRules([
         '@PSR12' => true,
         '@Symfony' => true,
-        'concat_space' => ['spacing' => 'one'],
-        'single_line_throw' => false,
     ])
     ->setUsingCache(false)
     ->setFinder($finder)
