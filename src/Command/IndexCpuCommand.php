@@ -19,8 +19,7 @@ use function Symfony\Component\String\u;
 #[AsCommand(
     name: 'app:index-cpu',
     description: 'Lookup github repository for cpu, create if not exist.',
-    hidden: false,
-    aliases: ['app:index-cpu']
+    hidden: false
 )]
 class IndexCpuCommand extends Command
 {
