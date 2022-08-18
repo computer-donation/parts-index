@@ -14,13 +14,13 @@ use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
+
 use function Symfony\Component\String\u;
 
 #[AsCommand(
     name: 'app:index-cpu',
     description: 'Lookup github repository for cpu, create if not exist.',
-    hidden: false,
-    aliases: ['app:index-cpu']
+    hidden: false
 )]
 class IndexCpuCommand extends Command
 {
@@ -68,12 +68,12 @@ class IndexCpuCommand extends Command
     protected function indexCpus(Vendor $vendor, OutputInterface $output): void
     {
         $finder = new Finder();
-        $finder->files()->in($this->lscpuDir . DIRECTORY_SEPARATOR . $vendor->value);
+        $finder->files()->in($this->lscpuDir.DIRECTORY_SEPARATOR.$vendor->value);
         $last = $finder->count();
         $current = 0;
         $progressBar = new ProgressBar($output, $last);
         foreach ($finder as $file) {
-            $current++;
+            ++$current;
             $progressBar->advance();
             $this->indexCpu($file, $vendor, !($current % 100) || $current === $last);
         }

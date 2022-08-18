@@ -2,7 +2,8 @@
 
 namespace App\Enum\Cpu;
 
-enum Vendor: string {
+enum Vendor: string
+{
     case AMD = 'AMD';
     case INTEL = 'Intel';
 }

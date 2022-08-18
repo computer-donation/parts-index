@@ -25,3 +25,21 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+when@test:
+    services:
+        test.void_process:
+            class: 'App\Tests\Fixtures\VoidProcess'
+            arguments:
+                $command: []
+        App\Command\IndexCpuCommand:
+            arguments:
+                # find a way to avoid defining this argument
+                $cpuRepository: '@App\Repository\CpuRepository'
+                $lscpuDir: '%kernel.project_dir%/tests/Fixtures/LsCPU'
+                # find a way to avoid defining this argument
+                $lscpuRepo: 'https://github.com/linuxhw/LsCPU.git'
+                $process: '@test.void_process'
+            # find a way to avoid defining this tag
+            tags:
+                - { name: 'console.command', command: 'app:index-cpu' }
