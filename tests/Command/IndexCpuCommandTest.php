@@ -12,7 +12,7 @@ use Symfony\Component\Console\Tester\CommandTester;
 
 class IndexCpuCommandTest extends KernelTestCase
 {
-    private EntityManager $entityManager;
+    private ?EntityManager $entityManager = null;
 
     protected function setUp(): void
     {
@@ -49,7 +49,7 @@ class IndexCpuCommandTest extends KernelTestCase
             '98D52182A0'
         );
         $this->assertCpu(
-            'amd-6-37-2-core-i5-650',
+            'intel-6-37-2-core-i5-650',
             Vendor::INTEL,
             'Core i5 650',
             '0BB0F8B0AC'
@@ -61,10 +61,6 @@ class IndexCpuCommandTest extends KernelTestCase
         $cpu = $this->entityManager
             ->getRepository(Cpu::class)
             ->find($id)
-        ;
-        $cpus = $this->entityManager
-            ->getRepository(Cpu::class)
-            ->findAll()
         ;
 
         $this->assertInstanceOf(Cpu::class, $cpu);
