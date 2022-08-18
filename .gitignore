@@ -1,3 +1,6 @@
+.vscode/
+/clover.xml
+/coveralls-upload.json
 
 ###> symfony/framework-bundle ###
 /.env.local
@@ -8,8 +11,6 @@
 /var/
 /vendor/
 ###< symfony/framework-bundle ###
-
-.vscode/
 
 ###> symfony/phpunit-bridge ###
 .phpunit.result.cache
