@@ -30,11 +30,6 @@ class Computer
     #[Assert\NotBlank]
     public string $model;
 
-    #[ORM\Column(type: Types::STRING)]
-    #[Assert\NotBlank]
-    public string $probe;
-
-    #[ORM\OneToOne(targetEntity: Computer::class, mappedBy: 'computer')]
-    #[ORM\JoinColumn(nullable: true)]
-    public ?GraphicsCard $graphicsCard = null;
+    #[ORM\OneToMany(targetEntity: Probe::class, mappedBy: 'computer')]
+    public Collection $probes;
 }

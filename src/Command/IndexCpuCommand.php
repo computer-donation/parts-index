@@ -84,7 +84,7 @@ class IndexCpuCommand extends AbstractIndexCommand
             $cpu->id = $id;
             $cpu->vendor = $vendor;
             $cpu->model = $model;
-            $cpu->probe = $probe;
+            $cpu->addProbe($this->getProbe($probe));
             $this->cpuRepository->add($cpu, $flush);
         }
     }
