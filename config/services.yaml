@@ -4,15 +4,16 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    app.lscpu_dir: '%kernel.project_dir%/var/repos/LsCPU'
+    app.lscpu_repo: 'https://github.com/linuxhw/LsCPU.git'
+    app.hwinfo_dir: '%kernel.project_dir%/var/repos/HWInfo'
+    app.hwinfo_repo: 'https://github.com/linuxhw/HWInfo.git'
 
 services:
     # default configuration for services in *this* file
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
-        bind:
-            $lscpuDir: '%kernel.project_dir%/var/repos/LsCPU'
-            $lscpuRepo: 'https://github.com/linuxhw/LsCPU.git'
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
@@ -27,19 +28,6 @@ services:
     # please note that last definitions always *replace* previous ones
 
 when@test:
-    services:
-        test.void_process:
-            class: 'App\Tests\Fixtures\VoidProcess'
-            arguments:
-                $command: []
-        App\Command\IndexCpuCommand:
-            arguments:
-                # find a way to avoid defining this argument
-                $cpuRepository: '@App\Repository\CpuRepository'
-                $lscpuDir: '%kernel.project_dir%/tests/Fixtures/LsCPU'
-                # find a way to avoid defining this argument
-                $lscpuRepo: 'https://github.com/linuxhw/LsCPU.git'
-                $process: '@test.void_process'
-            # find a way to avoid defining this tag
-            tags:
-                - { name: 'console.command', command: 'app:index-cpu' }
+    parameters:
+        app.lscpu_dir: '%kernel.project_dir%/tests/Fixtures/LsCPU'
+        app.hwinfo_dir: '%kernel.project_dir%/tests/Fixtures/HWInfo'

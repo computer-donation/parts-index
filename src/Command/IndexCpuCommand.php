@@ -3,7 +3,8 @@
 namespace App\Command;
 
 use App\Entity\Cpu;
-use App\Enum\Cpu\Vendor;
+use App\Enum\CpuVendor;
+use App\Tests\Process\VoidProcess;
 use App\Repository\CpuRepository;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -12,8 +13,8 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
-use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 use function Symfony\Component\String\u;
 
@@ -22,22 +23,34 @@ use function Symfony\Component\String\u;
     description: 'Lookup github repository for cpu, create if not exist.',
     hidden: false
 )]
-class IndexCpuCommand extends Command
+class IndexCpuCommand extends AbstractIndexCommand
 {
     public function __construct(
         protected CpuRepository $cpuRepository,
+        #[Autowire('%app.lscpu_dir%')]
         protected string $lscpuDir,
+        #[Autowire('%app.lscpu_repo%')]
         protected string $lscpuRepo,
-        protected ?Process $process = null
+        #[Autowire(service: VoidProcess::class)]
+        ?Process $process = null
     ) {
-        parent::__construct();
+        parent::__construct($process);
+    }
+
+    protected function getDir(): string
+    {
+        return $this->lscpuDir;
+    }
+
+    protected function getRepo(): string
+    {
+        return $this->lscpuRepo;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->updateRepository($output);
-        foreach (Vendor::cases() as $vendor) {
-            $output->writeln(sprintf('Indexing cpus for vendor %s...', $vendor->value));
+        foreach (CpuVendor::cases() as $vendor) {
             $this->indexCpus($vendor, $output);
         }
         $output->writeln('Indexed all cpus!');
@@ -45,28 +58,9 @@ class IndexCpuCommand extends Command
         return Command::SUCCESS;
     }
 
-    protected function updateRepository(OutputInterface $output): void
+    protected function indexCpus(CpuVendor $vendor, OutputInterface $output): void
     {
-        $output->writeln('Updating cpu repository...');
-        if (!is_dir($this->lscpuDir)) {
-            $this->runProcess(['git', 'clone', $this->lscpuRepo, $this->lscpuDir]);
-        } else {
-            $this->runProcess(['git', '-C', $this->lscpuDir, 'pull']);
-        }
-    }
-
-    protected function runProcess(array $command): void
-    {
-        $process = $this->process ?? new Process($command);
-        $process->run();
-
-        if (!$process->isSuccessful()) {
-            throw new ProcessFailedException($process);
-        }
-    }
-
-    protected function indexCpus(Vendor $vendor, OutputInterface $output): void
-    {
+        $output->writeln(sprintf('Indexing cpus for vendor %s...', $vendor->value));
         $finder = new Finder();
         $finder->files()->in($this->lscpuDir.DIRECTORY_SEPARATOR.$vendor->value);
         $last = $finder->count();
@@ -81,7 +75,7 @@ class IndexCpuCommand extends Command
         $output->writeln(' Finished!');
     }
 
-    protected function indexCpu(SplFileInfo $file, Vendor $vendor, bool $flush): void
+    protected function indexCpu(SplFileInfo $file, CpuVendor $vendor, bool $flush): void
     {
         [, $model, $code, $probe] = explode(DIRECTORY_SEPARATOR, $file->getRelativePathname());
         $id = u('-')->join([$vendor->value, $code, $model])->lower()->replace(' ', '-');

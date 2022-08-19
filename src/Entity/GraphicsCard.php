@@ -3,29 +3,31 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
-use App\Enum\CpuVendor;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity]
 #[ApiResource]
-class Cpu
+class GraphicsCard
 {
     #[ORM\Id]
     #[ORM\Column(type: Types::STRING, unique: true)]
     #[Assert\NotBlank]
     public string $id;
 
-    #[ORM\Column(type: Types::STRING, length: 5, enumType: CpuVendor::class)]
+    #[ORM\Column(type: Types::STRING)]
     #[Assert\NotBlank]
-    public CpuVendor $vendor;
+    public string $vendor;
+
+    #[ORM\Column(type: Types::STRING, nullable: true)]
+    #[Assert\NotBlank]
+    public ?string $subVendor = null;
 
     #[ORM\Column(type: Types::STRING)]
     #[Assert\NotBlank]
-    public string $model;
+    public string $device;
 
-    #[ORM\Column(type: Types::STRING)]
-    #[Assert\NotBlank]
-    public string $probe;
+    #[ORM\OneToOne(targetEntity: Computer::class, inversedBy: 'graphicsCard')]
+    public Computer $computer;
 }
