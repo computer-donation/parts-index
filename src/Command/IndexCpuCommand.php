@@ -4,17 +4,19 @@ namespace App\Command;
 
 use App\Entity\Cpu;
 use App\Enum\CpuVendor;
-use App\Tests\Process\VoidProcess;
 use App\Repository\CpuRepository;
+use App\Repository\ProbeRepository;
+use App\Tests\Process\VoidProcess;
+use Doctrine\DBAL\Connection;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\Process\Process;
-use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 use function Symfony\Component\String\u;
 
@@ -26,15 +28,17 @@ use function Symfony\Component\String\u;
 class IndexCpuCommand extends AbstractIndexCommand
 {
     public function __construct(
+        ProbeRepository $probeRepository,
         protected CpuRepository $cpuRepository,
         #[Autowire('%app.lscpu_dir%')]
         protected string $lscpuDir,
         #[Autowire('%app.lscpu_repo%')]
         protected string $lscpuRepo,
+        Connection $connection,
         #[Autowire(service: VoidProcess::class)]
         ?Process $process = null
     ) {
-        parent::__construct($process);
+        parent::__construct($probeRepository, $connection, $process);
     }
 
     protected function getDir(): string
@@ -50,6 +54,7 @@ class IndexCpuCommand extends AbstractIndexCommand
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->updateRepository($output);
+        $this->disableLogging();
         foreach (CpuVendor::cases() as $vendor) {
             $this->indexCpus($vendor, $output);
         }

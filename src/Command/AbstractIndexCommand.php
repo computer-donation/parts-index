@@ -4,21 +4,24 @@ namespace App\Command;
 
 use App\Entity\Probe;
 use App\Repository\ProbeRepository;
+use Doctrine\DBAL\Connection;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
+use Symfony\Component\Process\Process;
 
 abstract class AbstractIndexCommand extends Command
 {
     public function __construct(
         protected ProbeRepository $probeRepository,
+        protected Connection $connection,
         protected ?Process $process = null
     ) {
         parent::__construct();
     }
 
     abstract protected function getRepo(): string;
+
     abstract protected function getDir(): string;
 
     protected function updateRepository(OutputInterface $output): void
@@ -62,9 +65,15 @@ abstract class AbstractIndexCommand extends Command
     {
         if (!$probe = $this->probeRepository->find($id)) {
             $probe = new Probe();
+            $probe->id = $id;
             $this->probeRepository->add($probe, true);
         }
 
         return $probe;
+    }
+
+    protected function disableLogging(): void
+    {
+        $this->connection->getConfiguration()->setSQLLogger(null);
     }
 }

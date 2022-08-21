@@ -27,6 +27,7 @@ class CpuRepository extends ServiceEntityRepository
 
         if ($flush) {
             $this->getEntityManager()->flush();
+            $this->getEntityManager()->clear();
         }
     }
 }
