@@ -3,6 +3,7 @@
 namespace App\Tests\Command;
 
 use App\Entity\Cpu;
+use App\Entity\Probe;
 use App\Enum\CpuVendor;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\SchemaTool;
@@ -56,18 +57,23 @@ class IndexCpuCommandTest extends KernelTestCase
         );
     }
 
-    public function assertCpu(string $id, CpuVendor $vendor, string $model, string $probe)
+    public function assertCpu(string $id, CpuVendor $vendor, string $model, string $probeId)
     {
         $cpu = $this->entityManager
             ->getRepository(Cpu::class)
             ->find($id)
         ;
 
+        $probe = $this->entityManager
+            ->getRepository(Probe::class)
+            ->find($probeId)
+        ;
+
         $this->assertInstanceOf(Cpu::class, $cpu);
         $this->assertSame($id, $cpu->id);
         $this->assertSame($vendor, $cpu->vendor);
         $this->assertSame($model, $cpu->model);
-        $this->assertSame($probe, $cpu->probe);
+        $this->assertSame($cpu, $probe->cpu);
     }
 
     protected function tearDown(): void
