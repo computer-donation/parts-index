@@ -30,7 +30,7 @@ class GraphicsCard
     #[Assert\NotBlank]
     public string $device;
 
-    #[ORM\OneToMany(targetEntity: Probe::class, mappedBy: 'cpu')]
+    #[ORM\OneToMany(targetEntity: Probe::class, mappedBy: 'graphicsCard')]
     protected Collection $probes;
 
     public function __construct()
