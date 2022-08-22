@@ -88,7 +88,7 @@ class IndexCpuCommand extends AbstractIndexCommand
         }
         [, $model, $code, $probe] = $items;
         $id = u('-')->join([$vendor->value, $code, $model])->lower()->replace(' ', '-');
-        if (0 === $this->cpuRepository->count(['id' => $id])) {
+        if (!$this->cpuRepository->find($id)) {
             $cpu = new Cpu();
             $cpu->id = $id;
             $cpu->vendor = $vendor;

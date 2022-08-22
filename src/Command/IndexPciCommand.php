@@ -85,7 +85,7 @@ class IndexPciCommand extends AbstractIndexCommand
         if (preg_match('/Unique ID: ([^\s]+)((?!VGA).)*Hardware Class: graphics card.*?Vendor: ([^\r|\n]+).*?Device: ([^\r|\n]+).*?SubVendor: ([^\r|\n]+)/s', $file->getContents(), $matches)) {
             [, $id, $vendor, $device, $subVendor] = $matches;
             $id = str_replace('.', '-', $id);
-            if (0 === $this->graphicsCardRepository->count(['id' => $id])) {
+            if (!$this->graphicsCardRepository->find($id)) {
                 $graphicsCard = new GraphicsCard();
                 $graphicsCard->id = $id;
                 $graphicsCard->vendor = $vendor;
@@ -106,7 +106,7 @@ class IndexPciCommand extends AbstractIndexCommand
             return;
         }
         [$vendor, , $model, $hwid, , , , $probe] = $items;
-        if (0 === $this->computerRepository->count(['id' => $hwid])) {
+        if (!$this->computerRepository->find($hwid)) {
             $computer = new Computer();
             $computer->id = $hwid;
             $computer->type = $type;
