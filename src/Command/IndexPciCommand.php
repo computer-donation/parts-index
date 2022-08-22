@@ -70,14 +70,14 @@ class IndexPciCommand extends AbstractIndexCommand
         $finder = new Finder();
         $finder->files()->in($this->hwinfoDir.DIRECTORY_SEPARATOR.$type->value);
         $last = $finder->count();
-        $current = 0;
+        $current = 1;
         $progressBar = new ProgressBar($output, $last);
         foreach ($finder as $file) {
-            ++$current;
             $progressBar->advance();
             $flush = !($current % 100) || $current === $last;
-            $this->indexComputer($file, $type, $flush);
+            $this->indexComputer($file, $type, $flush, $output);
             $this->indexGraphicsCard($file, $flush);
+            ++$current;
         }
         $progressBar->finish();
         $output->writeln(' Finished!');
@@ -88,7 +88,7 @@ class IndexPciCommand extends AbstractIndexCommand
         if (preg_match('/Unique ID: ([^\s]+)((?!VGA).)*Hardware Class: graphics card.*?Vendor: ([^\r|\n]+).*?Device: ([^\r|\n]+).*?SubVendor: ([^\r|\n]+)/s', $file->getContents(), $matches)) {
             [, $id, $vendor, $device, $subVendor] = $matches;
             $id = str_replace('.', '-', $id);
-            if (!$graphicsCard = $this->graphicsCardRepository->find($id)) {
+            if (0 === $this->graphicsCardRepository->count(['id' => $id])) {
                 $graphicsCard = new GraphicsCard();
                 $graphicsCard->id = $id;
                 $graphicsCard->vendor = $vendor;
@@ -100,10 +100,16 @@ class IndexPciCommand extends AbstractIndexCommand
         }
     }
 
-    protected function indexComputer(SplFileInfo $file, ComputerType $type, bool $flush): Computer
+    protected function indexComputer(SplFileInfo $file, ComputerType $type, bool $flush, OutputInterface $output): void
     {
-        [, $vendor, $model, $hwid, , , , $probe] = explode(DIRECTORY_SEPARATOR, $file->getRelativePathname());
-        if (!$computer = $this->computerRepository->find($hwid)) {
+        $items = explode(DIRECTORY_SEPARATOR, $file->getRelativePathname());
+        if (8 !== count($items)) {
+            $output->writeln(sprintf('<error>Invalid file path %s. It should follow this pattern %s</error>', $file->getPathname(), '{COMPUTER TYPE}/{VENDOR}/{MODEL PREFIX}/{MODEL}/{HWID}/{OS}/{KERNEL}/{ARCH}/{PROBE ID}'));
+
+            return;
+        }
+        [$vendor, , $model, $hwid, , , , $probe] = $items;
+        if (0 === $this->computerRepository->count(['id' => $hwid])) {
             $computer = new Computer();
             $computer->id = $hwid;
             $computer->type = $type;
@@ -112,7 +118,5 @@ class IndexPciCommand extends AbstractIndexCommand
             $computer->addProbe($this->getProbe($probe));
             $this->computerRepository->add($computer, $flush);
         }
-
-        return $computer;
     }
 }

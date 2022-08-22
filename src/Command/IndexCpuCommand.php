@@ -69,22 +69,29 @@ class IndexCpuCommand extends AbstractIndexCommand
         $finder = new Finder();
         $finder->files()->in($this->lscpuDir.DIRECTORY_SEPARATOR.$vendor->value);
         $last = $finder->count();
-        $current = 0;
+        $current = 1;
         $progressBar = new ProgressBar($output, $last);
         foreach ($finder as $file) {
-            ++$current;
             $progressBar->advance();
-            $this->indexCpu($file, $vendor, !($current % 100) || $current === $last);
+            $flush = !($current % 100) || $current === $last;
+            $this->indexCpu($file, $vendor, $flush, $output);
+            ++$current;
         }
         $progressBar->finish();
         $output->writeln(' Finished!');
     }
 
-    protected function indexCpu(SplFileInfo $file, CpuVendor $vendor, bool $flush): void
+    protected function indexCpu(SplFileInfo $file, CpuVendor $vendor, bool $flush, OutputInterface $output): void
     {
-        [, $model, $code, $probe] = explode(DIRECTORY_SEPARATOR, $file->getRelativePathname());
+        $items = explode(DIRECTORY_SEPARATOR, $file->getRelativePathname());
+        if (4 !== count($items)) {
+            $output->writeln(sprintf('<error>Invalid file path %s. It should follow this pattern %s</error>', $file->getPathname(), '{VENDOR}/{MODEL PREFIX}/{MODEL NAME}/{FAMILY}-{MODEL}-{STEPPING}/{PROBE ID}'));
+
+            return;
+        }
+        [, $model, $code, $probe] = $items;
         $id = u('-')->join([$vendor->value, $code, $model])->lower()->replace(' ', '-');
-        if (!$this->cpuRepository->find($id)) {
+        if (0 === $this->cpuRepository->count(['id' => $id])) {
             $cpu = new Cpu();
             $cpu->id = $id;
             $cpu->vendor = $vendor;
