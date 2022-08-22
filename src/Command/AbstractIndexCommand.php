@@ -4,7 +4,6 @@ namespace App\Command;
 
 use App\Entity\Probe;
 use App\Repository\ProbeRepository;
-use Doctrine\DBAL\Connection;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Exception\ProcessFailedException;
@@ -14,7 +13,6 @@ abstract class AbstractIndexCommand extends Command
 {
     public function __construct(
         protected ProbeRepository $probeRepository,
-        protected Connection $connection,
         protected ?Process $process = null
     ) {
         parent::__construct();
@@ -70,10 +68,5 @@ abstract class AbstractIndexCommand extends Command
         }
 
         return $probe;
-    }
-
-    protected function disableLogging(): void
-    {
-        $this->connection->getConfiguration()->setSQLLogger(null);
     }
 }

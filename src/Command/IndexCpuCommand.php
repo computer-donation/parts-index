@@ -7,7 +7,6 @@ use App\Enum\CpuVendor;
 use App\Repository\CpuRepository;
 use App\Repository\ProbeRepository;
 use App\Tests\Process\VoidProcess;
-use Doctrine\DBAL\Connection;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
@@ -34,11 +33,10 @@ class IndexCpuCommand extends AbstractIndexCommand
         protected string $lscpuDir,
         #[Autowire('%app.lscpu_repo%')]
         protected string $lscpuRepo,
-        Connection $connection,
         #[Autowire(service: VoidProcess::class)]
         ?Process $process = null
     ) {
-        parent::__construct($probeRepository, $connection, $process);
+        parent::__construct($probeRepository, $process);
     }
 
     protected function getDir(): string
@@ -54,7 +52,6 @@ class IndexCpuCommand extends AbstractIndexCommand
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->updateRepository($output);
-        $this->disableLogging();
         foreach (CpuVendor::cases() as $vendor) {
             $this->indexCpus($vendor, $output);
         }
