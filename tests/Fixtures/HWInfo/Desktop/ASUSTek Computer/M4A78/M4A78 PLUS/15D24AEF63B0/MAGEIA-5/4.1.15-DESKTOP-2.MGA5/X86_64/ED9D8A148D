@@ -1,0 +1,85 @@
+# [ED9D8A148D](https://github.com/linuxhw/HWInfo/blob/master/Desktop/ASUSTek%20Computer/M4A78/M4A78%20PLUS/15D24AEF63B0/MAGEIA-5/4.1.15-DESKTOP-2.MGA5/X86_64/ED9D8A148D) by [Linux Hardware Project](https://github.com/linuxhw) is licensed under [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/). 
+
+38: PCI 100.0: 0106 SATA controller (AHCI 1.0)
+  [Created at pci.328]
+  Unique ID: VCu0.TTpyRDzu1K2
+  Parent ID: _Znp.QP8LIPCDgC6
+  SysFS ID: /devices/pci0000:00/0000:00:02.0/0000:01:00.0
+  SysFS BusID: 0000:01:00.0
+  Hardware Class: storage
+  Model: "Marvell 88SE9230 PCIe SATA 6Gb/s Controller"
+  Vendor: pci 0x1b4b "Marvell Technology Group Ltd."
+  Device: pci 0x9230 "88SE9230 PCIe SATA 6Gb/s Controller"
+  SubVendor: pci 0x1b4b "Marvell Technology Group Ltd."
+  SubDevice: pci 0x9230 
+  Revision: 0x11
+  Driver: "ahci"
+  Driver Modules: "ahci"
+  I/O Ports: 0xbc00-0xbc07 (rw)
+  I/O Ports: 0xb880-0xb883 (rw)
+  I/O Ports: 0xb800-0xb807 (rw)
+  I/O Ports: 0xb480-0xb483 (rw)
+  I/O Ports: 0xb400-0xb41f (rw)
+  Memory Range: 0xf9fff800-0xf9ffffff (rw,non-prefetchable)
+  Memory Range: 0xf9fe0000-0xf9feffff (ro,non-prefetchable,disabled)
+  IRQ: 28 (1029241 events)
+  Module Alias: "pci:v00001B4Bd00009230sv00001B4Bsd00009230bc01sc06i01"
+  Config Status: cfg=new, avail=yes, need=no, active=unknown
+  Attached to: #17 (PCI bridge)
+
+39: PCI 200.0: 0300 VGA compatible controller (VGA)
+  [Created at pci.328]
+  Unique ID: B35A.1ehoqeJg_IE
+  Parent ID: 8otl.SE1rFYRdjz6
+  SysFS ID: /devices/pci0000:00/0000:00:04.0/0000:02:00.0
+  SysFS BusID: 0000:02:00.0
+  Hardware Class: graphics card
+  Model: "nVidia GF108 [GeForce GT 430]"
+  Vendor: pci 0x10de "nVidia Corporation"
+  Device: pci 0x0de1 "GF108 [GeForce GT 430]"
+  SubVendor: pci 0x1462 "Micro-Star International Co., Ltd."
+  SubDevice: pci 0x2304 
+  Revision: 0xa1
+  Driver: "nvidia"
+  Driver Modules: "nvidia"
+  Memory Range: 0xfa000000-0xfaffffff (rw,non-prefetchable)
+  Memory Range: 0xd8000000-0xdfffffff (ro,non-prefetchable)
+  Memory Range: 0xd6000000-0xd7ffffff (ro,non-prefetchable)
+  I/O Ports: 0xcc00-0xcc7f (rw)
+  Memory Range: 0xfbc80000-0xfbcfffff (ro,non-prefetchable,disabled)
+  IRQ: 37 (1452132 events)
+  I/O Ports: 0x3c0-0x3df (rw)
+  Module Alias: "pci:v000010DEd00000DE1sv00001462sd00002304bc03sc00i00"
+  Driver Info #0:
+    Driver Status: nvidiafb is not active
+    Driver Activation Cmd: "modprobe nvidiafb"
+  Driver Info #1:
+    Driver Status: nouveau is not active
+    Driver Activation Cmd: "modprobe nouveau"
+  Driver Info #2:
+    Driver Status: nvidia_current is not active
+    Driver Activation Cmd: "modprobe nvidia_current"
+  Config Status: cfg=new, avail=yes, need=no, active=unknown
+  Attached to: #18 (PCI bridge)
+
+40: PCI 200.1: 0403 Audio device
+  [Created at pci.328]
+  Unique ID: 2Oa+.yi_3CNjOuF6
+  Parent ID: 8otl.SE1rFYRdjz6
+  SysFS ID: /devices/pci0000:00/0000:00:04.0/0000:02:00.1
+  SysFS BusID: 0000:02:00.1
+  Hardware Class: sound
+  Model: "nVidia GF108 High Definition Audio Controller"
+  Vendor: pci 0x10de "nVidia Corporation"
+  Device: pci 0x0bea "GF108 High Definition Audio Controller"
+  SubVendor: pci 0x1462 "Micro-Star International Co., Ltd."
+  SubDevice: pci 0x2304 
+  Revision: 0xa1
+  Memory Range: 0xfbc7c000-0xfbc7ffff (rw,non-prefetchable)
+  IRQ: 7 (no events)
+  Module Alias: "pci:v000010DEd00000BEAsv00001462sd00002304bc04sc03i00"
+  Driver Info #0:
+    Driver Status: snd_hda_intel is not active
+    Driver Activation Cmd: "modprobe snd_hda_intel"
+  Config Status: cfg=new, avail=yes, need=no, active=unknown
+  Attached to: #18 (PCI bridge)

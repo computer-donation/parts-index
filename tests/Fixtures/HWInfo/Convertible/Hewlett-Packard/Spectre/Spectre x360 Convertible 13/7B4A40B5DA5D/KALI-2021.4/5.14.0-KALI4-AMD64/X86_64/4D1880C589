@@ -1,0 +1,71 @@
+# [4D1880C589](https://github.com/linuxhw/HWInfo/blob/master/Convertible/Hewlett-Packard/Spectre/Spectre%20x360%20Convertible%2013/7B4A40B5DA5D/KALI-2021.4/5.14.0-KALI4-AMD64/X86_64/4D1880C589) by [Linux Hardware Project](https://github.com/linuxhw) is licensed under [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/). 
+
+21: PCI 03.0: 0403 Audio device
+  [Created at pci.386]
+  Unique ID: 3hqH.5vTEbhFbFBA
+  SysFS ID: /devices/pci0000:00/0000:00:03.0
+  SysFS BusID: 0000:00:03.0
+  Hardware Class: sound
+  Model: "Intel Broadwell-U Audio Controller"
+  Vendor: pci 0x8086 "Intel Corporation"
+  Device: pci 0x160c "Broadwell-U Audio Controller"
+  SubVendor: pci 0x103c "Hewlett-Packard Company"
+  SubDevice: pci 0x802d 
+  Revision: 0x09
+  Driver: "snd_hda_intel"
+  Driver Modules: "snd_hda_intel"
+  Memory Range: 0xb2210000-0xb2213fff (rw,non-prefetchable)
+  IRQ: 49 (794 events)
+  Module Alias: "pci:v00008086d0000160Csv0000103Csd0000802Dbc04sc03i00"
+  Driver Info #0:
+    Driver Status: snd_hda_intel is active
+    Driver Activation Cmd: "modprobe snd_hda_intel"
+  Config Status: cfg=new, avail=yes, need=no, active=unknown
+
+22: PCI 02.0: 0300 VGA compatible controller (VGA)
+  [Created at pci.386]
+  Unique ID: _Znp.hw1hbH1EzSC
+  SysFS ID: /devices/pci0000:00/0000:00:02.0
+  SysFS BusID: 0000:00:02.0
+  Hardware Class: graphics card
+  Device Name: "Onboard IGD"
+  Model: "Intel HD Graphics 5500"
+  Vendor: pci 0x8086 "Intel Corporation"
+  Device: pci 0x1616 "HD Graphics 5500"
+  SubVendor: pci 0x103c "Hewlett-Packard Company"
+  SubDevice: pci 0x802d 
+  Revision: 0x09
+  Driver: "i915"
+  Driver Modules: "i915"
+  Memory Range: 0xb1000000-0xb1ffffff (rw,non-prefetchable)
+  Memory Range: 0xc0000000-0xcfffffff (ro,non-prefetchable)
+  I/O Ports: 0x3000-0x303f (rw)
+  Memory Range: 0x000c0000-0x000dffff (rw,non-prefetchable,disabled)
+  IRQ: 47 (609500 events)
+  Module Alias: "pci:v00008086d00001616sv0000103Csd0000802Dbc03sc00i00"
+  Driver Info #0:
+    Driver Status: i915 is active
+    Driver Activation Cmd: "modprobe i915"
+  Config Status: cfg=new, avail=yes, need=no, active=unknown
+
+23: PCI 14.0: 0c03 USB Controller (XHCI)
+  [Created at pci.386]
+  Unique ID: MZfG.oppYvE9sVZ8
+  SysFS ID: /devices/pci0000:00/0000:00:14.0
+  SysFS BusID: 0000:00:14.0
+  Hardware Class: usb controller
+  Model: "Intel Wildcat Point-LP USB xHCI Controller"
+  Vendor: pci 0x8086 "Intel Corporation"
+  Device: pci 0x9cb1 "Wildcat Point-LP USB xHCI Controller"
+  SubVendor: pci 0x103c "Hewlett-Packard Company"
+  SubDevice: pci 0x802d 
+  Revision: 0x03
+  Driver: "xhci_hcd"
+  Driver Modules: "xhci_pci"
+  Memory Range: 0xb2200000-0xb220ffff (rw,non-prefetchable)
+  IRQ: 45 (86527 events)
+  Module Alias: "pci:v00008086d00009CB1sv0000103Csd0000802Dbc0Csc03i30"
+  Driver Info #0:
+    Driver Status: xhci_pci is active
+    Driver Activation Cmd: "modprobe xhci_pci"
+  Config Status: cfg=new, avail=yes, need=no, active=unknown

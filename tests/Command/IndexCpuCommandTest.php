@@ -5,44 +5,24 @@ namespace App\Tests\Command;
 use App\Entity\Cpu;
 use App\Entity\Probe;
 use App\Enum\CpuVendor;
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Tools\SchemaTool;
-use Symfony\Bundle\FrameworkBundle\Console\Application;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Symfony\Component\Console\Tester\CommandTester;
 
-class IndexCpuCommandTest extends KernelTestCase
+class IndexCpuCommandTest extends CommandTestCase
 {
-    private ?EntityManager $entityManager = null;
-
-    protected function setUp(): void
+    protected function getCommand(): string
     {
-        self::bootKernel();
-
-        $this->entityManager = self::$kernel->getContainer()
-            ->get('doctrine')
-            ->getManager();
-
-        $this->initDatabase();
+        return 'app:index-cpu';
     }
 
-    public function testExecute()
+    protected function assertOutput(string $output): void
     {
-        $application = new Application(self::$kernel);
-
-        $command = $application->find('app:index-cpu');
-        $commandTester = new CommandTester($command);
-        $commandTester->execute([]);
-
-        $commandTester->assertCommandIsSuccessful();
-
-        // the output of the command in the console
-        $output = $commandTester->getDisplay();
         $this->assertStringContainsString('Updating repository...', $output);
         $this->assertStringContainsString('Indexing cpus for vendor AMD...', $output);
         $this->assertStringContainsString('Indexing cpus for vendor Intel...', $output);
         $this->assertStringContainsString('Indexed all cpus!', $output);
+    }
 
+    protected function assertParts(): void
+    {
         $this->assertCpu(
             'amd-23-1-1-ryzen-3-pro-1300-quad-core',
             CpuVendor::AMD,
@@ -57,7 +37,7 @@ class IndexCpuCommandTest extends KernelTestCase
         );
     }
 
-    public function assertCpu(string $id, CpuVendor $vendor, string $model, string $probeId)
+    protected function assertCpu(string $id, CpuVendor $vendor, string $model, string $probeId)
     {
         $cpu = $this->entityManager
             ->getRepository(Cpu::class)
@@ -74,21 +54,5 @@ class IndexCpuCommandTest extends KernelTestCase
         $this->assertSame($vendor, $cpu->vendor);
         $this->assertSame($model, $cpu->model);
         $this->assertSame($cpu, $probe->cpu);
-    }
-
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-
-        // doing this is recommended to avoid memory leaks
-        $this->entityManager->close();
-        $this->entityManager = null;
-    }
-
-    private function initDatabase(): void
-    {
-        $metaData = $this->entityManager->getMetadataFactory()->getAllMetadata();
-        $schemaTool = new SchemaTool($this->entityManager);
-        $schemaTool->updateSchema($metaData);
     }
 }
