@@ -19,6 +19,8 @@ use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\Process\Process;
 
+use function Symfony\Component\String\u;
+
 #[AsCommand(
     name: 'app:index-pci',
     description: 'Lookup github repository for pci devices, create if not exist.',
@@ -82,9 +84,9 @@ class IndexPciCommand extends AbstractIndexCommand
 
     protected function indexGraphicsCard(SplFileInfo $file, bool $flush): void
     {
-        if (preg_match('/Unique ID: ([^\s]+)((?!VGA).)*Hardware Class: graphics card.*?Vendor: ([^\r|\n]+).*?Device: ([^\r|\n]+).*?SubVendor: ([^\r|\n]+)/s', $file->getContents(), $matches)) {
-            [, $id, $vendor, $device, $subVendor] = $matches;
-            $id = str_replace('.', '-', $id);
+        if (preg_match('/Hardware Class: graphics card.*?Vendor: pci 0x([^\s]+) "([^"]+)"\s+Device: pci 0x([^\s]+) "([^"]+)"\s+SubVendor: pci 0x([^\s]+) "([^"]+)"\s+SubDevice: pci 0x([^\s]+)/s', $file->getContents(), $matches)) {
+            [, $vendorId, $vendor, $deviceId, $device, $subVendorId, $subVendor, $subDeviceId] = $matches;
+            $id = u('-')->join([$vendorId, $deviceId, $subVendorId, $subDeviceId]);
             if (!$this->graphicsCardRepository->find($id)) {
                 $graphicsCard = new GraphicsCard();
                 $graphicsCard->id = $id;
