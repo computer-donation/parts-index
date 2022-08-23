@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Enum\Cpu;
+namespace App\Enum;
 
-enum Vendor: string
+enum CpuVendor: string
 {
     case AMD = 'AMD';
     case INTEL = 'Intel';

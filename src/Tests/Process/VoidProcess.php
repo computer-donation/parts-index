@@ -1,11 +1,18 @@
 <?php
 
-namespace App\Tests\Fixtures;
+namespace App\Tests\Process;
 
+use Symfony\Component\DependencyInjection\Attribute\When;
 use Symfony\Component\Process\Process;
 
+#[When(env: 'test')]
 class VoidProcess extends Process
 {
+    public function __construct()
+    {
+        parent::__construct([]);
+    }
+
     public function start(callable $callback = null, array $env = []): void
     {
     }

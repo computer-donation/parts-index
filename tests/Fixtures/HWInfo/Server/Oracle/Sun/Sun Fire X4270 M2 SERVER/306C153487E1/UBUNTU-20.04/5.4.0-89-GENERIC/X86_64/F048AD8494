@@ -1,0 +1,76 @@
+# [F048AD8494](https://github.com/linuxhw/HWInfo/blob/master/Server/Oracle/Sun/Sun%20Fire%20X4270%20M2%20SERVER/306C153487E1/UBUNTU-20.04/5.4.0-89-GENERIC/X86_64/F048AD8494) by [Linux Hardware Project](https://github.com/linuxhw) is licensed under [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/). 
+
+28: PCI 1a02.0: 0604 PCI bridge (Normal decode)
+  [Created at pci.386]
+  Unique ID: USj7.Ke3G9sOdAV5
+  Parent ID: fNQ2.Ke3G9sOdAV5
+  SysFS ID: /devices/pci0000:00/0000:00:07.0/0000:19:00.0/0000:1a:02.0
+  SysFS BusID: 0000:1a:02.0
+  Hardware Class: bridge
+  Model: "Microsemi / PMC / IDT PES24T6G2 PCI Express Gen2 Switch"
+  Vendor: pci 0x111d "Microsemi / PMC / IDT"
+  Device: pci 0x806e "PES24T6G2 PCI Express Gen2 Switch"
+  SubVendor: pci 0x111d "Microsemi / PMC / IDT"
+  SubDevice: pci 0x806a 
+  Revision: 0x02
+  Driver: "pcieport"
+  IRQ: 32 (no events)
+  Module Alias: "pci:v0000111Dd0000806Esv0000111Dsd0000806Abc06sc04i00"
+  Config Status: cfg=new, avail=yes, need=no, active=unknown
+  Attached to: #64 (PCI bridge)
+
+29: PCI 3505.0: 0300 VGA compatible controller (VGA)
+  [Created at pci.386]
+  Unique ID: 2sHQ.MsbgkS25Bk8
+  Parent ID: 6NW+.fh9+2TN69Q3
+  SysFS ID: /devices/pci0000:00/0000:00:1e.0/0000:35:05.0
+  SysFS BusID: 0000:35:05.0
+  Hardware Class: graphics card
+  Model: "ASPEED AST1000/2000"
+  Vendor: pci 0x1a03 "ASPEED Technology Inc."
+  Device: pci 0x2000 "AST1000/2000"
+  SubVendor: pci 0x108e "Oracle/SUN"
+  SubDevice: pci 0x484c 
+  Revision: 0x10
+  Driver: "ast"
+  Driver Modules: "ast"
+  Memory Range: 0xdf800000-0xdfffffff (rw,non-prefetchable)
+  Memory Range: 0xdf7e0000-0xdf7fffff (rw,non-prefetchable)
+  I/O Ports: 0xec00-0xec7f (rw)
+  Memory Range: 0x000c0000-0x000dffff (rw,non-prefetchable,disabled)
+  IRQ: 16 (no events)
+  Module Alias: "pci:v00001A03d00002000sv0000108Esd0000484Cbc03sc00i00"
+  Driver Info #0:
+    XFree86 v4 Server Module: ast
+  Config Status: cfg=new, avail=yes, need=no, active=unknown
+  Attached to: #75 (PCI bridge)
+
+30: PCI 2300.1: 0200 Ethernet controller
+  [Created at pci.386]
+  Unique ID: GjA8.nnwMpZgQGeA
+  Parent ID: wHKH.e6pgl_MbRFD
+  SysFS ID: /devices/pci0000:00/0000:00:07.0/0000:19:00.0/0000:1a:04.0/0000:21:00.0/0000:22:02.0/0000:23:00.1
+  SysFS BusID: 0000:23:00.1
+  Hardware Class: network
+  Model: "Oracle/SUN Quad Port Adapter"
+  Vendor: pci 0x8086 "Intel Corporation"
+  Device: pci 0x10bc "82571EB/82571GB Gigabit Ethernet Controller (Copper)"
+  SubVendor: pci 0x108e "Oracle/SUN"
+  SubDevice: pci 0x11bc "Quad Port Adapter"
+  Revision: 0x06
+  Driver: "e1000e"
+  Driver Modules: "e1000e"
+  Device File: eth7
+  Memory Range: 0xdf5e0000-0xdf5fffff (rw,non-prefetchable)
+  Memory Range: 0xdf5c0000-0xdf5dffff (rw,non-prefetchable)
+  I/O Ports: 0xcc00-0xcc1f (rw)
+  IRQ: 71 (48 events)
+  HW Address:  ...
+  Permanent HW Address:  ...
+  Link detected: no
+  Module Alias: "pci:v00008086d000010BCsv0000108Esd000011BCbc02sc00i00"
+  Driver Info #0:
+    Driver Status: e1000e is active
+    Driver Activation Cmd: "modprobe e1000e"
+  Config Status: cfg=new, avail=yes, need=no, active=unknown
+  Attached to: #40 (PCI bridge)

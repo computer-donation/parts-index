@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
-use App\Enum\CpuVendor;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -12,22 +11,26 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity]
 #[ApiResource]
-class Cpu
+class GraphicsCard
 {
     #[ORM\Id]
     #[ORM\Column(type: Types::STRING, unique: true)]
     #[Assert\NotBlank]
     public string $id;
 
-    #[ORM\Column(type: Types::STRING, length: 5, enumType: CpuVendor::class)]
+    #[ORM\Column(type: Types::STRING)]
     #[Assert\NotBlank]
-    public CpuVendor $vendor;
+    public string $vendor;
+
+    #[ORM\Column(type: Types::STRING, nullable: true)]
+    #[Assert\NotBlank]
+    public ?string $subVendor = null;
 
     #[ORM\Column(type: Types::STRING)]
     #[Assert\NotBlank]
-    public string $model;
+    public string $device;
 
-    #[ORM\OneToMany(targetEntity: Probe::class, mappedBy: 'cpu')]
+    #[ORM\OneToMany(targetEntity: Probe::class, mappedBy: 'graphicsCard')]
     protected Collection $probes;
 
     public function __construct()
@@ -39,7 +42,7 @@ class Cpu
     {
         if (!$this->probes->contains($probe)) {
             $this->probes->add($probe);
-            $probe->cpu = $this;
+            $probe->graphicsCard = $this;
         }
     }
 }

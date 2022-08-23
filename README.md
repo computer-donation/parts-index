@@ -7,7 +7,15 @@ This project index data (computers & devices) from https://linux-hardware.org/.
 ```shell
 composer install
 bin/console doctrine:schema:update --force
+bin/console app:index-cpu --no-debug
+bin/console app:index-pci --no-debug
 symfony serve
+```
+
+## Test
+
+```shell
+bin/phpunit
 ```
 
 ## License

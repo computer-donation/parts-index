@@ -1,0 +1,69 @@
+# [071C584451](https://github.com/linuxhw/HWInfo/blob/master/All%20In%20One/Dell/XPS/XPS%207760%20AIO/2EB49941386F/ENDEAVOUROS-ROLLING/5.9.8-XANMOD1-1/X86_64/071C584451) by [Linux Hardware Project](https://github.com/linuxhw) is licensed under [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/). 
+
+23: PCI 16.0: 0780 Communication controller
+  [Created at pci.386]
+  Unique ID: WnlC.OVTZhqsnEuD
+  SysFS ID: /devices/pci0000:00/0000:00:16.0
+  SysFS BusID: 0000:00:16.0
+  Hardware Class: unknown
+  Model: "Intel 100 Series/C230 Series Chipset Family MEI Controller #1"
+  Vendor: pci 0x8086 "Intel Corporation"
+  Device: pci 0xa13a "100 Series/C230 Series Chipset Family MEI Controller #1"
+  SubVendor: pci 0x1028 "Dell"
+  SubDevice: pci 0x075c 
+  Revision: 0x31
+  Driver: "mei_me"
+  Driver Modules: "mei_me"
+  Memory Range: 0x2ffff25000-0x2ffff25fff (rw,non-prefetchable)
+  IRQ: 138 (60 events)
+  Module Alias: "pci:v00008086d0000A13Asv00001028sd0000075Cbc07sc80i00"
+  Driver Info #0:
+    Driver Status: mei_me is active
+    Driver Activation Cmd: "modprobe mei_me"
+  Config Status: cfg=new, avail=yes, need=no, active=unknown
+
+24: PCI 100.0: 0300 VGA compatible controller (VGA)
+  [Created at pci.386]
+  Unique ID: VCu0.+JcsK+yjXmE
+  Parent ID: vSkL.El+3lHrRvy9
+  SysFS ID: /devices/pci0000:00/0000:00:01.0/0000:01:00.0
+  SysFS BusID: 0000:01:00.0
+  Hardware Class: graphics card
+  Model: "ATI Ellesmere [Radeon RX 470/480/570/570X/580/580X/590]"
+  Vendor: pci 0x1002 "ATI Technologies Inc"
+  Device: pci 0x67df "Ellesmere [Radeon RX 470/480/570/570X/580/580X/590]"
+  SubVendor: pci 0x1028 "Dell"
+  SubDevice: pci 0x175c 
+  Revision: 0xc5
+  Driver: "amdgpu"
+  Driver Modules: "amdgpu"
+  Memory Range: 0x2000000000-0x21ffffffff (ro,non-prefetchable)
+  Memory Range: 0x2200000000-0x22001fffff (ro,non-prefetchable)
+  I/O Ports: 0xe000-0xefff (rw)
+  Memory Range: 0xee400000-0xee43ffff (rw,non-prefetchable)
+  Memory Range: 0x000c0000-0x000dffff (rw,non-prefetchable,disabled)
+  IRQ: 143 (1193111 events)
+  Module Alias: "pci:v00001002d000067DFsv00001028sd0000175Cbc03sc00i00"
+  Driver Info #0:
+    Driver Status: amdgpu is active
+    Driver Activation Cmd: "modprobe amdgpu"
+  Config Status: cfg=new, avail=yes, need=no, active=unknown
+  Attached to: #22 (PCI bridge)
+
+25: PCI 1b.0: 0604 PCI bridge (Normal decode)
+  [Created at pci.386]
+  Unique ID: u1Nb.e0CRgFX7Xx7
+  SysFS ID: /devices/pci0000:00/0000:00:1b.0
+  SysFS BusID: 0000:00:1b.0
+  Hardware Class: bridge
+  Device Name: "Intel HD Audio"
+  Model: "Intel 100 Series/C230 Series Chipset Family PCI Express Root Port #17"
+  Vendor: pci 0x8086 "Intel Corporation"
+  Device: pci 0xa167 "100 Series/C230 Series Chipset Family PCI Express Root Port #17"
+  SubVendor: pci 0x1028 "Dell"
+  SubDevice: pci 0x075c 
+  Revision: 0xf1
+  Driver: "pcieport"
+  IRQ: 122 (no events)
+  Module Alias: "pci:v00008086d0000A167sv00001028sd0000075Cbc06sc04i00"
+  Config Status: cfg=new, avail=yes, need=no, active=unknown

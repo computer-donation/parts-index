@@ -1,0 +1,71 @@
+# [4A3BB182A0](https://github.com/linuxhw/HWInfo/blob/master/Mini%20Pc/Intel/NUC6CAYB/NUC6CAYB%20J23203-402/078C47E8922E/ARCH-ROLLING/5.6.7-ARCH1-1/X86_64/4A3BB182A0) by [Linux Hardware Project](https://github.com/linuxhw) is licensed under [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/). 
+
+29: PCI 19.1: 1180 Signal processing controller
+  [Created at pci.386]
+  Unique ID: b8mU.o9MZCqa9fn4
+  SysFS ID: /devices/pci0000:00/0000:00:19.1
+  SysFS BusID: 0000:00:19.1
+  Hardware Class: unknown
+  Model: "Intel Celeron N3350/Pentium N4200/Atom E3900 Series SPI Controller #2"
+  Vendor: pci 0x8086 "Intel Corporation"
+  Device: pci 0x5ac4 "Celeron N3350/Pentium N4200/Atom E3900 Series SPI Controller #2"
+  Revision: 0x0b
+  Driver: "intel-lpss"
+  Driver Modules: "intel_lpss_pci"
+  Memory Range: 0x9141c000-0x9141cfff (rw,non-prefetchable)
+  Memory Range: 0x9141b000-0x9141bfff (rw,non-prefetchable)
+  IRQ: 36 (no events)
+  Module Alias: "pci:v00008086d00005AC4sv00000000sd00000000bc11sc80i00"
+  Driver Info #0:
+    Driver Status: intel_lpss_pci is active
+    Driver Activation Cmd: "modprobe intel_lpss_pci"
+  Config Status: cfg=new, avail=yes, need=no, active=unknown
+
+30: PCI 02.0: 0300 VGA compatible controller (VGA)
+  [Created at pci.386]
+  Unique ID: _Znp.qHzegI2GNs7
+  SysFS ID: /devices/pci0000:00/0000:00:02.0
+  SysFS BusID: 0000:00:02.0
+  Hardware Class: graphics card
+  Device Name: "CPU"
+  Model: "Intel HD Graphics 500"
+  Vendor: pci 0x8086 "Intel Corporation"
+  Device: pci 0x5a85 "HD Graphics 500"
+  SubVendor: pci 0x8086 "Intel Corporation"
+  SubDevice: pci 0x2067 
+  Revision: 0x0b
+  Driver: "i915"
+  Driver Modules: "i915"
+  Memory Range: 0x90000000-0x90ffffff (rw,non-prefetchable)
+  Memory Range: 0x80000000-0x8fffffff (ro,non-prefetchable)
+  I/O Ports: 0xf000-0xf03f (rw)
+  Memory Range: 0x000c0000-0x000dffff (rw,non-prefetchable,disabled)
+  IRQ: 131 (352 events)
+  Module Alias: "pci:v00008086d00005A85sv00008086sd00002067bc03sc00i00"
+  Driver Info #0:
+    Driver Status: i915 is active
+    Driver Activation Cmd: "modprobe i915"
+  Config Status: cfg=new, avail=yes, need=no, active=unknown
+
+31: SCSI 200.0: 10600 Disk
+  [Created at block.245]
+  Unique ID: uI_Q.JHfGqWl+dS2
+  Parent ID: VCu0.uNrY6V14Kd2
+  SysFS ID: /class/block/sdb
+  SysFS BusID: 2:0:0:0
+  SysFS Device Link: /devices/pci0000:00/0000:00:13.0/0000:01:00.0/host2/target2:0:0/2:0:0:0
+  Hardware Class: disk
+  Model: "Generic SD/M.S."
+  Vendor: "Generic-"
+  Device: "SD/M.S."
+  Revision: "1.00"
+  Driver: "rts5229", "sd"
+  Driver Modules: "rts5229"
+  Device File: /dev/sdb (/dev/sg1)
+  Device Files: /dev/sdb, /dev/disk/by-path/pci-0000:01:00.0-scsi-0:0:0:0
+  Device Number: block 8:16-8:31 (char 21:1)
+  Geometry (Logical): CHS 14719/255/63
+  Size: 236462080 sectors a 512 bytes
+  Capacity: 112 GB (121068584960 bytes)
+  Config Status: cfg=new, avail=yes, need=no, active=unknown
+  Attached to: #18 (Unclassified device)
