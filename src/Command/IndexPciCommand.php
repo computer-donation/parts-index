@@ -103,7 +103,7 @@ class IndexPciCommand extends AbstractIndexCommand
     {
         $items = explode(DIRECTORY_SEPARATOR, $file->getRelativePathname());
         if (8 !== count($items)) {
-            $output->writeln(sprintf('<error>Invalid file path %s. It should follow this pattern %s</error>', $file->getPathname(), '{COMPUTER TYPE}/{VENDOR}/{MODEL PREFIX}/{MODEL}/{HWID}/{OS}/{KERNEL}/{ARCH}/{PROBE ID}'));
+            $output->writeln(sprintf('<error>Invalid file path %s. Expected pattern %s</error>', $file->getPathname(), '{COMPUTER TYPE}/{VENDOR}/{MODEL PREFIX}/{MODEL}/{HWID}/{OS}/{KERNEL}/{ARCH}/{PROBE ID}'));
 
             return;
         }

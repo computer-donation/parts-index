@@ -82,7 +82,7 @@ class IndexCpuCommand extends AbstractIndexCommand
     {
         $items = explode(DIRECTORY_SEPARATOR, $file->getRelativePathname());
         if (4 !== count($items)) {
-            $output->writeln(sprintf('<error>Invalid file path %s. It should follow this pattern %s</error>', $file->getPathname(), '{VENDOR}/{MODEL PREFIX}/{MODEL NAME}/{FAMILY}-{MODEL}-{STEPPING}/{PROBE ID}'));
+            $output->writeln(sprintf('<error>Invalid file path %s. Expected pattern %s</error>', $file->getPathname(), '{VENDOR}/{MODEL PREFIX}/{MODEL NAME}/{FAMILY}-{MODEL}-{STEPPING}/{PROBE ID}'));
 
             return;
         }
