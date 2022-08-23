@@ -12,6 +12,12 @@ bin/console app:index-pci --no-debug
 symfony serve
 ```
 
+## Test
+
+```shell
+bin/phpunit
+```
+
 ## License
 
 [MIT](https://github.com/computer-donation/parts-index/blob/main/LICENSE)
