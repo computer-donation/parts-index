@@ -1,0 +1,115 @@
+# [E6DB55B378](https://github.com/linuxhw/HWInfo/blob/master/Desktop/ASRock/FM2A88M/FM2A88M%20Extreme4+/2C240BA11E40/KAOS-ROLLING/4.10.9-1/X86_64/E6DB55B378) by [Linux Hardware Project](https://github.com/linuxhw) is licensed under [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/). 
+
+61: USB 00.0: 10a00 Hub
+  [Created at usb.122]
+  Unique ID: KgLP._WUAGn1cSY8
+  Parent ID: hB6S.93uyGHD24FB
+  SysFS ID: /devices/pci0000:00/0000:00:14.5/usb9/9-0:1.0
+  SysFS BusID: 9-0:1.0
+  Hardware Class: hub
+  Model: "Linux Foundation 1.1 root hub"
+  Hotplug: USB
+  Vendor: usb 0x1d6b "Linux Foundation"
+  Device: usb 0x0001 "1.1 root hub"
+  Revision: "4.10"
+  Serial ID: --
+  Driver: "hub"
+  Driver Modules: "usbcore"
+  Speed: 12 Mbps
+  Module Alias: "usb:v1D6Bp0001d0410dc09dsc00dp00ic09isc00ip00in00"
+  Driver Info #0:
+    Driver Status: usbcore is active
+    Driver Activation Cmd: "modprobe usbcore"
+  Config Status: cfg=new, avail=yes, need=no, active=unknown
+  Attached to: #37 (USB Controller)
+
+62: USB 00.1: 10900 Printer
+  [Created at usb.122]
+  Unique ID: wilb.kZ_u24Hax33
+  Parent ID: KRJj.sdGrt+0Ng37
+  SysFS ID: /devices/pci0000:00/0000:00:10.0/usb3/3-1/3-1.7/3-1.7:1.1
+  SysFS BusID: 3-1.7:1.1
+  Hardware Class: printer
+  Model: "HP ENVY 5530 series"
+  Hotplug: USB
+  Vendor: usb 0x03f0 "HP"
+  Device: usb 0xc311 "ENVY 5530 series"
+  Revision: "1.00"
+  Serial ID: --
+  Driver: "usblp"
+  Driver Modules: "usblp"
+  Speed: 480 Mbps
+  Module Alias: "usb:v03F0pC311d0100dc00dsc00dp00ic07isc01ip02in01"
+  Driver Info #0:
+    Driver Status: usblp is active
+    Driver Activation Cmd: "modprobe usblp"
+  Config Status: cfg=new, avail=yes, need=no, active=unknown
+  Attached to: #66 (Hub)
+
+66: USB 00.0: 10a00 Hub
+  [Created at usb.122]
+  Unique ID: KRJj.sdGrt+0Ng37
+  Parent ID: uIhY._63LoM0erv2
+  SysFS ID: /devices/pci0000:00/0000:00:10.0/usb3/3-1/3-1:1.0
+  SysFS BusID: 3-1:1.0
+  Hardware Class: hub
+  Model: "Terminus FE 2.1 7-port Hub"
+  Hotplug: USB
+  Vendor: usb 0x1a40 "Terminus Technology Inc."
+  Device: usb 0x0201 "FE 2.1 7-port Hub"
+  Revision: "1.00"
+  Driver: "hub"
+  Driver Modules: "usbcore"
+  Speed: 480 Mbps
+  Module Alias: "usb:v1A40p0201d0100dc09dsc00dp02ic09isc00ip02in00"
+  Driver Info #0:
+    Driver Status: usbcore is active
+    Driver Activation Cmd: "modprobe usbcore"
+  Config Status: cfg=new, avail=yes, need=no, active=unknown
+  Attached to: #55 (Hub)
+
+67: USB 00.1: 10900 Printer
+  [Created at usb.122]
+  Unique ID: U0fP.Rw28o6FIR5A
+  Parent ID: Q0Le.DFkaVl_rzX0
+  SysFS ID: /devices/pci0000:00/0000:00:10.0/usb3/3-1/3-1.4/3-1.4.4/3-1.4.4:1.1
+  SysFS BusID: 3-1.4.4:1.1
+  Hardware Class: printer
+  Model: "Epson EPSON ET-2550 Series"
+  Hotplug: USB
+  Vendor: usb 0x04b8 "Epson"
+  Device: usb 0x1106 "EPSON ET-2550 Series"
+  Revision: "1.00"
+  Serial ID: --
+  Driver: "usblp"
+  Driver Modules: "usblp"
+  Speed: 480 Mbps
+  Module Alias: "usb:v04B8p1106d0100dc00dsc00dp00ic07isc01ip02in01"
+  Driver Info #0:
+    Driver Status: usblp is active
+    Driver Activation Cmd: "modprobe usblp"
+  Config Status: cfg=new, avail=yes, need=no, active=unknown
+  Attached to: #53 (Hub)
+
+69: USB 00.0: 10a00 Hub
+  [Created at usb.122]
+  Unique ID: k4bc.YdoZZg0c8i6
+  Parent ID: x_X+.N19tqN_IIPD
+  SysFS ID: /devices/pci0000:00/0000:00:12.2/usb1/1-0:1.0
+  SysFS BusID: 1-0:1.0
+  Hardware Class: hub
+  Model: "Linux Foundation 2.0 root hub"
+  Hotplug: USB
+  Vendor: usb 0x1d6b "Linux Foundation"
+  Device: usb 0x0002 "2.0 root hub"
+  Revision: "4.10"
+  Serial ID: --
+  Driver: "hub"
+  Driver Modules: "usbcore"
+  Speed: 480 Mbps
+  Module Alias: "usb:v1D6Bp0002d0410dc09dsc00dp00ic09isc00ip00in00"
+  Driver Info #0:
+    Driver Status: usbcore is active
+    Driver Activation Cmd: "modprobe usbcore"
+  Config Status: cfg=new, avail=yes, need=no, active=unknown
+  Attached to: #14 (USB Controller)

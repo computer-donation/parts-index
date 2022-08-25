@@ -4,6 +4,7 @@ namespace App\Tests\Command;
 
 use App\Entity\Computer;
 use App\Entity\GraphicsCard;
+use App\Entity\Printer;
 use App\Entity\Probe;
 use App\Enum\ComputerType;
 
@@ -90,6 +91,16 @@ class IndexPciCommandTest extends CommandTestCase
             'Micro-Star International Co., Ltd.',
             'ED9D8A148D'
         );
+        $this->assertPrinter(
+            'usb:03f0-c311',
+            'HP',
+            'ENVY 5530 series'
+        );
+        $this->assertPrinter(
+            'usb:04b8-1106',
+            'Epson',
+            'EPSON ET-2550 Series'
+        );
     }
 
     protected function assertMiniPcParts(): void
@@ -125,6 +136,11 @@ class IndexPciCommandTest extends CommandTestCase
             'RS880M [Mobility Radeon HD 4225/4250]',
             'Acer Incorporated [ALI]',
             '326303D482'
+        );
+        $this->assertPrinter(
+            'usb:04f9-0428',
+            'Brother Industries, Ltd',
+            'HL-L2390DW'
         );
     }
 
@@ -202,5 +218,18 @@ class IndexPciCommandTest extends CommandTestCase
         $this->assertSame($device, $graphicsCard->device);
         $this->assertSame($subVendor, $graphicsCard->subVendor);
         $this->assertSame($graphicsCard, $probe->graphicsCard);
+    }
+
+    protected function assertPrinter(string $id, string $vendor, string $device)
+    {
+        $printer = $this->entityManager
+            ->getRepository(Printer::class)
+            ->find($id)
+        ;
+
+        $this->assertInstanceOf(Printer::class, $printer);
+        $this->assertSame($id, $printer->id);
+        $this->assertSame($vendor, $printer->vendor);
+        $this->assertSame($device, $printer->device);
     }
 }

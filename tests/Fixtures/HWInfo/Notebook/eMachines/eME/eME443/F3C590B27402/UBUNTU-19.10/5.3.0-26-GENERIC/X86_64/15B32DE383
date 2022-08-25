@@ -1,0 +1,69 @@
+# [15B32DE383](https://github.com/linuxhw/HWInfo/blob/master/Notebook/eMachines/eME/eME443/F3C590B27402/UBUNTU-19.10/5.3.0-26-GENERIC/X86_64/15B32DE383) by [Linux Hardware Project](https://github.com/linuxhw) is licensed under [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/). 
+
+43: USB 00.0: 10503 USB Mouse
+  [Created at usb.122]
+  Unique ID: mZxt.gfI5BLJe0H0
+  Parent ID: uIhY.7qWCOCfUJwE
+  SysFS ID: /devices/pci0000:00/0000:00:12.0/usb3/3-2/3-2:1.0
+  SysFS BusID: 3-2:1.0
+  Hardware Class: mouse
+  Model: "China Resource Semico Usb Mouse"
+  Hotplug: USB
+  Vendor: usb 0x1a2c "China Resource Semico Co., Ltd"
+  Device: usb 0x0042 "Usb Mouse"
+  Revision: "1.10"
+  Compatible to: int 0x0200 0x0001 "Generic USB Mouse"
+  Driver: "usbhid"
+  Driver Modules: "usbhid"
+  Device File: /dev/input/mice (/dev/input/mouse0)
+  Device Number: char 13:63 (char 13:32)
+  Speed: 1.5 Mbps
+  Module Alias: "usb:v1A2Cp0042d0110dc00dsc00dp00ic03isc01ip02in00"
+  Driver Info #0:
+    XFree86 Protocol: explorerps/2
+    GPM Protocol: exps2
+  Config Status: cfg=new, avail=yes, need=no, active=unknown
+  Attached to: #36 (Hub)
+
+44: USB 00.0: 10900 Printer
+  [Created at usb.122]
+  Unique ID: ADDn.Vt5c65AIpi9
+  Parent ID: k4bc.YdoZZg0c8i6
+  SysFS ID: /devices/pci0000:00/0000:00:12.2/usb1/1-1/1-1:1.0
+  SysFS BusID: 1-1:1.0
+  Hardware Class: printer
+  Model: "Brother Industries HL-L2390DW"
+  Hotplug: USB
+  Vendor: usb 0x04f9 "Brother Industries, Ltd"
+  Device: usb 0x0428 "HL-L2390DW"
+  Revision: "1.00"
+  Serial ID: --
+  Driver: "usblp"
+  Driver Modules: "usblp"
+  Speed: 480 Mbps
+  Module Alias: "usb:v04F9p0428d0100dc00dsc00dp00ic07isc01ip02in00"
+  Driver Info #0:
+    Driver Status: usblp is active
+    Driver Activation Cmd: "modprobe usblp"
+  Config Status: cfg=new, avail=yes, need=no, active=unknown
+  Attached to: #42 (Hub)
+
+45: USB 00.0: 10a00 Hub
+  [Created at usb.122]
+  Unique ID: pBe4.3f5c44ENLJ9
+  Parent ID: 06bT.ZbgJ97dQy94
+  SysFS ID: /devices/pci0000:00/0000:00:13.2/usb2/2-0:1.0
+  SysFS BusID: 2-0:1.0
+  Hardware Class: hub
+  Model: "Linux Foundation 2.0 root hub"
+  Hotplug: USB
+  Vendor: usb 0x1d6b "Linux Foundation"
+  Device: usb 0x0002 "2.0 root hub"
+  Revision: "5.03"
+  Serial ID: --
+  Driver: "hub"
+  Driver Modules: "usbcore"
+  Speed: 480 Mbps
+  Module Alias: "usb:v1D6Bp0002d0503dc09dsc00dp00ic09isc00ip00in00"
+  Config Status: cfg=new, avail=yes, need=no, active=unknown
+  Attached to: #6 (USB Controller)
