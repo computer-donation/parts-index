@@ -4,9 +4,11 @@ namespace App\Command;
 
 use App\Entity\Computer;
 use App\Entity\GraphicsCard;
+use App\Entity\Printer;
 use App\Enum\ComputerType;
 use App\Repository\ComputerRepository;
 use App\Repository\GraphicsCardRepository;
+use App\Repository\PrinterRepository;
 use App\Repository\ProbeRepository;
 use App\Tests\Process\VoidProcess;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -32,6 +34,7 @@ class IndexPciCommand extends AbstractIndexCommand
         ProbeRepository $probeRepository,
         protected ComputerRepository $computerRepository,
         protected GraphicsCardRepository $graphicsCardRepository,
+        protected PrinterRepository $printerRepository,
         #[Autowire('%app.hwinfo_dir%')]
         protected string $hwinfoDir,
         #[Autowire('%app.hwinfo_repo%')]
@@ -76,6 +79,7 @@ class IndexPciCommand extends AbstractIndexCommand
             $flush = !($current % 100) || $current === $last;
             $this->indexComputer($file, $type, $flush, $output);
             $this->indexGraphicsCard($file, $flush);
+            $this->indexPrinters($file, $flush);
             ++$current;
         }
         $progressBar->finish();
@@ -116,6 +120,23 @@ class IndexPciCommand extends AbstractIndexCommand
             $computer->model = $model;
             $computer->addProbe($this->getProbe($probe));
             $this->computerRepository->add($computer, $flush);
+        }
+    }
+
+    protected function indexPrinters(SplFileInfo $file, bool $flush): void
+    {
+        if ($count = preg_match_all('/Hardware Class: printer.*?Vendor: usb 0x([^\s]+) "([^"]+)"\s+Device: usb 0x([^\s]+) "([^"]+)"/s', $file->getContents(), $matches)) {
+            for ($column = 0; $column < $count; ++$column) {
+                [, $vendorId, $vendor, $deviceId, $device] = array_column($matches, $column);
+                $id = "usb:$vendorId-$deviceId";
+                if (!$this->printerRepository->find($id)) {
+                    $printer = new Printer();
+                    $printer->id = $id;
+                    $printer->vendor = $vendor;
+                    $printer->device = $device;
+                    $this->printerRepository->add($printer, $flush);
+                }
+            }
         }
     }
 }
