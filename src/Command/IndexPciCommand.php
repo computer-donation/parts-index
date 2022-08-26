@@ -88,17 +88,19 @@ class IndexPciCommand extends AbstractIndexCommand
 
     protected function indexGraphicsCard(SplFileInfo $file, bool $flush): void
     {
-        if (preg_match('/Hardware Class: graphics card.*?Vendor: pci 0x([^\s]+) "([^"]+)"\s+Device: pci 0x([^\s]+) "([^"]+)"\s+SubVendor: pci 0x([^\s]+) "([^"]+)"\s+SubDevice: pci 0x([^\s]+)/s', $file->getContents(), $matches)) {
-            [, $vendorId, $vendor, $deviceId, $device, $subVendorId, $subVendor, $subDeviceId] = $matches;
-            $id = u('-')->join([$vendorId, $deviceId, $subVendorId, $subDeviceId]);
-            if (!$this->graphicsCardRepository->find($id)) {
-                $graphicsCard = new GraphicsCard();
-                $graphicsCard->id = $id;
-                $graphicsCard->vendor = $vendor;
-                $graphicsCard->device = $device;
-                $graphicsCard->subVendor = $subVendor;
-                $graphicsCard->addProbe($this->getProbe($file->getFilename()));
-                $this->graphicsCardRepository->add($graphicsCard, $flush);
+        if ($count = preg_match_all('/Hardware Class: graphics card.*?Vendor: pci 0x([^\s]+) "([^"]+)"\s+Device: pci 0x([^\s]+) "([^"]+)"\s+SubVendor: pci 0x([^\s]+) "([^"]+)"\s+SubDevice: pci 0x([^\s]+)/s', $file->getContents(), $matches)) {
+            for ($column = 0; $column < $count; ++$column) {
+                [, $vendorId, $vendor, $deviceId, $device, $subVendorId, $subVendor, $subDeviceId] = array_column($matches, $column);
+                $id = u('-')->join([$vendorId, $deviceId, $subVendorId, $subDeviceId]);
+                if (!$this->graphicsCardRepository->find($id)) {
+                    $graphicsCard = new GraphicsCard();
+                    $graphicsCard->id = $id;
+                    $graphicsCard->vendor = $vendor;
+                    $graphicsCard->device = $device;
+                    $graphicsCard->subVendor = $subVendor;
+                    $graphicsCard->addProbe($this->getProbe($file->getFilename()));
+                    $this->graphicsCardRepository->add($graphicsCard, $flush);
+                }
             }
         }
     }

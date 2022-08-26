@@ -91,6 +91,20 @@ class IndexPciCommandTest extends CommandTestCase
             'Micro-Star International Co., Ltd.',
             'ED9D8A148D'
         );
+        $this->assertGraphicsCard(
+            '10de-1201-1019-2036',
+            'nVidia Corporation',
+            'GF114 [GeForce GTX 560]',
+            'Elitegroup Computer Systems',
+            'EE8BDB8EC5'
+        );
+        $this->assertGraphicsCard(
+            '8086-0102-17aa-3070',
+            'Intel Corporation',
+            '2nd Generation Core Processor Family Integrated Graphics Controller',
+            'Lenovo',
+            'EE8BDB8EC5'
+        );
         $this->assertPrinter(
             'usb:03f0-c311',
             'HP',
@@ -217,7 +231,8 @@ class IndexPciCommandTest extends CommandTestCase
         $this->assertSame($vendor, $graphicsCard->vendor);
         $this->assertSame($device, $graphicsCard->device);
         $this->assertSame($subVendor, $graphicsCard->subVendor);
-        $this->assertSame($graphicsCard, $probe->graphicsCard);
+        $this->assertContains($graphicsCard, $probe->getGraphicsCards());
+        $this->assertContains($probe, $graphicsCard->getProbes());
     }
 
     protected function assertPrinter(string $id, string $vendor, string $device)
