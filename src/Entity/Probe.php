@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -22,7 +24,23 @@ class Probe
     #[ORM\JoinColumn(nullable: true)]
     public ?Cpu $cpu = null;
 
-    #[ORM\ManyToOne(targetEntity: GraphicsCard::class, inversedBy: 'probes')]
-    #[ORM\JoinColumn(nullable: true)]
-    public ?GraphicsCard $graphicsCard = null;
+    #[ORM\ManyToMany(targetEntity: GraphicsCard::class, inversedBy: 'probes')]
+    protected Collection $graphicsCards;
+
+    public function __construct()
+    {
+        $this->graphicsCards = new ArrayCollection();
+    }
+
+    public function getGraphicsCards(): Collection
+    {
+        return $this->graphicsCards;
+    }
+
+    public function addGraphicsCard(GraphicsCard $graphicsCard): void
+    {
+        if (!$this->graphicsCards->contains($graphicsCard)) {
+            $this->graphicsCards->add($graphicsCard);
+        }
+    }
 }

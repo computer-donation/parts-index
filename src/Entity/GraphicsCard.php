@@ -30,7 +30,7 @@ class GraphicsCard
     #[Assert\NotBlank]
     public string $device;
 
-    #[ORM\OneToMany(targetEntity: Probe::class, mappedBy: 'graphicsCard')]
+    #[ORM\ManyToMany(targetEntity: Probe::class, mappedBy: 'graphicsCards')]
     protected Collection $probes;
 
     public function __construct()
@@ -38,11 +38,16 @@ class GraphicsCard
         $this->probes = new ArrayCollection();
     }
 
+    public function getProbes(): Collection
+    {
+        return $this->probes;
+    }
+
     public function addProbe(Probe $probe): void
     {
         if (!$this->probes->contains($probe)) {
             $this->probes->add($probe);
-            $probe->graphicsCard = $this;
+            $probe->addGraphicsCard($this);
         }
     }
 }
