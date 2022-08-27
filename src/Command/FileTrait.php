@@ -2,20 +2,25 @@
 
 namespace App\Command;
 
+use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Finder\SplFileInfo;
+use Symfony\Component\Finder\Finder;
 
 trait FileTrait
 {
-    protected function getDirs(SplFileInfo $file, OutputInterface $output, string $expectedPattern): array
+    protected function browseFiles(string|array $dirs, OutputInterface $output, callable $fileCallback): void
     {
-        $dirs = explode(DIRECTORY_SEPARATOR, $file->getRelativePathname());
-        if (count(explode(DIRECTORY_SEPARATOR, $expectedPattern)) - 1 !== count($dirs)) {
-            $output->writeln(sprintf('<error>Invalid file path %s. Expected pattern %s</error>', $file->getPathname(), $expectedPattern));
-
-            return [];
+        $finder = new Finder();
+        $finder->files()->in($dirs)->notName('README.md');
+        $last = $finder->count();
+        $current = 1;
+        $progressBar = new ProgressBar($output, $last);
+        foreach ($finder as $file) {
+            $progressBar->advance();
+            $flush = !($current % 100) || $current === $last;
+            call_user_func($fileCallback, $file, $flush);
+            ++$current;
         }
-
-        return $dirs;
+        $progressBar->finish();
     }
 }

@@ -10,23 +10,19 @@ trait RepoTrait
 {
     protected ?Process $process;
 
-    abstract protected function getRepo(): string;
-
-    abstract protected function getDir(): string;
-
-    protected function updateRepository(OutputInterface $output): void
+    protected function updateRepository(string $repo, string $dir, OutputInterface $output): void
     {
         $output->writeln('Updating repository...');
-        if (!is_dir($this->getDir())) {
-            $this->cloneRepo();
+        if (!is_dir($dir)) {
+            $this->cloneRepo($repo, $dir);
         } else {
-            $this->pullRepo();
+            $this->pullRepo($dir);
         }
     }
 
-    protected function cloneRepo(): void
+    protected function cloneRepo(string $repo, string $dir): void
     {
-        $process = $this->process ?? new Process(['git', 'clone', '--progress', $this->getRepo(), $this->getDir()]);
+        $process = $this->process ?? new Process(['git', 'clone', '--progress', $repo, $dir]);
         $process->setTimeout(null);
         $process->run(function ($type, $buffer) {
             echo $buffer;
@@ -34,9 +30,9 @@ trait RepoTrait
         $this->checkExitCode($process);
     }
 
-    protected function pullRepo(): void
+    protected function pullRepo(string $dir): void
     {
-        $process = $this->process ?? new Process(['git', '-C', $this->getDir(), 'pull', '--progress']);
+        $process = $this->process ?? new Process(['git', '-C', $dir, 'pull', '--progress']);
         $process->setTimeout(null);
         $process->run(function ($type, $buffer) {
             echo $buffer;

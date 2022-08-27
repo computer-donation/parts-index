@@ -12,11 +12,9 @@ use App\Repository\ProbeRepository;
 use App\Tests\Process\VoidProcess;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
-use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\Process\Process;
 
@@ -24,13 +22,14 @@ use function Symfony\Component\String\u;
 
 #[AsCommand(
     name: 'app:index-pci',
-    description: 'Lookup github repository for pci devices, create if not exist.',
+    description: 'Lookup github repository for computers and pci devices, create if not exist.',
     hidden: false
 )]
 class IndexPciCommand extends Command
 {
     use RepoTrait;
     use ProbeTrait;
+    use FileTrait;
 
     public function __construct(
         protected ProbeRepository $probeRepository,
@@ -47,47 +46,33 @@ class IndexPciCommand extends Command
         parent::__construct();
     }
 
-    protected function getDir(): string
-    {
-        return $this->hwinfoDir;
-    }
-
-    protected function getRepo(): string
-    {
-        return $this->hwinfoRepo;
-    }
-
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->updateRepository($output);
+        $this->updateRepository($this->hwinfoRepo, $this->hwinfoDir, $output);
         foreach (ComputerType::cases() as $type) {
             $this->indexPciDevices($type, $output);
         }
-        $output->writeln('Indexed all pci devices!');
+        $output->writeln('Indexed all computers and pci devices!');
 
         return Command::SUCCESS;
     }
 
     protected function indexPciDevices(ComputerType $type, OutputInterface $output): void
     {
-        $output->writeln(sprintf('Indexing pci devices for type %s...', $type->value));
-        $finder = new Finder();
-        $finder->files()->in($this->getDir().DIRECTORY_SEPARATOR.$type->value);
-        $last = $finder->count();
-        $current = 1;
-        $progressBar = new ProgressBar($output, $last);
-        foreach ($finder as $file) {
-            $progressBar->advance();
-            $flush = !($current % 100) || $current === $last;
-            $this->indexGraphicsCard($file, $flush);
-            $this->indexPrinters($file, $flush);
-            ++$current;
-        }
-        $progressBar->finish();
+        $output->writeln(sprintf('Indexing computers and pci devices for type %s...', $type->value));
+        $this->browseFiles(
+            $this->hwinfoDir.DIRECTORY_SEPARATOR.$type->value,
+            $output,
+            function (SplFileInfo $file, bool $flush): void {
+                $this->indexGraphicsCard($file);
+                $this->indexPrinters($file);
+                $flush && $this->printerRepository->flush(); // Doesn't matter which repository flush the changes
+            }
+        );
         $output->writeln(' Finished!');
     }
 
-    protected function indexGraphicsCard(SplFileInfo $file, bool $flush): void
+    protected function indexGraphicsCard(SplFileInfo $file): void
     {
         if ($count = preg_match_all('/Hardware Class: graphics card.*?Vendor: pci 0x([^\s]+) "([^"]+)"\s+Device: pci 0x([^\s]+) "([^"]+)"\s+SubVendor: pci 0x([^\s]+) "([^"]+)"\s+SubDevice: pci 0x([^\s]+)/s', $file->getContents(), $matches)) {
             for ($column = 0; $column < $count; ++$column) {
@@ -100,13 +85,13 @@ class IndexPciCommand extends Command
                     $graphicsCard->device = $device;
                     $graphicsCard->subVendor = $subVendor;
                     $graphicsCard->addProbe($this->getProbe($file->getFilename()));
-                    $this->graphicsCardRepository->add($graphicsCard, $flush);
+                    $this->graphicsCardRepository->add($graphicsCard);
                 }
             }
         }
     }
 
-    protected function indexPrinters(SplFileInfo $file, bool $flush): void
+    protected function indexPrinters(SplFileInfo $file): void
     {
         if ($count = preg_match_all('/Hardware Class: printer.*?Vendor: usb 0x([^\s]+) "([^"]+)"\s+Device: usb 0x([^\s]+) "([^"]+)"/s', $file->getContents(), $matches)) {
             for ($column = 0; $column < $count; ++$column) {
@@ -117,7 +102,7 @@ class IndexPciCommand extends Command
                     $printer->id = $id;
                     $printer->vendor = $vendor;
                     $printer->device = $device;
-                    $this->printerRepository->add($printer, $flush);
+                    $this->printerRepository->add($printer);
                 }
             }
         }

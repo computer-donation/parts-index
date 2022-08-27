@@ -16,14 +16,14 @@ class IndexPciCommandTest extends CommandTestCase
     protected function assertOutput(string $output): void
     {
         $this->assertStringContainsString('Updating repository...', $output);
-        $this->assertStringContainsString('Indexing pci devices for type All In One...', $output);
-        $this->assertStringContainsString('Indexing pci devices for type Convertible...', $output);
-        $this->assertStringContainsString('Indexing pci devices for type Desktop...', $output);
-        $this->assertStringContainsString('Indexing pci devices for type Mini Pc...', $output);
-        $this->assertStringContainsString('Indexing pci devices for type Notebook...', $output);
-        $this->assertStringContainsString('Indexing pci devices for type Server...', $output);
-        $this->assertStringContainsString('Indexing pci devices for type Stick Pc...', $output);
-        $this->assertStringContainsString('Indexed all pci devices!', $output);
+        $this->assertStringContainsString('Indexing computers and pci devices for type All In One...', $output);
+        $this->assertStringContainsString('Indexing computers and pci devices for type Convertible...', $output);
+        $this->assertStringContainsString('Indexing computers and pci devices for type Desktop...', $output);
+        $this->assertStringContainsString('Indexing computers and pci devices for type Mini Pc...', $output);
+        $this->assertStringContainsString('Indexing computers and pci devices for type Notebook...', $output);
+        $this->assertStringContainsString('Indexing computers and pci devices for type Server...', $output);
+        $this->assertStringContainsString('Indexing computers and pci devices for type Stick Pc...', $output);
+        $this->assertStringContainsString('Indexed all computers and pci devices!', $output);
     }
 
     protected function assertParts(): void

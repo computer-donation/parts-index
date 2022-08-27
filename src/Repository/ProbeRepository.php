@@ -21,12 +21,8 @@ class ProbeRepository extends ServiceEntityRepository
         parent::__construct($registry, Probe::class);
     }
 
-    public function add(Probe $entity, bool $flush = false): void
+    public function add(Probe $entity): void
     {
         $this->getEntityManager()->persist($entity);
-
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
     }
 }

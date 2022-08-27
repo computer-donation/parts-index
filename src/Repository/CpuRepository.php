@@ -16,19 +16,16 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class CpuRepository extends ServiceEntityRepository
 {
+    use FlushTrait;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Cpu::class);
     }
 
-    public function add(Cpu $entity, bool $flush = false): void
+    public function add(Cpu $entity): void
     {
         $this->getEntityManager()->persist($entity);
-
-        if ($flush) {
-            $this->getEntityManager()->flush();
-            $this->getEntityManager()->clear();
-        }
     }
 
     public function has(string $id): bool

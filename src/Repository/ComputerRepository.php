@@ -16,24 +16,26 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class ComputerRepository extends ServiceEntityRepository
 {
+    use FlushTrait;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Computer::class);
     }
 
-    public function add(Computer $entity, bool $flush = false): void
+    public function add(Computer $entity): void
     {
         $this->getEntityManager()->persist($entity);
-
-        if ($flush) {
-            $this->getEntityManager()->flush();
-            $this->getEntityManager()->clear();
-        }
     }
 
     public function has(string $id): bool
     {
         return $this->getEntityManager()->getUnitOfWork()->tryGetById($id, Computer::class) ||
             $this->count(['id' => $id]);
+    }
+
+    public function reference(string $id): ?Computer
+    {
+        return $this->getEntityManager()->getReference(Computer::class, $id);
     }
 }

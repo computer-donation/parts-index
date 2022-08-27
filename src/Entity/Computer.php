@@ -34,6 +34,10 @@ class Computer
     #[ORM\OneToMany(targetEntity: Probe::class, mappedBy: 'computer')]
     public Collection $probes;
 
+    #[ORM\ManyToOne(targetEntity: Motherboard::class, inversedBy: 'computers')]
+    #[ORM\JoinColumn(nullable: true)]
+    public ?Motherboard $motherboard = null;
+
     public function __construct()
     {
         $this->probes = new ArrayCollection();
