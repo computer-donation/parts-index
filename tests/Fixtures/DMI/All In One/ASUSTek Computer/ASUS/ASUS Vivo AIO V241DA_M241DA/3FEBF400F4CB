@@ -1,0 +1,16 @@
+# [3FEBF400F4CB](https://github.com/linuxhw/DMI/blob/master/All%20In%20One/ASUSTek%20Computer/ASUS/ASUS%20Vivo%20AIO%20V241DA_M241DA/3FEBF400F4CB) by [Linux Hardware Project](https://github.com/linuxhw) is licensed under [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/). 
+
+Handle 0x0002, DMI type 2, 15 bytes
+Base Board Information
+	Manufacturer: ASUSTeK COMPUTER INC.
+	Product Name: V241DA
+	Version: 1.0       
+	Serial Number: --
+	Asset Tag: --
+	Features:
+		Board is a hosting board
+		Board is replaceable
+	Location In Chassis: MIDDLE              
+	Chassis Handle: 0x0003
+	Type: Motherboard
+	Contained Object Handles: 0

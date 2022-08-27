@@ -24,19 +24,23 @@ use function Symfony\Component\String\u;
     description: 'Lookup github repository for cpu, create if not exist.',
     hidden: false
 )]
-class IndexCpuCommand extends AbstractIndexCommand
+class IndexCpuCommand extends Command
 {
+    use RepoTrait;
+    use ProbeTrait;
+    use FileTrait;
+
     public function __construct(
-        ProbeRepository $probeRepository,
+        protected ProbeRepository $probeRepository,
         protected CpuRepository $cpuRepository,
         #[Autowire('%app.lscpu_dir%')]
         protected string $lscpuDir,
         #[Autowire('%app.lscpu_repo%')]
         protected string $lscpuRepo,
         #[Autowire(service: VoidProcess::class)]
-        ?Process $process = null
+        protected ?Process $process = null
     ) {
-        parent::__construct($probeRepository, $process);
+        parent::__construct();
     }
 
     protected function getDir(): string
@@ -64,7 +68,7 @@ class IndexCpuCommand extends AbstractIndexCommand
     {
         $output->writeln(sprintf('Indexing cpus for vendor %s...', $vendor->value));
         $finder = new Finder();
-        $finder->files()->in($this->lscpuDir.DIRECTORY_SEPARATOR.$vendor->value);
+        $finder->files()->in($this->getDir().DIRECTORY_SEPARATOR.$vendor->value);
         $last = $finder->count();
         $current = 1;
         $progressBar = new ProgressBar($output, $last);
@@ -80,15 +84,13 @@ class IndexCpuCommand extends AbstractIndexCommand
 
     protected function indexCpu(SplFileInfo $file, CpuVendor $vendor, bool $flush, OutputInterface $output): void
     {
-        $items = explode(DIRECTORY_SEPARATOR, $file->getRelativePathname());
-        if (4 !== count($items)) {
-            $output->writeln(sprintf('<error>Invalid file path %s. Expected pattern %s</error>', $file->getPathname(), '{VENDOR}/{MODEL PREFIX}/{MODEL NAME}/{FAMILY}-{MODEL}-{STEPPING}/{PROBE ID}'));
-
+        $dirs = explode(DIRECTORY_SEPARATOR, $file->getRelativePathname());
+        if (!$dirs = $this->getDirs($file, $output, '{VENDOR}/{MODEL PREFIX}/{MODEL NAME}/{FAMILY}-{MODEL}-{STEPPING}/{PROBE ID}')) {
             return;
         }
-        [, $model, $code, $probe] = $items;
+        [, $model, $code, $probe] = $dirs;
         $id = u('-')->join([$vendor->value, $code, $model])->lower()->replace(' ', '-');
-        if (!$this->cpuRepository->find($id)) {
+        if (!$this->cpuRepository->has($id)) {
             $cpu = new Cpu();
             $cpu->id = $id;
             $cpu->vendor = $vendor;

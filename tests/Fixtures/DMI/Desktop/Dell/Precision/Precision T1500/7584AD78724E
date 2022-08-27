@@ -1,0 +1,16 @@
+# [7584AD78724E](https://github.com/linuxhw/DMI/blob/master/Desktop/Dell/Precision/Precision%20T1500/7584AD78724E) by [Linux Hardware Project](https://github.com/linuxhw) is licensed under [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/).
+
+Handle 0x0002, DMI type 2, 15 bytes
+Base Board Information
+	Manufacturer: Dell Inc.
+	Product Name: 0XC7MM
+	Version: A01
+	Serial Number: --
+	Asset Tag: --
+	97946E993916094B22613E03B8339091
+		Board is a hosting board
+		Board is replaceable
+	Location In Chassis:  
+	Chassis Handle: 0x0003
+	Type: Motherboard
+	Contained Object Handles: 0

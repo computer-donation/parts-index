@@ -30,4 +30,10 @@ class CpuRepository extends ServiceEntityRepository
             $this->getEntityManager()->clear();
         }
     }
+
+    public function has(string $id): bool
+    {
+        return $this->getEntityManager()->getUnitOfWork()->tryGetById($id, Cpu::class) ||
+            $this->count(['id' => $id]);
+    }
 }

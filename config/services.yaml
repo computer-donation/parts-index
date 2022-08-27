@@ -8,6 +8,10 @@ parameters:
     app.lscpu_repo: 'https://github.com/linuxhw/LsCPU.git'
     app.hwinfo_dir: '%kernel.project_dir%/var/repos/HWInfo'
     app.hwinfo_repo: 'https://github.com/linuxhw/HWInfo.git'
+    app.dmi_dir: '%kernel.project_dir%/var/repos/DMI'
+    app.dmi_repo: 'https://github.com/linuxhw/DMI.git'
+    app.sensors_dir: '%kernel.project_dir%/var/repos/Sensors'
+    app.sensors_repo: 'https://github.com/linuxhw/Sensors.git'
 
 services:
     # default configuration for services in *this* file
@@ -31,3 +35,5 @@ when@test:
     parameters:
         app.lscpu_dir: '%kernel.project_dir%/tests/Fixtures/LsCPU'
         app.hwinfo_dir: '%kernel.project_dir%/tests/Fixtures/HWInfo'
+        app.dmi_dir: '%kernel.project_dir%/tests/Fixtures/DMI'
+        app.sensors_dir: '%kernel.project_dir%/tests/Fixtures/Sensors'
