@@ -2,6 +2,7 @@
 
 namespace App\Command;
 
+use App\Entity\Computer;
 use App\Entity\GraphicsCard;
 use App\Entity\Printer;
 use App\Enum\ComputerType;
@@ -12,11 +13,9 @@ use App\Repository\ProbeRepository;
 use App\Tests\Process\VoidProcess;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
-use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\Process\Process;
 
@@ -24,13 +23,14 @@ use function Symfony\Component\String\u;
 
 #[AsCommand(
     name: 'app:index-pci',
-    description: 'Lookup github repository for pci devices, create if not exist.',
+    description: 'Lookup github repository for computers and pci devices, create if not exist.',
     hidden: false
 )]
 class IndexPciCommand extends Command
 {
     use RepoTrait;
     use ProbeTrait;
+    use FileTrait;
 
     public function __construct(
         protected ProbeRepository $probeRepository,
@@ -47,44 +47,45 @@ class IndexPciCommand extends Command
         parent::__construct();
     }
 
-    protected function getDir(): string
-    {
-        return $this->hwinfoDir;
-    }
-
-    protected function getRepo(): string
-    {
-        return $this->hwinfoRepo;
-    }
-
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->updateRepository($output);
+        $this->updateRepository($this->hwinfoRepo, $this->hwinfoDir, $output);
         foreach (ComputerType::cases() as $type) {
             $this->indexPciDevices($type, $output);
         }
-        $output->writeln('Indexed all pci devices!');
+        $output->writeln('Indexed all computers and pci devices!');
 
         return Command::SUCCESS;
     }
 
     protected function indexPciDevices(ComputerType $type, OutputInterface $output): void
     {
-        $output->writeln(sprintf('Indexing pci devices for type %s...', $type->value));
-        $finder = new Finder();
-        $finder->files()->in($this->getDir().DIRECTORY_SEPARATOR.$type->value);
-        $last = $finder->count();
-        $current = 1;
-        $progressBar = new ProgressBar($output, $last);
-        foreach ($finder as $file) {
-            $progressBar->advance();
-            $flush = !($current % 100) || $current === $last;
-            $this->indexGraphicsCard($file, $flush);
-            $this->indexPrinters($file, $flush);
-            ++$current;
-        }
-        $progressBar->finish();
+        $output->writeln(sprintf('Indexing computers and pci devices for type %s...', $type->value));
+        $this->browseFiles(
+            $this->hwinfoDir.DIRECTORY_SEPARATOR.$type->value,
+            $output,
+            function (SplFileInfo $file, bool $flush) use ($type): void {
+                $this->indexComputer($file, $type, $flush);
+                $this->indexGraphicsCard($file, $flush);
+                $this->indexPrinters($file, $flush);
+            }
+        );
         $output->writeln(' Finished!');
+    }
+
+    protected function indexComputer(SplFileInfo $file, ComputerType $type, bool $flush): void
+    {
+        // {VENDOR}/{MODEL PREFIX}/{MODEL}/{HWID}/{OS}/{KERNEL}/{ARCH}/{PROBE ID}
+        [$vendor, , $model, $hwid] = explode(DIRECTORY_SEPARATOR, $file->getRelativePathname());
+        if (!$this->computerRepository->find($hwid)) {
+            $computer = new Computer();
+            $computer->id = $hwid;
+            $computer->type = $type;
+            $computer->vendor = $vendor;
+            $computer->model = $model;
+            $computer->addProbe($this->getProbe($file->getFilename()));
+            $this->computerRepository->add($computer, $flush);
+        }
     }
 
     protected function indexGraphicsCard(SplFileInfo $file, bool $flush): void

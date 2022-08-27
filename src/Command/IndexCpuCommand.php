@@ -9,11 +9,9 @@ use App\Repository\ProbeRepository;
 use App\Tests\Process\VoidProcess;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
-use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\Process\Process;
 
@@ -43,19 +41,9 @@ class IndexCpuCommand extends Command
         parent::__construct();
     }
 
-    protected function getDir(): string
-    {
-        return $this->lscpuDir;
-    }
-
-    protected function getRepo(): string
-    {
-        return $this->lscpuRepo;
-    }
-
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->updateRepository($output);
+        $this->updateRepository($this->lscpuRepo, $this->lscpuDir, $output);
         foreach (CpuVendor::cases() as $vendor) {
             $this->indexCpus($vendor, $output);
         }
@@ -67,28 +55,20 @@ class IndexCpuCommand extends Command
     protected function indexCpus(CpuVendor $vendor, OutputInterface $output): void
     {
         $output->writeln(sprintf('Indexing cpus for vendor %s...', $vendor->value));
-        $finder = new Finder();
-        $finder->files()->in($this->getDir().DIRECTORY_SEPARATOR.$vendor->value);
-        $last = $finder->count();
-        $current = 1;
-        $progressBar = new ProgressBar($output, $last);
-        foreach ($finder as $file) {
-            $progressBar->advance();
-            $flush = !($current % 100) || $current === $last;
-            $this->indexCpu($file, $vendor, $flush, $output);
-            ++$current;
-        }
-        $progressBar->finish();
+        $this->browseFiles(
+            $this->lscpuDir.DIRECTORY_SEPARATOR.$vendor->value,
+            $output,
+            function (SplFileInfo $file, bool $flush) use ($vendor): void {
+                $this->indexCpu($file, $vendor, $flush);
+            }
+        );
         $output->writeln(' Finished!');
     }
 
-    protected function indexCpu(SplFileInfo $file, CpuVendor $vendor, bool $flush, OutputInterface $output): void
+    protected function indexCpu(SplFileInfo $file, CpuVendor $vendor, bool $flush): void
     {
-        $dirs = explode(DIRECTORY_SEPARATOR, $file->getRelativePathname());
-        if (!$dirs = $this->getDirs($file, $output, '{VENDOR}/{MODEL PREFIX}/{MODEL NAME}/{FAMILY}-{MODEL}-{STEPPING}/{PROBE ID}')) {
-            return;
-        }
-        [, $model, $code, $probe] = $dirs;
+        // {MODEL PREFIX}/{MODEL NAME}/{FAMILY}-{MODEL}-{STEPPING}/{PROBE ID}
+        [, $model, $code, $probe] = explode(DIRECTORY_SEPARATOR, $file->getRelativePathname());
         $id = u('-')->join([$vendor->value, $code, $model])->lower()->replace(' ', '-');
         if (!$this->cpuRepository->has($id)) {
             $cpu = new Cpu();

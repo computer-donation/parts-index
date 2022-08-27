@@ -28,6 +28,7 @@ class IndexComputerCommandTest extends CommandTestCase
 
     protected function assertParts(): void
     {
+        // Sensors dir
         $this->assertComputer(
             '65DABC6ADAB3',
             ComputerType::ALL_IN_ONE,
@@ -76,6 +77,56 @@ class IndexComputerCommandTest extends CommandTestCase
             'Lenovo',
             'IdeaCentre Stick 300-01IBY 90ER0005RN',
             '28B902C9B7'
+        );
+        // HWInfo dir
+        $this->assertComputer(
+            '2EB49941386F',
+            ComputerType::ALL_IN_ONE,
+            'Dell',
+            'XPS 7760 AIO',
+            '071C584451'
+        );
+        $this->assertComputer(
+            '7B4A40B5DA5D',
+            ComputerType::CONVERTIBLE,
+            'Hewlett-Packard',
+            'Spectre x360 Convertible 13',
+            '4D1880C589'
+        );
+        $this->assertComputer(
+            '15D24AEF63B0',
+            ComputerType::DESKTOP,
+            'ASUSTek Computer',
+            'M4A78 PLUS',
+            'ED9D8A148D'
+        );
+        $this->assertComputer(
+            '078C47E8922E',
+            ComputerType::MINI_PC,
+            'Intel',
+            'NUC6CAYB J23203-402',
+            '4A3BB182A0'
+        );
+        $this->assertComputer(
+            'CDA0D5D5D8AC',
+            ComputerType::NOTEBOOK,
+            'Acer',
+            'Aspire 4540',
+            '326303D482'
+        );
+        $this->assertComputer(
+            '306C153487E1',
+            ComputerType::SERVER,
+            'Oracle',
+            'Sun Fire X4270 M2 SERVER',
+            'F048AD8494'
+        );
+        $this->assertComputer(
+            'A11940EE2CBD',
+            ComputerType::STICK_PC,
+            'AWOW',
+            'Others',
+            '50585544F9'
         );
     }
 
