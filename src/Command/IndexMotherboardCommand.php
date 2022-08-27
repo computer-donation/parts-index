@@ -62,13 +62,14 @@ class IndexMotherboardCommand extends Command
             $this->dmiDir.DIRECTORY_SEPARATOR.$type->value,
             $output,
             function (SplFileInfo $file, bool $flush) use ($output): void {
-                $this->indexMotherboard($file, $flush, $output);
+                $this->indexMotherboard($file, $output);
+                $flush && $this->motherboardRepository->flush();
             }
         );
         $output->writeln(' Finished!');
     }
 
-    protected function indexMotherboard(SplFileInfo $file, bool $flush, OutputInterface $output): void
+    protected function indexMotherboard(SplFileInfo $file, OutputInterface $output): void
     {
         if (!$this->computerRepository->has($file->getFilename())) {
             $output->writeln(sprintf('<error>Computer %s not found</error>', $file->getFilename()));
@@ -85,7 +86,7 @@ class IndexMotherboardCommand extends Command
                 $motherboard->productName = $productName;
                 $motherboard->version = trim($version);
                 $motherboard->addComputer($this->computerRepository->reference($file->getFilename()));
-                $this->motherboardRepository->add($motherboard, $flush);
+                $this->motherboardRepository->add($motherboard);
             }
         }
     }

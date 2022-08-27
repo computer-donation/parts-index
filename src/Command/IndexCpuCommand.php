@@ -59,13 +59,14 @@ class IndexCpuCommand extends Command
             $this->lscpuDir.DIRECTORY_SEPARATOR.$vendor->value,
             $output,
             function (SplFileInfo $file, bool $flush) use ($vendor): void {
-                $this->indexCpu($file, $vendor, $flush);
+                $this->indexCpu($file, $vendor);
+                $flush && $this->cpuRepository->flush();
             }
         );
         $output->writeln(' Finished!');
     }
 
-    protected function indexCpu(SplFileInfo $file, CpuVendor $vendor, bool $flush): void
+    protected function indexCpu(SplFileInfo $file, CpuVendor $vendor): void
     {
         // {MODEL PREFIX}/{MODEL NAME}/{FAMILY}-{MODEL}-{STEPPING}/{PROBE ID}
         [, $model, $code, $probe] = explode(DIRECTORY_SEPARATOR, $file->getRelativePathname());
@@ -76,7 +77,7 @@ class IndexCpuCommand extends Command
             $cpu->vendor = $vendor;
             $cpu->model = $model;
             $cpu->addProbe($this->getProbe($probe));
-            $this->cpuRepository->add($cpu, $flush);
+            $this->cpuRepository->add($cpu);
         }
     }
 }

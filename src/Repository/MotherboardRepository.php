@@ -21,14 +21,15 @@ class MotherboardRepository extends ServiceEntityRepository
         parent::__construct($registry, Motherboard::class);
     }
 
-    public function add(Motherboard $entity, bool $flush = false): void
+    public function add(Motherboard $entity): void
     {
         $this->getEntityManager()->persist($entity);
+    }
 
-        if ($flush) {
-            $this->getEntityManager()->flush();
-            $this->getEntityManager()->clear();
-        }
+    public function flush(): void
+    {
+        $this->getEntityManager()->flush();
+        $this->getEntityManager()->clear();
     }
 
     public function has(string $id): bool

@@ -21,14 +21,15 @@ class GraphicsCardRepository extends ServiceEntityRepository
         parent::__construct($registry, GraphicsCard::class);
     }
 
-    public function add(GraphicsCard $entity, bool $flush = false): void
+    public function add(GraphicsCard $entity): void
     {
         $this->getEntityManager()->persist($entity);
+    }
 
-        if ($flush) {
-            $this->getEntityManager()->flush();
-            $this->getEntityManager()->clear();
-        }
+    public function flush(): void
+    {
+        $this->getEntityManager()->flush();
+        $this->getEntityManager()->clear();
     }
 
     public function has(string $id): bool

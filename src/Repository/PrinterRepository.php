@@ -21,14 +21,15 @@ class PrinterRepository extends ServiceEntityRepository
         parent::__construct($registry, Printer::class);
     }
 
-    public function add(Printer $entity, bool $flush = false): void
+    public function add(Printer $entity): void
     {
         $this->getEntityManager()->persist($entity);
+    }
 
-        if ($flush) {
-            $this->getEntityManager()->flush();
-            $this->getEntityManager()->clear();
-        }
+    public function flush(): void
+    {
+        $this->getEntityManager()->flush();
+        $this->getEntityManager()->clear();
     }
 
     public function has(string $id): bool

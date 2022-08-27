@@ -21,14 +21,15 @@ class ComputerRepository extends ServiceEntityRepository
         parent::__construct($registry, Computer::class);
     }
 
-    public function add(Computer $entity, bool $flush = false): void
+    public function add(Computer $entity): void
     {
         $this->getEntityManager()->persist($entity);
+    }
 
-        if ($flush) {
-            $this->getEntityManager()->flush();
-            $this->getEntityManager()->clear();
-        }
+    public function flush(): void
+    {
+        $this->getEntityManager()->flush();
+        $this->getEntityManager()->clear();
     }
 
     public function has(string $id): bool

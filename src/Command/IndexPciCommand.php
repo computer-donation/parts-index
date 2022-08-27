@@ -2,7 +2,6 @@
 
 namespace App\Command;
 
-use App\Entity\Computer;
 use App\Entity\GraphicsCard;
 use App\Entity\Printer;
 use App\Enum\ComputerType;
@@ -64,31 +63,16 @@ class IndexPciCommand extends Command
         $this->browseFiles(
             $this->hwinfoDir.DIRECTORY_SEPARATOR.$type->value,
             $output,
-            function (SplFileInfo $file, bool $flush) use ($type): void {
-                $this->indexComputer($file, $type, $flush);
-                $this->indexGraphicsCard($file, $flush);
-                $this->indexPrinters($file, $flush);
+            function (SplFileInfo $file, bool $flush): void {
+                $this->indexGraphicsCard($file);
+                $this->indexPrinters($file);
+                $flush && $this->printerRepository->flush(); // Doesn't matter which repository flush the changes
             }
         );
         $output->writeln(' Finished!');
     }
 
-    protected function indexComputer(SplFileInfo $file, ComputerType $type, bool $flush): void
-    {
-        // {VENDOR}/{MODEL PREFIX}/{MODEL}/{HWID}/{OS}/{KERNEL}/{ARCH}/{PROBE ID}
-        [$vendor, , $model, $hwid] = explode(DIRECTORY_SEPARATOR, $file->getRelativePathname());
-        if (!$this->computerRepository->find($hwid)) {
-            $computer = new Computer();
-            $computer->id = $hwid;
-            $computer->type = $type;
-            $computer->vendor = $vendor;
-            $computer->model = $model;
-            $computer->addProbe($this->getProbe($file->getFilename()));
-            $this->computerRepository->add($computer, $flush);
-        }
-    }
-
-    protected function indexGraphicsCard(SplFileInfo $file, bool $flush): void
+    protected function indexGraphicsCard(SplFileInfo $file): void
     {
         if ($count = preg_match_all('/Hardware Class: graphics card.*?Vendor: pci 0x([^\s]+) "([^"]+)"\s+Device: pci 0x([^\s]+) "([^"]+)"\s+SubVendor: pci 0x([^\s]+) "([^"]+)"\s+SubDevice: pci 0x([^\s]+)/s', $file->getContents(), $matches)) {
             for ($column = 0; $column < $count; ++$column) {
@@ -101,13 +85,13 @@ class IndexPciCommand extends Command
                     $graphicsCard->device = $device;
                     $graphicsCard->subVendor = $subVendor;
                     $graphicsCard->addProbe($this->getProbe($file->getFilename()));
-                    $this->graphicsCardRepository->add($graphicsCard, $flush);
+                    $this->graphicsCardRepository->add($graphicsCard);
                 }
             }
         }
     }
 
-    protected function indexPrinters(SplFileInfo $file, bool $flush): void
+    protected function indexPrinters(SplFileInfo $file): void
     {
         if ($count = preg_match_all('/Hardware Class: printer.*?Vendor: usb 0x([^\s]+) "([^"]+)"\s+Device: usb 0x([^\s]+) "([^"]+)"/s', $file->getContents(), $matches)) {
             for ($column = 0; $column < $count; ++$column) {
@@ -118,7 +102,7 @@ class IndexPciCommand extends Command
                     $printer->id = $id;
                     $printer->vendor = $vendor;
                     $printer->device = $device;
-                    $this->printerRepository->add($printer, $flush);
+                    $this->printerRepository->add($printer);
                 }
             }
         }

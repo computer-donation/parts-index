@@ -65,13 +65,14 @@ class IndexComputerCommand extends Command
             ],
             $output,
             function (SplFileInfo $file, bool $flush) use ($type): void {
-                $this->indexComputer($file, $type, $flush);
+                $this->indexComputer($file, $type);
+                $flush && $this->computerRepository->flush();
             }
         );
         $output->writeln(' Finished!');
     }
 
-    protected function indexComputer(SplFileInfo $file, ComputerType $type, bool $flush): void
+    protected function indexComputer(SplFileInfo $file, ComputerType $type): void
     {
         // {VENDOR}/{MODEL PREFIX}/{MODEL}/{HWID}/{OS}/{KERNEL}/{ARCH}/{PROBE ID}
         [$vendor, , $model, $hwid] = explode(DIRECTORY_SEPARATOR, $file->getRelativePathname());
@@ -82,7 +83,7 @@ class IndexComputerCommand extends Command
             $computer->vendor = $vendor;
             $computer->model = $model;
             $computer->addProbe($this->getProbe($file->getFilename()));
-            $this->computerRepository->add($computer, $flush);
+            $this->computerRepository->add($computer);
         }
     }
 }

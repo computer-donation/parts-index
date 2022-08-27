@@ -14,7 +14,7 @@ trait ProbeTrait
         if (!$probe = $this->probeRepository->find($id)) {
             $probe = new Probe();
             $probe->id = $id;
-            $this->probeRepository->add($probe, true);
+            $this->probeRepository->add($probe);
         }
 
         return $probe;
