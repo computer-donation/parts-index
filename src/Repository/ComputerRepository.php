@@ -16,6 +16,8 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class ComputerRepository extends ServiceEntityRepository
 {
+    use FlushTrait;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Computer::class);
@@ -24,12 +26,6 @@ class ComputerRepository extends ServiceEntityRepository
     public function add(Computer $entity): void
     {
         $this->getEntityManager()->persist($entity);
-    }
-
-    public function flush(): void
-    {
-        $this->getEntityManager()->flush();
-        $this->getEntityManager()->clear();
     }
 
     public function has(string $id): bool
