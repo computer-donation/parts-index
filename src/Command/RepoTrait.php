@@ -2,21 +2,13 @@
 
 namespace App\Command;
 
-use App\Entity\Probe;
-use App\Repository\ProbeRepository;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
-abstract class AbstractIndexCommand extends Command
+trait RepoTrait
 {
-    public function __construct(
-        protected ProbeRepository $probeRepository,
-        protected ?Process $process = null
-    ) {
-        parent::__construct();
-    }
+    protected ?Process $process;
 
     abstract protected function getRepo(): string;
 
@@ -57,16 +49,5 @@ abstract class AbstractIndexCommand extends Command
         if (!$process->isSuccessful()) {
             throw new ProcessFailedException($process);
         }
-    }
-
-    protected function getProbe(string $id): Probe
-    {
-        if (!$probe = $this->probeRepository->find($id)) {
-            $probe = new Probe();
-            $probe->id = $id;
-            $this->probeRepository->add($probe, true);
-        }
-
-        return $probe;
     }
 }

@@ -30,4 +30,10 @@ class GraphicsCardRepository extends ServiceEntityRepository
             $this->getEntityManager()->clear();
         }
     }
+
+    public function has(string $id): bool
+    {
+        return $this->getEntityManager()->getUnitOfWork()->tryGetById($id, GraphicsCard::class) ||
+            $this->count(['id' => $id]);
+    }
 }

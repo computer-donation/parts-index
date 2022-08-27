@@ -1,0 +1,16 @@
+# [3451354907A7](https://github.com/linuxhw/DMI/blob/master/Convertible/Acer/Nitro/Nitro%20NP515-51/3451354907A7) by [Linux Hardware Project](https://github.com/linuxhw) is licensed under [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/).
+
+Handle 0x0002, DMI type 2, 17 bytes
+Base Board Information
+	Manufacturer: KBL
+	Product Name: Buzz_KL
+	Version: V1.07
+	Serial Number: --
+	Asset Tag: --
+	97946E993916094B22613E03B8339091
+		Board is a hosting board
+		Board is replaceable
+	Location In Chassis: Type2 - Board Chassis Location  
+	Chassis Handle: 0x0003
+	Type: Motherboard
+	Contained Object Handles: 0

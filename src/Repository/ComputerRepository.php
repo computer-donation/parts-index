@@ -30,4 +30,10 @@ class ComputerRepository extends ServiceEntityRepository
             $this->getEntityManager()->clear();
         }
     }
+
+    public function has(string $id): bool
+    {
+        return $this->getEntityManager()->getUnitOfWork()->tryGetById($id, Computer::class) ||
+            $this->count(['id' => $id]);
+    }
 }
