@@ -74,10 +74,10 @@ class IndexPciCommand extends Command
 
     protected function indexGraphicsCard(SplFileInfo $file): void
     {
-        if ($count = preg_match_all('/Hardware Class: graphics card.*?Vendor: pci 0x([^\s]+) "([^"]+)"\s+Device: pci 0x([^\s]+) "([^"]+)"\s+SubVendor: pci 0x([^\s]+) "([^"]+)"\s+SubDevice: pci 0x([^\s]+)/s', $file->getContents(), $matches)) {
+        if ($count = preg_match_all('/Hardware Class: graphics card.*?Vendor: pci 0x([^\s]+) "([^"]+)"\s+Device: pci 0x([^\s]+) "([^"]+)"\s+(SubVendor: pci 0x([^\s]+) "([^"]+)"\s+SubDevice: pci 0x([^\s]+))?/s', $file->getContents(), $matches)) {
             for ($column = 0; $column < $count; ++$column) {
-                [, $vendorId, $vendor, $deviceId, $device, $subVendorId, $subVendor, $subDeviceId] = array_column($matches, $column);
-                $id = u('-')->join([$vendorId, $deviceId, $subVendorId, $subDeviceId]);
+                @[, $vendorId, $vendor, $deviceId, $device, , $subVendorId, $subVendor, $subDeviceId] = array_column($matches, $column);
+                $id = u('-')->join([$vendorId, $deviceId, $subVendorId, $subDeviceId])->trim('-');
                 if (!$this->graphicsCardRepository->has($id)) {
                     $graphicsCard = new GraphicsCard();
                     $graphicsCard->id = $id;
