@@ -2,10 +2,12 @@
 
 namespace App\Command;
 
+use App\Entity\EthernetPciCard;
 use App\Entity\GraphicsCard;
 use App\Entity\Printer;
 use App\Enum\ComputerType;
 use App\Repository\ComputerRepository;
+use App\Repository\EthernetPciCardRepository;
 use App\Repository\GraphicsCardRepository;
 use App\Repository\PrinterRepository;
 use App\Repository\ProbeRepository;
@@ -36,6 +38,7 @@ class IndexPciCommand extends Command
         protected ComputerRepository $computerRepository,
         protected GraphicsCardRepository $graphicsCardRepository,
         protected PrinterRepository $printerRepository,
+        protected EthernetPciCardRepository $ethernetPciCardRepository,
         #[Autowire('%app.hwinfo_dir%')]
         protected string $hwinfoDir,
         #[Autowire('%app.hwinfo_repo%')]
@@ -66,6 +69,7 @@ class IndexPciCommand extends Command
             function (SplFileInfo $file, bool $flush): void {
                 $this->indexGraphicsCard($file);
                 $this->indexPrinters($file);
+                $this->indexEthernetPciCard($file);
                 $flush && $this->printerRepository->flush(); // Doesn't matter which repository flush the changes
             }
         );
@@ -103,6 +107,25 @@ class IndexPciCommand extends Command
                     $printer->vendor = $vendor;
                     $printer->device = $device;
                     $this->printerRepository->add($printer);
+                }
+            }
+        }
+    }
+
+    protected function indexEthernetPciCard(SplFileInfo $file): void
+    {
+        if ($count = preg_match_all('/0200 Ethernet controller.*?Hardware Class: network.*?Vendor: pci 0x([^\s]+) "([^"]+)"\s+Device: pci 0x([^\s]+) "([^"]+)"\s+SubVendor: pci 0x([^\s]+) "([^"]+)"\s+SubDevice: pci 0x([^\s]+)/s', $file->getContents(), $matches)) {
+            for ($column = 0; $column < $count; ++$column) {
+                @[, $vendorId, $vendor, $deviceId, $device, $subVendorId, $subVendor, $subDeviceId] = array_column($matches, $column);
+                $id = u('-')->join([$vendorId, $deviceId, $subVendorId, $subDeviceId]);
+                if (!$this->ethernetPciCardRepository->has($id)) {
+                    $ethernetPciCard = new EthernetPciCard();
+                    $ethernetPciCard->id = $id;
+                    $ethernetPciCard->vendor = $vendor;
+                    $ethernetPciCard->device = $device;
+                    $ethernetPciCard->subVendor = $subVendor;
+                    $ethernetPciCard->addProbe($this->getProbe($file->getFilename()));
+                    $this->ethernetPciCardRepository->add($ethernetPciCard);
                 }
             }
         }

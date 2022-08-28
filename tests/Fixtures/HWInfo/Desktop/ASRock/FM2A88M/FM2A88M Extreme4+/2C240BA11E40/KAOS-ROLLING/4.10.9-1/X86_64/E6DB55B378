@@ -1,27 +1,33 @@
 # [E6DB55B378](https://github.com/linuxhw/HWInfo/blob/master/Desktop/ASRock/FM2A88M/FM2A88M%20Extreme4+/2C240BA11E40/KAOS-ROLLING/4.10.9-1/X86_64/E6DB55B378) by [Linux Hardware Project](https://github.com/linuxhw) is licensed under [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/). 
 
-61: USB 00.0: 10a00 Hub
-  [Created at usb.122]
-  Unique ID: KgLP._WUAGn1cSY8
-  Parent ID: hB6S.93uyGHD24FB
-  SysFS ID: /devices/pci0000:00/0000:00:14.5/usb9/9-0:1.0
-  SysFS BusID: 9-0:1.0
-  Hardware Class: hub
-  Model: "Linux Foundation 1.1 root hub"
-  Hotplug: USB
-  Vendor: usb 0x1d6b "Linux Foundation"
-  Device: usb 0x0001 "1.1 root hub"
-  Revision: "4.10"
-  Serial ID: --
-  Driver: "hub"
-  Driver Modules: "usbcore"
-  Speed: 12 Mbps
-  Module Alias: "usb:v1D6Bp0001d0410dc09dsc00dp00ic09isc00ip00in00"
+30: PCI 300.0: 0200 Ethernet controller
+  [Created at pci.378]
+  Unique ID: UOJ9.ZhKSHlXL48B
+  Parent ID: I+Ba.kfTGFHKsqc1
+  SysFS ID: /devices/pci0000:00/0000:00:15.1/0000:03:00.0
+  SysFS BusID: 0000:03:00.0
+  Hardware Class: network
+  Model: "Qualcomm Atheros QCA8171 Gigabit Ethernet"
+  Vendor: pci 0x1969 "Qualcomm Atheros"
+  Device: pci 0x10a1 "QCA8171 Gigabit Ethernet"
+  SubVendor: pci 0x1849 "ASRock Incorporation"
+  SubDevice: pci 0x10a1 
+  Revision: 0x10
+  Driver: "alx"
+  Driver Modules: "alx"
+  Device File: enp3s0
+  Memory Range: 0xfea00000-0xfea3ffff (rw,non-prefetchable)
+  I/O Ports: 0xe000-0xefff (rw)
+  IRQ: 17 (no events)
+  HW Address:  ...
+  Permanent HW Address:  ...
+  Link detected: yes
+  Module Alias: "pci:v00001969d000010A1sv00001849sd000010A1bc02sc00i00"
   Driver Info #0:
-    Driver Status: usbcore is active
-    Driver Activation Cmd: "modprobe usbcore"
+    Driver Status: alx is active
+    Driver Activation Cmd: "modprobe alx"
   Config Status: cfg=new, avail=yes, need=no, active=unknown
-  Attached to: #37 (USB Controller)
+  Attached to: #32 (PCI bridge)
 
 62: USB 00.1: 10900 Printer
   [Created at usb.122]

@@ -2,6 +2,7 @@
 
 namespace App\Tests\Command;
 
+use App\Entity\EthernetPciCard;
 use App\Entity\GraphicsCard;
 use App\Entity\Printer;
 use App\Entity\Probe;
@@ -43,6 +44,13 @@ class IndexPciCommandTest extends CommandTestCase
             '1002-67df-1028-175c',
             'ATI Technologies Inc',
             'Ellesmere [Radeon RX 470/480/570/570X/580/580X/590]',
+            'Dell',
+            '071C584451'
+        );
+        $this->assertEthernetPciCard(
+            '8086-15b7-1028-075c',
+            'Intel Corporation',
+            'Ethernet Connection (2) I219-LM',
             'Dell',
             '071C584451'
         );
@@ -92,6 +100,27 @@ class IndexPciCommandTest extends CommandTestCase
             'Epson',
             'EPSON ET-2550 Series'
         );
+        $this->assertEthernetPciCard(
+            '1969-10a1-1849-10a1',
+            'Qualcomm Atheros',
+            'QCA8171 Gigabit Ethernet',
+            'ASRock Incorporation',
+            'E6DB55B378'
+        );
+        $this->assertEthernetPciCard(
+            '10ec-8168-1043-8385',
+            'Realtek Semiconductor Co., Ltd.',
+            'RTL8111/8168 PCI Express Gigabit Ethernet controller',
+            'ASUSTeK Computer Inc.',
+            'ED9D8A148D'
+        );
+        $this->assertEthernetPciCard(
+            '8086-1502-17aa-3070',
+            'Intel Corporation',
+            '82579LM Gigabit Network Connection (Lewisville)',
+            'Lenovo',
+            'EE8BDB8EC5'
+        );
     }
 
     protected function assertMiniPcParts(): void
@@ -100,6 +129,13 @@ class IndexPciCommandTest extends CommandTestCase
             '8086-5a85-8086-2067',
             'Intel Corporation',
             'HD Graphics 500',
+            'Intel Corporation',
+            '4A3BB182A0'
+        );
+        $this->assertEthernetPciCard(
+            '10ec-8168-8086-2067',
+            'Realtek Semiconductor Co., Ltd.',
+            'RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller',
             'Intel Corporation',
             '4A3BB182A0'
         );
@@ -119,6 +155,20 @@ class IndexPciCommandTest extends CommandTestCase
             'Brother Industries, Ltd',
             'HL-L2390DW'
         );
+        $this->assertEthernetPciCard(
+            '1969-1063-1025-027d',
+            'Qualcomm Atheros',
+            'AR8131 Gigabit Ethernet',
+            'Acer Incorporated [ALI]',
+            '326303D482'
+        );
+        $this->assertEthernetPciCard(
+            '1969-2062-1025-0602',
+            'Qualcomm Atheros',
+            'AR8152 v2.0 Fast Ethernet',
+            'Acer Incorporated [ALI]',
+            '15B32DE383'
+        );
     }
 
     protected function assertServerParts(): void
@@ -127,6 +177,20 @@ class IndexPciCommandTest extends CommandTestCase
             '1a03-2000-108e-484c',
             'ASPEED Technology Inc.',
             'AST1000/2000',
+            'Oracle/SUN',
+            'F048AD8494'
+        );
+        $this->assertEthernetPciCard(
+            '8086-10bc-108e-11bc',
+            'Intel Corporation',
+            '82571EB/82571GB Gigabit Ethernet Controller (Copper)',
+            'Oracle/SUN',
+            'F048AD8494'
+        );
+        $this->assertEthernetPciCard(
+            '8086-10c9-108e-484c',
+            'Intel Corporation',
+            '82576 Gigabit Network Connection',
             'Oracle/SUN',
             'F048AD8494'
         );
@@ -149,11 +213,7 @@ class IndexPciCommandTest extends CommandTestCase
             ->getRepository(GraphicsCard::class)
             ->find($id)
         ;
-
-        $probe = $this->entityManager
-            ->getRepository(Probe::class)
-            ->find($probeId)
-        ;
+        $probe = $this->getProbe($probeId);
 
         $this->assertInstanceOf(GraphicsCard::class, $graphicsCard);
         $this->assertSame($id, $graphicsCard->id);
@@ -175,5 +235,30 @@ class IndexPciCommandTest extends CommandTestCase
         $this->assertSame($id, $printer->id);
         $this->assertSame($vendor, $printer->vendor);
         $this->assertSame($device, $printer->device);
+    }
+
+    protected function assertEthernetPciCard(string $id, string $vendor, string $device, string $subVendor, string $probeId)
+    {
+        $ethernetPciCard = $this->entityManager
+            ->getRepository(EthernetPciCard::class)
+            ->find($id)
+        ;
+        $probe = $this->getProbe($probeId);
+
+        $this->assertInstanceOf(EthernetPciCard::class, $ethernetPciCard);
+        $this->assertSame($id, $ethernetPciCard->id);
+        $this->assertSame($vendor, $ethernetPciCard->vendor);
+        $this->assertSame($device, $ethernetPciCard->device);
+        $this->assertSame($subVendor, $ethernetPciCard->subVendor);
+        $this->assertContains($ethernetPciCard, $probe->getEthernetPciCards());
+        $this->assertContains($probe, $ethernetPciCard->getProbes());
+    }
+
+    protected function getProbe(string $id): Probe
+    {
+        return $this->entityManager
+            ->getRepository(Probe::class)
+            ->find($id)
+        ;
     }
 }

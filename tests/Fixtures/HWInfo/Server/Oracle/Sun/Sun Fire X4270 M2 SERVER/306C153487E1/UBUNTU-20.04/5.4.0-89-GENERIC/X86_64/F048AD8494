@@ -74,3 +74,66 @@
     Driver Activation Cmd: "modprobe e1000e"
   Config Status: cfg=new, avail=yes, need=no, active=unknown
   Attached to: #40 (PCI bridge)
+
+55: PCI 1600.1: 0200 Ethernet controller
+  [Created at pci.386]
+  Unique ID: DkES.nnwMpZgQGeA
+  Parent ID: jtud.e6pgl_MbRFD
+  SysFS ID: /devices/pci0000:00/0000:00:05.0/0000:13:00.0/0000:14:04.0/0000:16:00.1
+  SysFS BusID: 0000:16:00.1
+  Hardware Class: network
+  Model: "Oracle/SUN Quad Port Adapter"
+  Vendor: pci 0x8086 "Intel Corporation"
+  Device: pci 0x10bc "82571EB/82571GB Gigabit Ethernet Controller (Copper)"
+  SubVendor: pci 0x108e "Oracle/SUN"
+  SubDevice: pci 0x11bc "Quad Port Adapter"
+  Revision: 0x06
+  Driver: "e1000e"
+  Driver Modules: "e1000e"
+  Device File: eth3
+  Memory Range: 0xdf3e0000-0xdf3fffff (rw,non-prefetchable)
+  Memory Range: 0xdf3c0000-0xdf3dffff (rw,non-prefetchable)
+  I/O Ports: 0xac00-0xac1f (rw)
+  IRQ: 47 (no events)
+  HW Address:  ...
+  Permanent HW Address:  ...
+  Link detected: no
+  Module Alias: "pci:v00008086d000010BCsv0000108Esd000011BCbc02sc00i00"
+  Driver Info #0:
+    Driver Status: e1000e is active
+    Driver Activation Cmd: "modprobe e1000e"
+  Config Status: cfg=new, avail=yes, need=no, active=unknown
+  Attached to: #124 (PCI bridge)
+
+61: PCI 100.0: 0200 Ethernet controller
+  [Created at pci.386]
+  Unique ID: TRND.OeyupWtxS+9
+  Parent ID: vSkL.4PNuwsQPfgF
+  SysFS ID: /devices/pci0000:00/0000:00:01.0/0000:01:00.0
+  SysFS BusID: 0000:01:00.0
+  Hardware Class: network
+  Device Name: "Intel 82576 Ethernet Controller."
+  Model: "Intel 82576 Gigabit Network Connection"
+  Vendor: pci 0x8086 "Intel Corporation"
+  Device: pci 0x10c9 "82576 Gigabit Network Connection"
+  SubVendor: pci 0x108e "Oracle/SUN"
+  SubDevice: pci 0x484c 
+  Revision: 0x01
+  Driver: "igb"
+  Driver Modules: "igb"
+  Device File: eno0
+  Memory Range: 0xdf060000-0xdf07ffff (rw,non-prefetchable)
+  Memory Range: 0xdf040000-0xdf05ffff (rw,non-prefetchable)
+  I/O Ports: 0x7880-0x789f (rw)
+  Memory Range: 0xdf098000-0xdf09bfff (rw,non-prefetchable)
+  Memory Range: 0xdf020000-0xdf03ffff (ro,non-prefetchable,disabled)
+  IRQ: 49 (no events)
+  HW Address:  ...
+  Permanent HW Address:  ...
+  Link detected: no
+  Module Alias: "pci:v00008086d000010C9sv0000108Esd0000484Cbc02sc00i00"
+  Driver Info #0:
+    Driver Status: igb is active
+    Driver Activation Cmd: "modprobe igb"
+  Config Status: cfg=new, avail=yes, need=no, active=unknown
+  Attached to: #45 (PCI bridge)

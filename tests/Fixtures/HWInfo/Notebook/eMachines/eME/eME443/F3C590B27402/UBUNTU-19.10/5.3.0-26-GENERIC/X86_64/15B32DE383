@@ -1,29 +1,33 @@
 # [15B32DE383](https://github.com/linuxhw/HWInfo/blob/master/Notebook/eMachines/eME/eME443/F3C590B27402/UBUNTU-19.10/5.3.0-26-GENERIC/X86_64/15B32DE383) by [Linux Hardware Project](https://github.com/linuxhw) is licensed under [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/). 
 
-43: USB 00.0: 10503 USB Mouse
-  [Created at usb.122]
-  Unique ID: mZxt.gfI5BLJe0H0
-  Parent ID: uIhY.7qWCOCfUJwE
-  SysFS ID: /devices/pci0000:00/0000:00:12.0/usb3/3-2/3-2:1.0
-  SysFS BusID: 3-2:1.0
-  Hardware Class: mouse
-  Model: "China Resource Semico Usb Mouse"
-  Hotplug: USB
-  Vendor: usb 0x1a2c "China Resource Semico Co., Ltd"
-  Device: usb 0x0042 "Usb Mouse"
-  Revision: "1.10"
-  Compatible to: int 0x0200 0x0001 "Generic USB Mouse"
-  Driver: "usbhid"
-  Driver Modules: "usbhid"
-  Device File: /dev/input/mice (/dev/input/mouse0)
-  Device Number: char 13:63 (char 13:32)
-  Speed: 1.5 Mbps
-  Module Alias: "usb:v1A2Cp0042d0110dc00dsc00dp00ic03isc01ip02in00"
+18: PCI 600.0: 0200 Ethernet controller
+  [Created at pci.386]
+  Unique ID: 4Nnf.WHMIiyXZqa7
+  Parent ID: AKhP.FZg9Z3lH594
+  SysFS ID: /devices/pci0000:00/0000:00:15.2/0000:06:00.0
+  SysFS BusID: 0000:06:00.0
+  Hardware Class: network
+  Model: "Qualcomm Atheros AR8152 v2.0 Fast Ethernet"
+  Vendor: pci 0x1969 "Qualcomm Atheros"
+  Device: pci 0x2062 "AR8152 v2.0 Fast Ethernet"
+  SubVendor: pci 0x1025 "Acer Incorporated [ALI]"
+  SubDevice: pci 0x0602 
+  Revision: 0xc1
+  Driver: "atl1c"
+  Driver Modules: "atl1c"
+  Device File: enp6s0
+  Memory Range: 0xf0200000-0xf023ffff (rw,non-prefetchable)
+  I/O Ports: 0x2000-0x207f (rw)
+  IRQ: 28 (138579 events)
+  HW Address:  ...
+  Permanent HW Address:  ...
+  Link detected: yes
+  Module Alias: "pci:v00001969d00002062sv00001025sd00000602bc02sc00i00"
   Driver Info #0:
-    XFree86 Protocol: explorerps/2
-    GPM Protocol: exps2
+    Driver Status: atl1c is active
+    Driver Activation Cmd: "modprobe atl1c"
   Config Status: cfg=new, avail=yes, need=no, active=unknown
-  Attached to: #36 (Hub)
+  Attached to: #16 (PCI bridge)
 
 44: USB 00.0: 10900 Printer
   [Created at usb.122]
