@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Ignore;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity]
@@ -32,6 +33,7 @@ class Computer
     public string $model;
 
     #[ORM\OneToMany(targetEntity: Probe::class, mappedBy: 'computer')]
+    #[Ignore]
     public Collection $probes;
 
     #[ORM\ManyToOne(targetEntity: Motherboard::class, inversedBy: 'computers')]
