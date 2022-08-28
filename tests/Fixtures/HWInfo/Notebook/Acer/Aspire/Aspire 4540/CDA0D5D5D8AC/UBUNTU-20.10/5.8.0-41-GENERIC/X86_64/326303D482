@@ -1,16 +1,33 @@
 # [326303D482](https://github.com/linuxhw/HWInfo/blob/master/Notebook/Acer/Aspire/Aspire%204540/CDA0D5D5D8AC/UBUNTU-20.10/5.8.0-41-GENERIC/X86_64/326303D482) by [Linux Hardware Project](https://github.com/linuxhw) is licensed under [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/). 
 
-23: PCI 14.4: 0604 PCI bridge (Subtractive decode)
+05: PCI 300.0: 0200 Ethernet controller
   [Created at pci.386]
-  Unique ID: qscc.ULOo3yhA66C
-  SysFS ID: /devices/pci0000:00/0000:00:14.4
-  SysFS BusID: 0000:00:14.4
-  Hardware Class: bridge
-  Model: "ATI SBx00 PCI to PCI Bridge"
-  Vendor: pci 0x1002 "ATI Technologies Inc"
-  Device: pci 0x4384 "SBx00 PCI to PCI Bridge"
-  Module Alias: "pci:v00001002d00004384sv00000000sd00000000bc06sc04i01"
+  Unique ID: UOJ9.7pAo1Xl_uH9
+  Parent ID: M71A.HCb23SJAe61
+  SysFS ID: /devices/pci0000:00/0000:00:07.0/0000:03:00.0
+  SysFS BusID: 0000:03:00.0
+  Hardware Class: network
+  Model: "Qualcomm Atheros AR8131 Gigabit Ethernet"
+  Vendor: pci 0x1969 "Qualcomm Atheros"
+  Device: pci 0x1063 "AR8131 Gigabit Ethernet"
+  SubVendor: pci 0x1025 "Acer Incorporated [ALI]"
+  SubDevice: pci 0x027d 
+  Revision: 0xc0
+  Driver: "atl1c"
+  Driver Modules: "atl1c"
+  Device File: enp3s0
+  Memory Range: 0xf0000000-0xf003ffff (rw,non-prefetchable)
+  I/O Ports: 0x2000-0x207f (rw)
+  IRQ: 27 (no events)
+  HW Address:  ...
+  Permanent HW Address:  ...
+  Link detected: no
+  Module Alias: "pci:v00001969d00001063sv00001025sd0000027Dbc02sc00i00"
+  Driver Info #0:
+    Driver Status: atl1c is active
+    Driver Activation Cmd: "modprobe atl1c"
   Config Status: cfg=new, avail=yes, need=no, active=unknown
+  Attached to: #15 (PCI bridge)
 
 24: PCI 105.0: 0300 VGA compatible controller (VGA)
   [Created at pci.386]

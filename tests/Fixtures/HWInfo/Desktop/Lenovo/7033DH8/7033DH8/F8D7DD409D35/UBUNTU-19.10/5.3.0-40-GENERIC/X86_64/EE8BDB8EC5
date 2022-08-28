@@ -1,5 +1,34 @@
 # [EE8BDB8EC5](https://github.com/linuxhw/HWInfo/blob/master/Desktop/Lenovo/7033DH8/7033DH8/F8D7DD409D35/UBUNTU-19.10/5.3.0-40-GENERIC/X86_64/EE8BDB8EC5) by [Linux Hardware Project](https://github.com/linuxhw) is licensed under [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/). 
 
+14: PCI 19.0: 0200 Ethernet controller
+  [Created at pci.386]
+  Unique ID: wcdH.f9FfOHEIgD4
+  SysFS ID: /devices/pci0000:00/0000:00:19.0
+  SysFS BusID: 0000:00:19.0
+  Hardware Class: network
+  Device Name: "Onboard LAN"
+  Model: "Intel 82579LM Gigabit Network Connection (Lewisville)"
+  Vendor: pci 0x8086 "Intel Corporation"
+  Device: pci 0x1502 "82579LM Gigabit Network Connection (Lewisville)"
+  SubVendor: pci 0x17aa "Lenovo"
+  SubDevice: pci 0x3070 
+  Revision: 0x05
+  Driver: "e1000e"
+  Driver Modules: "e1000e"
+  Device File: eno1
+  Memory Range: 0xfa800000-0xfa81ffff (rw,non-prefetchable)
+  Memory Range: 0xfa827000-0xfa827fff (rw,non-prefetchable)
+  I/O Ports: 0xf060-0xf07f (rw)
+  IRQ: 25 (88532 events)
+  HW Address:  ...
+  Permanent HW Address:  ...
+  Link detected: no
+  Module Alias: "pci:v00008086d00001502sv000017AAsd00003070bc02sc00i00"
+  Driver Info #0:
+    Driver Status: e1000e is active
+    Driver Activation Cmd: "modprobe e1000e"
+  Config Status: cfg=new, avail=yes, need=no, active=unknown
+
 11: PCI 100.0: 0300 VGA compatible controller (VGA)
   [Created at pci.386]
   Unique ID: VCu0.ucHebD2wXMC
