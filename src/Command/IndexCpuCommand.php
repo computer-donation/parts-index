@@ -86,7 +86,7 @@ class IndexCpuCommand extends Command
 
             return;
         }
-        $id = $this->slugger->slug(u($model)->lower()->replace('(r)', '')->replace('(tm)', ''));
+        $id = $this->slugger->slug(u($model)->lower()->replace('(r)', ' ')->replace('(tm)', ' '));
         if (!$this->cpuRepository->has($id)) {
             $cpu = new Cpu();
             $cpu->id = $id;
