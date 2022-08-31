@@ -24,20 +24,24 @@ class IndexCpuCommandTest extends CommandTestCase
     protected function assertParts(): void
     {
         $this->assertCpu(
-            'amd-23-1-1-ryzen-3-pro-1300-quad-core',
+            'amd-ryzen-3-pro-1300-quad-core-processor',
             CpuVendor::AMD,
-            'Ryzen 3 PRO 1300 Quad-Core',
+            'AMD Ryzen 3 PRO 1300 Quad-Core Processor',
+            4,
+            4,
             '98D52182A0'
         );
         $this->assertCpu(
-            'intel-6-37-2-core-i5-650',
+            'intel-core-i5-cpu-650-at-3-20ghz',
             CpuVendor::INTEL,
-            'Core i5 650',
+            'Intel(R) Core(TM) i5 CPU         650  @ 3.20GHz',
+            2,
+            4,
             '0BB0F8B0AC'
         );
     }
 
-    protected function assertCpu(string $id, CpuVendor $vendor, string $model, string $probeId)
+    protected function assertCpu(string $id, CpuVendor $vendor, string $model, int $cores, int $threads, string $probeId)
     {
         $cpu = $this->entityManager
             ->getRepository(Cpu::class)
@@ -53,6 +57,8 @@ class IndexCpuCommandTest extends CommandTestCase
         $this->assertSame($id, $cpu->id);
         $this->assertSame($vendor, $cpu->vendor);
         $this->assertSame($model, $cpu->model);
+        $this->assertSame($cores, $cpu->cores);
+        $this->assertSame($threads, $cpu->threads);
         $this->assertSame($cpu, $probe->cpu);
     }
 }

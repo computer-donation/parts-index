@@ -14,6 +14,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\Process\Process;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 use function Symfony\Component\String\u;
 
@@ -29,6 +30,7 @@ class IndexCpuCommand extends Command
     use FileTrait;
 
     public function __construct(
+        protected SluggerInterface $slugger,
         protected ProbeRepository $probeRepository,
         protected CpuRepository $cpuRepository,
         #[Autowire('%app.lscpu_dir%')]
@@ -58,25 +60,41 @@ class IndexCpuCommand extends Command
         $this->browseFiles(
             $this->lscpuDir.DIRECTORY_SEPARATOR.$vendor->value,
             $output,
-            function (SplFileInfo $file, bool $flush) use ($vendor): void {
-                $this->indexCpu($file, $vendor);
+            function (SplFileInfo $file, bool $flush) use ($vendor, $output): void {
+                $this->indexCpu($file, $vendor, $output);
                 $flush && $this->cpuRepository->flush();
             }
         );
         $output->writeln(' Finished!');
     }
 
-    protected function indexCpu(SplFileInfo $file, CpuVendor $vendor): void
+    protected function indexCpu(SplFileInfo $file, CpuVendor $vendor, OutputInterface $output): void
     {
-        // {MODEL PREFIX}/{MODEL NAME}/{FAMILY}-{MODEL}-{STEPPING}/{PROBE ID}
-        [, $model, $code, $probe] = explode(DIRECTORY_SEPARATOR, $file->getRelativePathname());
-        $id = u('-')->join([$vendor->value, $code, $model])->lower()->replace(' ', '-');
+        if (preg_match('/Core\(s\) per socket:\s+(\d+)/s', $file->getContents(), $matches)) {
+            $cores = $matches[1];
+        }
+        if (isset($cores) && preg_match('/Thread\(s\) per core:\s+(\d+)/s', $file->getContents(), $matches)) {
+            $threads = $cores * $matches[1];
+        }
+        if (preg_match('/Model name:\s+([^\r\n]+)/s', $file->getContents(), $matches)) {
+            $model = $matches[1];
+            if (!preg_match(u('|')->join(CpuVendor::values())->ensureStart('(')->ensureEnd(')'), $model)) {
+                $model = u(' ')->join([$vendor->value, $model]);
+            }
+        } else {
+            $output->writeln(sprintf('<error>Missing model name in %s</error>', $vendor->value.DIRECTORY_SEPARATOR.$file->getRelativePathname()));
+
+            return;
+        }
+        $id = $this->slugger->slug(u($model)->lower()->replace('(r)', ' ')->replace('(tm)', ' '));
         if (!$this->cpuRepository->has($id)) {
             $cpu = new Cpu();
             $cpu->id = $id;
             $cpu->vendor = $vendor;
             $cpu->model = $model;
-            $cpu->addProbe($this->getProbe($probe));
+            $cpu->cores = $cores ?? null;
+            $cpu->threads = $threads ?? null;
+            $cpu->addProbe($this->getProbe($file->getFilename()));
             $this->cpuRepository->add($cpu);
         }
     }

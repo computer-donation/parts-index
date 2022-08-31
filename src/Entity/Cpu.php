@@ -28,6 +28,12 @@ class Cpu
     #[Assert\NotBlank]
     public string $model;
 
+    #[ORM\Column(type: Types::INTEGER, nullable: true)]
+    public ?int $cores = null;
+
+    #[ORM\Column(type: Types::INTEGER, nullable: true)]
+    public ?int $threads = null;
+
     #[ORM\OneToMany(targetEntity: Probe::class, mappedBy: 'cpu')]
     #[Ignore]
     protected Collection $probes;
