@@ -29,6 +29,10 @@ class IndexCpuCommandTest extends CommandTestCase
             'AMD Ryzen 3 PRO 1300 Quad-Core Processor',
             4,
             4,
+            3500,
+            1550,
+            '2 MiB',
+            '8 MiB',
             '98D52182A0'
         );
         $this->assertCpu(
@@ -37,12 +41,26 @@ class IndexCpuCommandTest extends CommandTestCase
             'Intel(R) Core(TM) i5 CPU         650  @ 3.20GHz',
             2,
             4,
+            3201,
+            1200,
+            '256K',
+            '4096K',
             '0BB0F8B0AC'
         );
     }
 
-    protected function assertCpu(string $id, CpuVendor $vendor, string $model, int $cores, int $threads, string $probeId)
-    {
+    protected function assertCpu(
+        string $id,
+        CpuVendor $vendor,
+        string $model,
+        int $cores,
+        int $threads,
+        int $maxSpeed,
+        int $minSpeed,
+        string $l2Cache,
+        string $l3Cache,
+        string $probeId
+    ) {
         $cpu = $this->entityManager
             ->getRepository(Cpu::class)
             ->find($id)
@@ -59,6 +77,10 @@ class IndexCpuCommandTest extends CommandTestCase
         $this->assertSame($model, $cpu->model);
         $this->assertSame($cores, $cpu->cores);
         $this->assertSame($threads, $cpu->threads);
+        $this->assertSame($maxSpeed, $cpu->maxSpeed);
+        $this->assertSame($minSpeed, $cpu->minSpeed);
+        $this->assertSame($l2Cache, $cpu->l2Cache);
+        $this->assertSame($l3Cache, $cpu->l3Cache);
         $this->assertSame($cpu, $probe->cpu);
     }
 }

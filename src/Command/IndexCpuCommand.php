@@ -73,8 +73,20 @@ class IndexCpuCommand extends Command
         if (preg_match('/Core\(s\) per socket:\s+(\d+)/s', $file->getContents(), $matches)) {
             $cores = $matches[1];
         }
-        if (isset($cores) && preg_match('/Thread\(s\) per core:\s+(\d+)/s', $file->getContents(), $matches)) {
-            $threads = $cores * $matches[1];
+        if (preg_match('/CPU\(s\):\s+(\d+)/s', $file->getContents(), $matches)) {
+            $threads = $matches[1];
+        }
+        if (preg_match('/CPU max MHz:\s+(\d+)(\.|\,)\d+/s', $file->getContents(), $matches)) {
+            $maxSpeed = $matches[1];
+        }
+        if (preg_match('/CPU min MHz:\s+(\d+)(\.|\,)\d+/s', $file->getContents(), $matches)) {
+            $minSpeed = $matches[1];
+        }
+        if (preg_match('/L2 cache:\s+([^\r\n]+)/s', $file->getContents(), $matches)) {
+            $l2Cache = $matches[1];
+        }
+        if (preg_match('/L3 cache:\s+([^\r\n]+)/s', $file->getContents(), $matches)) {
+            $l3Cache = $matches[1];
         }
         if (preg_match('/Model name:\s+([^\r\n]+)/s', $file->getContents(), $matches)) {
             $model = $matches[1];
@@ -94,6 +106,10 @@ class IndexCpuCommand extends Command
             $cpu->model = $model;
             $cpu->cores = $cores ?? null;
             $cpu->threads = $threads ?? null;
+            $cpu->maxSpeed = $maxSpeed ?? null;
+            $cpu->minSpeed = $minSpeed ?? null;
+            $cpu->l2Cache = $l2Cache ?? null;
+            $cpu->l3Cache = $l3Cache ?? null;
             $cpu->addProbe($this->getProbe($file->getFilename()));
             $this->cpuRepository->add($cpu);
         }

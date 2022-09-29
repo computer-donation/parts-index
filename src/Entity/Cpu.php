@@ -34,6 +34,18 @@ class Cpu
     #[ORM\Column(type: Types::INTEGER, nullable: true)]
     public ?int $threads = null;
 
+    #[ORM\Column(type: Types::INTEGER, nullable: true)]
+    public ?int $maxSpeed = null;
+
+    #[ORM\Column(type: Types::INTEGER, nullable: true)]
+    public ?int $minSpeed = null;
+
+    #[ORM\Column(type: Types::STRING, nullable: true)]
+    public ?string $l2Cache = null;
+
+    #[ORM\Column(type: Types::STRING, nullable: true)]
+    public ?string $l3Cache = null;
+
     #[ORM\OneToMany(targetEntity: Probe::class, mappedBy: 'cpu')]
     #[Ignore]
     protected Collection $probes;
