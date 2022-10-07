@@ -90,15 +90,12 @@ class IndexCpuCommand extends Command
         }
         if (preg_match('/Model name:\s+([^\r\n]+)/s', $file->getContents(), $matches)) {
             $model = $matches[1];
-            if (!preg_match(u('|')->join(CpuVendor::values())->ensureStart('(')->ensureEnd(')'), $model)) {
-                $model = u(' ')->join([$vendor->value, $model]);
-            }
         } else {
             $output->writeln(sprintf('<error>Missing model name in %s</error>', $vendor->value.DIRECTORY_SEPARATOR.$file->getRelativePathname()));
 
             return;
         }
-        $id = $this->slugger->slug(u($model)->lower()->replace('(r)', ' ')->replace('(tm)', ' '));
+        $id = $this->slugger->slug(u($model)->lower()->replace('(r)', ' ')->replace('(tm)', ' ')->ensureStart($vendor->lower().' '));
         if (!$this->cpuRepository->has($id)) {
             $cpu = new Cpu();
             $cpu->id = $id;

@@ -14,4 +14,9 @@ enum CpuVendor: string
             CpuVendor::cases()
         );
     }
+
+    public function lower(): string
+    {
+        return strtolower($this->value);
+    }
 }
