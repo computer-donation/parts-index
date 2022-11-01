@@ -2,25 +2,29 @@
 
 namespace App\Tests\Command;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
+use Laudis\Neo4j\Contracts\ClientInterface;
+use Laudis\Neo4j\Databags\Statement;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 
 abstract class CommandTestCase extends KernelTestCase
 {
-    protected ?EntityManager $entityManager = null;
+    protected ?EntityManagerInterface $entityManager = null;
+    protected ?ClientInterface $client = null;
 
     protected function setUp(): void
     {
         self::bootKernel();
 
-        $this->entityManager = self::$kernel->getContainer()
-            ->get('doctrine')
-            ->getManager();
+        $container = self::$kernel->getContainer();
+        $this->entityManager = $container->get('doctrine')->getManager();
+        $this->client = $container->get('test.'.ClientInterface::class);
 
         $this->initDatabase();
+        $this->initGraphDatabase();
     }
 
     public function testExecute()
@@ -35,6 +39,8 @@ abstract class CommandTestCase extends KernelTestCase
 
         $this->assertOutput($commandTester->getDisplay());
         $this->assertParts();
+        $this->assertNodes();
+        $this->assertRelationships();
     }
 
     protected function tearDown(): void
@@ -44,6 +50,7 @@ abstract class CommandTestCase extends KernelTestCase
         // doing this is recommended to avoid memory leaks
         $this->entityManager->close();
         $this->entityManager = null;
+        $this->client = null;
     }
 
     protected function initDatabase(): void
@@ -53,9 +60,21 @@ abstract class CommandTestCase extends KernelTestCase
         $schemaTool->updateSchema($metaData);
     }
 
+    protected function initGraphDatabase(): void
+    {
+        $this->client->runStatements([
+            new Statement('MATCH (n) DETACH DELETE n', []),
+            // new Statement('CALL apoc.schema.assert({},{},true) YIELD label, key RETURN *', []),
+        ]);
+    }
+
     abstract protected function getCommand(): string;
 
     abstract protected function assertOutput(string $output): void;
 
     abstract protected function assertParts(): void;
+
+    abstract protected function assertNodes(): void;
+
+    abstract protected function assertRelationships(): void;
 }

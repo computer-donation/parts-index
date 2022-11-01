@@ -4,17 +4,18 @@ namespace App\Command;
 
 use App\Entity\Motherboard;
 use App\Enum\ComputerType;
-use App\Repository\ComputerRepository;
+use App\Neo4j\Node\MotherboardRepository as MotherboardNodeRepository;
+use App\Neo4j\Relationship\ComputerMotherboardRepository;
 use App\Repository\MotherboardRepository;
 use App\Tests\Process\VoidProcess;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\Process\Process;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 use function Symfony\Component\String\u;
 
@@ -29,8 +30,10 @@ class IndexMotherboardCommand extends Command
     use FileTrait;
 
     public function __construct(
-        protected ComputerRepository $computerRepository,
+        protected SluggerInterface $slugger,
         protected MotherboardRepository $motherboardRepository,
+        protected MotherboardNodeRepository $motherboardNodeRepository,
+        protected ComputerMotherboardRepository $computerMotherboardRelationshipRepository,
         #[Autowire('%app.dmi_dir%')]
         protected string $dmiDir,
         #[Autowire('%app.dmi_repo%')]
@@ -43,10 +46,8 @@ class IndexMotherboardCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        if (!$this->computerRepository->count([])) {
-            throw new RuntimeException('Need to run command app:index-computer first!');
-        }
         $this->updateRepository($this->dmiRepo, $this->dmiDir, $output);
+        $this->motherboardNodeRepository->setUp();
         foreach (ComputerType::cases() as $type) {
             $this->indexMotherboards($type, $output);
         }
@@ -71,23 +72,19 @@ class IndexMotherboardCommand extends Command
 
     protected function indexMotherboard(SplFileInfo $file, OutputInterface $output): void
     {
-        if (!$this->computerRepository->has($file->getFilename())) {
-            $output->writeln(sprintf('<error>Computer %s not found</error>', $file->getFilename()));
-
-            return;
-        }
         if (preg_match('/Base Board Information\s+Manufacturer: (.+)\s+Product Name: (.+)\s+Version: (.+)/', $file->getContents(), $matches)) {
             [, $manufacturer, $productName, $version] = $matches;
-            $id = u('-')->join([$manufacturer, $productName, trim($version)])->lower()->replace(' ', '-')->trim('-');
+            $id = $this->slugger->slug(u('-')->join([$manufacturer, $productName, $version])->lower());
             if (!$this->motherboardRepository->has($id)) {
                 $motherboard = new Motherboard();
                 $motherboard->id = $id;
                 $motherboard->manufacturer = $manufacturer;
                 $motherboard->productName = $productName;
                 $motherboard->version = trim($version);
-                $motherboard->addComputer($this->computerRepository->reference($file->getFilename()));
                 $this->motherboardRepository->add($motherboard);
             }
+            $this->motherboardNodeRepository->create($id, $manufacturer, $productName, trim($version));
+            $this->computerMotherboardRelationshipRepository->create($file->getFilename(), $id);
         }
     }
 }

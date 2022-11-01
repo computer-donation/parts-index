@@ -6,11 +6,14 @@ use App\Entity\EthernetPciCard;
 use App\Entity\GraphicsCard;
 use App\Entity\Printer;
 use App\Enum\ComputerType;
-use App\Repository\ComputerRepository;
+use App\Neo4j\Node\EthernetPciCardRepository as EthernetPciCardNodeRepository;
+use App\Neo4j\Node\GraphicsCardRepository as GraphicsCardNodeRepository;
+use App\Neo4j\Node\PrinterRepository as PrinterNodeRepository;
+use App\Neo4j\Relationship\ProbeEthernetPciCardRepository as ProbeEthernetPciCardRelationshipRepository;
+use App\Neo4j\Relationship\ProbeGraphicsCardRepository as ProbeGraphicsCardRelationshipRepository;
 use App\Repository\EthernetPciCardRepository;
 use App\Repository\GraphicsCardRepository;
 use App\Repository\PrinterRepository;
-use App\Repository\ProbeRepository;
 use App\Tests\Process\VoidProcess;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -24,21 +27,23 @@ use function Symfony\Component\String\u;
 
 #[AsCommand(
     name: 'app:index-pci',
-    description: 'Lookup github repository for computers and pci devices, create if not exist.',
+    description: 'Lookup github repository for pci devices, create if not exist.',
     hidden: false
 )]
 class IndexPciCommand extends Command
 {
     use RepoTrait;
-    use ProbeTrait;
     use FileTrait;
 
     public function __construct(
-        protected ProbeRepository $probeRepository,
-        protected ComputerRepository $computerRepository,
         protected GraphicsCardRepository $graphicsCardRepository,
         protected PrinterRepository $printerRepository,
         protected EthernetPciCardRepository $ethernetPciCardRepository,
+        protected GraphicsCardNodeRepository $graphicsCardNodeRepository,
+        protected ProbeGraphicsCardRelationshipRepository $probeGraphicsCardRelationshipRepository,
+        protected PrinterNodeRepository $printerNodeRepository,
+        protected EthernetPciCardNodeRepository $ethernetPciCardNodeRepository,
+        protected ProbeEthernetPciCardRelationshipRepository $probeEthernetPciCardRelationshipRepository,
         #[Autowire('%app.hwinfo_dir%')]
         protected string $hwinfoDir,
         #[Autowire('%app.hwinfo_repo%')]
@@ -52,17 +57,20 @@ class IndexPciCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->updateRepository($this->hwinfoRepo, $this->hwinfoDir, $output);
+        $this->graphicsCardNodeRepository->setUp();
+        $this->printerNodeRepository->setUp();
+        $this->ethernetPciCardNodeRepository->setUp();
         foreach (ComputerType::cases() as $type) {
             $this->indexPciDevices($type, $output);
         }
-        $output->writeln('Indexed all computers and pci devices!');
+        $output->writeln('Indexed all pci devices!');
 
         return Command::SUCCESS;
     }
 
     protected function indexPciDevices(ComputerType $type, OutputInterface $output): void
     {
-        $output->writeln(sprintf('Indexing computers and pci devices for type %s...', $type->value));
+        $output->writeln(sprintf('Indexing pci devices for type %s...', $type->value));
         $this->browseFiles(
             $this->hwinfoDir.DIRECTORY_SEPARATOR.$type->value,
             $output,
@@ -88,9 +96,10 @@ class IndexPciCommand extends Command
                     $graphicsCard->vendor = $vendor;
                     $graphicsCard->device = $device;
                     $graphicsCard->subVendor = $subVendor;
-                    $graphicsCard->addProbe($this->getProbe($file->getFilename()));
                     $this->graphicsCardRepository->add($graphicsCard);
                 }
+                $this->graphicsCardNodeRepository->create($id, $vendor, $subVendor, $device);
+                $this->probeGraphicsCardRelationshipRepository->create($file->getFilename(), $id);
             }
         }
     }
@@ -108,6 +117,7 @@ class IndexPciCommand extends Command
                     $printer->device = $device;
                     $this->printerRepository->add($printer);
                 }
+                $this->printerNodeRepository->create($id, $vendor, $device);
             }
         }
     }
@@ -124,9 +134,10 @@ class IndexPciCommand extends Command
                     $ethernetPciCard->vendor = $vendor;
                     $ethernetPciCard->device = $device;
                     $ethernetPciCard->subVendor = $subVendor;
-                    $ethernetPciCard->addProbe($this->getProbe($file->getFilename()));
                     $this->ethernetPciCardRepository->add($ethernetPciCard);
                 }
+                $this->ethernetPciCardNodeRepository->create($id, $vendor, $subVendor, $device);
+                $this->probeEthernetPciCardRelationshipRepository->create($file->getFilename(), $id);
             }
         }
     }

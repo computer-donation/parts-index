@@ -4,8 +4,9 @@ namespace App\Command;
 
 use App\Entity\Computer;
 use App\Enum\ComputerType;
+use App\Neo4j\Node\ComputerRepository as ComputerNodeRepository;
+use App\Neo4j\Relationship\ProbeComputerRepository;
 use App\Repository\ComputerRepository;
-use App\Repository\ProbeRepository;
 use App\Tests\Process\VoidProcess;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -23,12 +24,12 @@ use Symfony\Component\Process\Process;
 class IndexComputerCommand extends Command
 {
     use RepoTrait;
-    use ProbeTrait;
     use FileTrait;
 
     public function __construct(
-        protected ProbeRepository $probeRepository,
         protected ComputerRepository $computerRepository,
+        protected ComputerNodeRepository $computerNodeRepository,
+        protected ProbeComputerRepository $probeComputerRelationshipRepository,
         #[Autowire('%app.sensors_dir%')]
         protected string $sensorsDir,
         #[Autowire('%app.sensors_repo%')]
@@ -47,6 +48,7 @@ class IndexComputerCommand extends Command
     {
         $this->updateRepository($this->sensorsRepo, $this->sensorsDir, $output);
         $this->updateRepository($this->hwinfoRepo, $this->hwinfoDir, $output);
+        $this->computerNodeRepository->setUp();
         foreach (ComputerType::cases() as $type) {
             $this->indexComputers($type, $output);
         }
@@ -82,8 +84,9 @@ class IndexComputerCommand extends Command
             $computer->type = $type;
             $computer->vendor = $vendor;
             $computer->model = $model;
-            $computer->addProbe($this->getProbe($file->getFilename()));
             $this->computerRepository->add($computer);
         }
+        $this->computerNodeRepository->create($hwid, $type->value, $vendor, $model);
+        $this->probeComputerRelationshipRepository->create($file->getFilename(), $hwid);
     }
 }

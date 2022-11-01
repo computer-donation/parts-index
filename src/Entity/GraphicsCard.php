@@ -3,15 +3,13 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Metadata\Get;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation\Ignore;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity]
-#[ApiResource]
+#[ApiResource(operations: [new Get()])]
 class GraphicsCard
 {
     #[ORM\Id]
@@ -30,26 +28,4 @@ class GraphicsCard
     #[ORM\Column(type: Types::STRING)]
     #[Assert\NotBlank]
     public string $device;
-
-    #[ORM\ManyToMany(targetEntity: Probe::class, mappedBy: 'graphicsCards')]
-    #[Ignore]
-    protected Collection $probes;
-
-    public function __construct()
-    {
-        $this->probes = new ArrayCollection();
-    }
-
-    public function getProbes(): Collection
-    {
-        return $this->probes;
-    }
-
-    public function addProbe(Probe $probe): void
-    {
-        if (!$this->probes->contains($probe)) {
-            $this->probes->add($probe);
-            $probe->addGraphicsCard($this);
-        }
-    }
 }
