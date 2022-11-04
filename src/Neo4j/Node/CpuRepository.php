@@ -2,18 +2,16 @@
 
 namespace App\Neo4j\Node;
 
-use Laudis\Neo4j\Contracts\ClientInterface;
+use App\Neo4j\FlushTrait;
 use Laudis\Neo4j\Databags\Statement;
 
 class CpuRepository
 {
-    public function __construct(protected ClientInterface $client)
-    {
-    }
+    use FlushTrait;
 
     public function setUp(): void
     {
-        $this->client->runStatements([
+        $this->addStatements([
             Statement::create('CREATE CONSTRAINT IF NOT EXISTS FOR (c:Cpu) REQUIRE c.id IS UNIQUE'),
             Statement::create('CREATE FULLTEXT INDEX searchCpu IF NOT EXISTS FOR (c:Cpu) ON EACH [c.vendor, c.model]'),
         ]);
@@ -21,6 +19,9 @@ class CpuRepository
 
     public function create(string $id, string $vendor, string $model): void
     {
-        $this->client->run('MERGE (cpu:Cpu {id: $id}) ON CREATE SET cpu += {vendor: $vendor, model: $model}', ['id' => $id, 'vendor' => $vendor, 'model' => $model]);
+        $this->addStatement(Statement::create(
+            'MERGE (cpu:Cpu {id: $id}) ON CREATE SET cpu += {vendor: $vendor, model: $model}',
+            ['id' => $id, 'vendor' => $vendor, 'model' => $model]
+        ));
     }
 }

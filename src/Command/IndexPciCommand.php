@@ -78,7 +78,10 @@ class IndexPciCommand extends Command
                 $this->indexGraphicsCard($file);
                 $this->indexPrinters($file);
                 $this->indexEthernetPciCard($file);
-                $flush && $this->printerRepository->flush(); // Doesn't matter which repository flush the changes
+                if ($flush) {
+                    $this->printerRepository->flush(); // Doesn't matter which repository flush the changes
+                    $this->printerNodeRepository->flush(); // Doesn't matter which repository flush the changes
+                }
             }
         );
         $output->writeln(' Finished!');

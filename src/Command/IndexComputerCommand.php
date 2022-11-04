@@ -68,7 +68,10 @@ class IndexComputerCommand extends Command
             $output,
             function (SplFileInfo $file, bool $flush) use ($type): void {
                 $this->indexComputer($file, $type);
-                $flush && $this->computerRepository->flush();
+                if ($flush) {
+                    $this->computerRepository->flush();
+                    $this->computerNodeRepository->flush(); // Doesn't matter which repository flush the changes
+                }
             }
         );
         $output->writeln(' Finished!');

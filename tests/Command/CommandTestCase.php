@@ -63,8 +63,8 @@ abstract class CommandTestCase extends KernelTestCase
     protected function initGraphDatabase(): void
     {
         $this->client->runStatements([
-            new Statement('MATCH (n) DETACH DELETE n', []),
-            // new Statement('CALL apoc.schema.assert({},{},true) YIELD label, key RETURN *', []),
+            Statement::create('MATCH (n) DETACH DELETE n', []),
+            // Statement::create('CALL apoc.schema.assert({},{},true) YIELD label, key RETURN *', []),
         ]);
     }
 

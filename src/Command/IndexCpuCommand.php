@@ -64,7 +64,10 @@ class IndexCpuCommand extends Command
             $output,
             function (SplFileInfo $file, bool $flush) use ($vendor, $output): void {
                 $this->indexCpu($file, $vendor, $output);
-                $flush && $this->cpuRepository->flush();
+                if ($flush) {
+                    $this->cpuRepository->flush();
+                    $this->cpuNodeRepository->flush(); // Doesn't matter which repository flush the changes
+                }
             }
         );
         $output->writeln(' Finished!');

@@ -2,16 +2,18 @@
 
 namespace App\Neo4j\Relationship;
 
-use Laudis\Neo4j\Contracts\ClientInterface;
+use App\Neo4j\FlushTrait;
+use Laudis\Neo4j\Databags\Statement;
 
 class ProbeEthernetPciCardRepository
 {
-    public function __construct(protected ClientInterface $client)
-    {
-    }
+    use FlushTrait;
 
     public function create(string $probeId, string $ethernetId): void
     {
-        $this->client->run('MERGE (ethernet:EthernetPciCard {id: $ethernetId}) MERGE (probe:Probe {id: $probeId}) MERGE (probe)-[r:HAS_ETHERNET_PCI]->(ethernet)', ['ethernetId' => $ethernetId, 'probeId' => $probeId]);
+        $this->addStatement(Statement::create(
+            'MERGE (ethernet:EthernetPciCard {id: $ethernetId}) MERGE (probe:Probe {id: $probeId}) MERGE (probe)-[r:HAS_ETHERNET_PCI]->(ethernet)',
+            ['ethernetId' => $ethernetId, 'probeId' => $probeId]
+        ));
     }
 }
