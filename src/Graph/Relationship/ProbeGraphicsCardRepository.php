@@ -1,19 +1,18 @@
 <?php
 
-namespace App\Neo4j\Relationship;
+namespace App\Graph\Relationship;
 
-use App\Neo4j\FlushTrait;
-use Laudis\Neo4j\Databags\Statement;
+use App\Graph\GraphTrait;
 
 class ProbeGraphicsCardRepository
 {
-    use FlushTrait;
+    use GraphTrait;
 
     public function create(string $probeId, string $gpuId): void
     {
-        $this->addStatement(Statement::create(
+        $this->graphHelper->rawQuery(
             'MERGE (gpu:GraphicsCard {id: $gpuId}) MERGE (probe:Probe {id: $probeId}) MERGE (probe)-[r:HAS_GPU]->(gpu)',
             ['gpuId' => $gpuId, 'probeId' => $probeId]
-        ));
+        );
     }
 }

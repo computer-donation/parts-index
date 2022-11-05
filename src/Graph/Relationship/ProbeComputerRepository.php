@@ -1,19 +1,18 @@
 <?php
 
-namespace App\Neo4j\Relationship;
+namespace App\Graph\Relationship;
 
-use App\Neo4j\FlushTrait;
-use Laudis\Neo4j\Databags\Statement;
+use App\Graph\GraphTrait;
 
 class ProbeComputerRepository
 {
-    use FlushTrait;
+    use GraphTrait;
 
     public function create(string $probeId, string $computerId): void
     {
-        $this->addStatement(Statement::create(
+        $this->graphHelper->rawQuery(
             'MERGE (computer:Computer {id: $computerId}) MERGE (probe:Probe {id: $probeId}) MERGE (probe)-[r:HAS_COMPUTER]->(computer)',
             ['computerId' => $computerId, 'probeId' => $probeId]
-        ));
+        );
     }
 }

@@ -259,28 +259,28 @@ class IndexPciCommandTest extends CommandTestCase
 
     protected function assertGraphicsCardNode(string $id, string $vendor, string $device, string $subVendor): void
     {
-        $result = $this->client->run('MATCH (gpu:GraphicsCard {id: $id}) RETURN gpu', ['id' => $id])->first();
-        $gpu = $result->get('gpu');
-        $this->assertSame($vendor, $gpu->getProperty('vendor'));
-        $this->assertSame($device, $gpu->getProperty('device'));
-        $this->assertSame($subVendor, $gpu->getProperty('subVendor'));
+        $result = $this->graphHelper->query('MATCH (gpu:GraphicsCard {id: $id}) RETURN gpu.vendor, gpu.device, gpu.subVendor', ['id' => $id])->getResultSet();
+        $gpu = $result[0];
+        $this->assertSame($vendor, $gpu[0]);
+        $this->assertSame($device, $gpu[1]);
+        $this->assertSame($subVendor, $gpu[2]);
     }
 
     protected function assertEthernetPciCardNode(string $id, string $vendor, string $device, string $subVendor): void
     {
-        $result = $this->client->run('MATCH (ethernet:EthernetPciCard {id: $id}) RETURN ethernet', ['id' => $id])->first();
-        $ethernet = $result->get('ethernet');
-        $this->assertSame($vendor, $ethernet->getProperty('vendor'));
-        $this->assertSame($device, $ethernet->getProperty('device'));
-        $this->assertSame($subVendor, $ethernet->getProperty('subVendor'));
+        $result = $this->graphHelper->query('MATCH (ethernet:EthernetPciCard {id: $id}) RETURN ethernet.vendor, ethernet.device, ethernet.subVendor', ['id' => $id])->getResultSet();
+        $ethernet = $result[0];
+        $this->assertSame($vendor, $ethernet[0]);
+        $this->assertSame($device, $ethernet[1]);
+        $this->assertSame($subVendor, $ethernet[2]);
     }
 
     protected function assertPrinterNode(string $id, string $vendor, string $device): void
     {
-        $result = $this->client->run('MATCH (printer:Printer {id: $id}) RETURN printer', ['id' => $id])->first();
-        $printer = $result->get('printer');
-        $this->assertSame($vendor, $printer->getProperty('vendor'));
-        $this->assertSame($device, $printer->getProperty('device'));
+        $result = $this->graphHelper->query('MATCH (printer:Printer {id: $id}) RETURN printer.vendor, printer.device', ['id' => $id])->getResultSet();
+        $printer = $result[0];
+        $this->assertSame($vendor, $printer[0]);
+        $this->assertSame($device, $printer[1]);
     }
 
     protected function assertRelationships(): void
@@ -298,8 +298,8 @@ class IndexPciCommandTest extends CommandTestCase
         $args = func_get_args();
         $gpuId = reset($args);
         $probeId = end($args);
-        $result = $this->client->run('MATCH (gpu:GraphicsCard {id: $gpuId}) MATCH (probe:Probe {id: $probeId}) RETURN exists((probe)-[:HAS_GPU]->(gpu)) as hasRelationship', ['probeId' => $probeId, 'gpuId' => $gpuId])->first();
-        $this->assertTrue($result->get('hasRelationship'));
+        $result = $this->graphHelper->query('MATCH (gpu:GraphicsCard {id: $gpuId}) MATCH (probe:Probe {id: $probeId}) RETURN exists((probe)-[:HAS_GPU]->(gpu)) as hasRelationship', ['probeId' => $probeId, 'gpuId' => $gpuId])->getResultSet();
+        $this->assertSame('true', $result[0][0]);
     }
 
     protected function assertProbeEthernetPciCardRelationship(): void
@@ -307,7 +307,7 @@ class IndexPciCommandTest extends CommandTestCase
         $args = func_get_args();
         $ethernetId = reset($args);
         $probeId = end($args);
-        $result = $this->client->run('MATCH (ethernet:EthernetPciCard {id: $ethernetId}) MATCH (probe:Probe {id: $probeId}) RETURN exists((probe)-[:HAS_ETHERNET_PCI]->(ethernet)) as hasRelationship', ['probeId' => $probeId, 'ethernetId' => $ethernetId])->first();
-        $this->assertTrue($result->get('hasRelationship'));
+        $result = $this->graphHelper->query('MATCH (ethernet:EthernetPciCard {id: $ethernetId}) MATCH (probe:Probe {id: $probeId}) RETURN exists((probe)-[:HAS_ETHERNET_PCI]->(ethernet)) as hasRelationship', ['probeId' => $probeId, 'ethernetId' => $ethernetId])->getResultSet();
+        $this->assertSame('true', $result[0][0]);
     }
 }

@@ -4,8 +4,8 @@ namespace App\Command;
 
 use App\Entity\Motherboard;
 use App\Enum\ComputerType;
-use App\Neo4j\Node\MotherboardRepository as MotherboardNodeRepository;
-use App\Neo4j\Relationship\ComputerMotherboardRepository;
+use App\Graph\Node\MotherboardRepository as MotherboardNodeRepository;
+use App\Graph\Relationship\ComputerMotherboardRepository;
 use App\Repository\MotherboardRepository;
 use App\Tests\Process\VoidProcess;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -64,10 +64,7 @@ class IndexMotherboardCommand extends Command
             $output,
             function (SplFileInfo $file, bool $flush) use ($output): void {
                 $this->indexMotherboard($file, $output);
-                if ($flush) {
-                    $this->motherboardRepository->flush();
-                    $this->motherboardNodeRepository->flush(); // Doesn't matter which repository flush the changes
-                }
+                $flush && $this->motherboardRepository->flush();
             }
         );
         $output->writeln(' Finished!');

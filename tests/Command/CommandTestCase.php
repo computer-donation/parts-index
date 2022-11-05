@@ -2,10 +2,9 @@
 
 namespace App\Tests\Command;
 
+use App\Graph\GraphHelper;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
-use Laudis\Neo4j\Contracts\ClientInterface;
-use Laudis\Neo4j\Databags\Statement;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -13,7 +12,7 @@ use Symfony\Component\Console\Tester\CommandTester;
 abstract class CommandTestCase extends KernelTestCase
 {
     protected ?EntityManagerInterface $entityManager = null;
-    protected ?ClientInterface $client = null;
+    protected ?GraphHelper $graphHelper = null;
 
     protected function setUp(): void
     {
@@ -21,7 +20,7 @@ abstract class CommandTestCase extends KernelTestCase
 
         $container = self::$kernel->getContainer();
         $this->entityManager = $container->get('doctrine')->getManager();
-        $this->client = $container->get('test.'.ClientInterface::class);
+        $this->graphHelper = $container->get('test.'.GraphHelper::class);
 
         $this->initDatabase();
         $this->initGraphDatabase();
@@ -50,7 +49,7 @@ abstract class CommandTestCase extends KernelTestCase
         // doing this is recommended to avoid memory leaks
         $this->entityManager->close();
         $this->entityManager = null;
-        $this->client = null;
+        $this->graphHelper = null;
     }
 
     protected function initDatabase(): void
@@ -62,10 +61,7 @@ abstract class CommandTestCase extends KernelTestCase
 
     protected function initGraphDatabase(): void
     {
-        $this->client->runStatements([
-            Statement::create('MATCH (n) DETACH DELETE n', []),
-            // Statement::create('CALL apoc.schema.assert({},{},true) YIELD label, key RETURN *', []),
-        ]);
+        $this->graphHelper->delete();
     }
 
     abstract protected function getCommand(): string;

@@ -4,8 +4,8 @@ namespace App\Command;
 
 use App\Entity\Cpu;
 use App\Enum\CpuVendor;
-use App\Neo4j\Node\CpuRepository as CpuNodeRepository;
-use App\Neo4j\Relationship\ProbeCpuRepository;
+use App\Graph\Node\CpuRepository as CpuNodeRepository;
+use App\Graph\Relationship\ProbeCpuRepository;
 use App\Repository\CpuRepository;
 use App\Tests\Process\VoidProcess;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -64,10 +64,7 @@ class IndexCpuCommand extends Command
             $output,
             function (SplFileInfo $file, bool $flush) use ($vendor, $output): void {
                 $this->indexCpu($file, $vendor, $output);
-                if ($flush) {
-                    $this->cpuRepository->flush();
-                    $this->cpuNodeRepository->flush(); // Doesn't matter which repository flush the changes
-                }
+                $flush && $this->cpuRepository->flush();
             }
         );
         $output->writeln(' Finished!');
