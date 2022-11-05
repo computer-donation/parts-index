@@ -106,11 +106,11 @@ class IndexMotherboardCommandTest extends CommandTestCase
 
     protected function assertMotherboardNode(string $id, string $manufacturer, string $productName, string $version): void
     {
-        $result = $this->client->run('MATCH (motherboard:Motherboard {id: $id}) RETURN motherboard', ['id' => $id])->first();
-        $motherboard = $result->get('motherboard');
-        $this->assertSame($manufacturer, $motherboard->getProperty('manufacturer'));
-        $this->assertSame($productName, $motherboard->getProperty('productName'));
-        $this->assertSame($version, $motherboard->getProperty('version'));
+        $result = $this->graphHelper->query('MATCH (motherboard:Motherboard {id: $id}) RETURN motherboard.manufacturer, motherboard.productName, motherboard.version', ['id' => $id])->getResultSet();
+        $motherboard = $result[0];
+        $this->assertSame($manufacturer, $motherboard[0]);
+        $this->assertSame($productName, $motherboard[1]);
+        $this->assertSame($version, $motherboard[2]);
     }
 
     protected function assertRelationships(): void
@@ -125,7 +125,7 @@ class IndexMotherboardCommandTest extends CommandTestCase
         $args = func_get_args();
         $motherboardId = reset($args);
         $computerId = end($args);
-        $result = $this->client->run('MATCH (computer:Computer {id: $computerId}) MATCH (motherboard:Motherboard {id: $motherboardId}) RETURN exists((computer)-[:HAS_MOTHERBOARD]->(motherboard)) as hasRelationship', ['computerId' => $computerId, 'motherboardId' => $motherboardId])->first();
-        $this->assertTrue($result->get('hasRelationship'));
+        $result = $this->graphHelper->query('MATCH (computer:Computer {id: $computerId}) MATCH (motherboard:Motherboard {id: $motherboardId}) RETURN exists((computer)-[:HAS_MOTHERBOARD]->(motherboard)) as hasRelationship', ['computerId' => $computerId, 'motherboardId' => $motherboardId])->getResultSet();
+        $this->assertSame('true', $result[0][0]);
     }
 }

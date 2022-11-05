@@ -2,5 +2,5 @@ services:
     _defaults:
         public: true
 
-    test.Laudis\Neo4j\Contracts\ClientInterface:
-        alias: 'Laudis\Neo4j\Contracts\ClientInterface'
+    test.App\Graph\GraphHelper:
+        alias: 'App\Graph\GraphHelper'

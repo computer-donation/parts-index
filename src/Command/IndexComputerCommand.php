@@ -4,8 +4,8 @@ namespace App\Command;
 
 use App\Entity\Computer;
 use App\Enum\ComputerType;
-use App\Neo4j\Node\ComputerRepository as ComputerNodeRepository;
-use App\Neo4j\Relationship\ProbeComputerRepository;
+use App\Graph\Node\ComputerRepository as ComputerNodeRepository;
+use App\Graph\Relationship\ProbeComputerRepository;
 use App\Repository\ComputerRepository;
 use App\Tests\Process\VoidProcess;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -68,10 +68,7 @@ class IndexComputerCommand extends Command
             $output,
             function (SplFileInfo $file, bool $flush) use ($type): void {
                 $this->indexComputer($file, $type);
-                if ($flush) {
-                    $this->computerRepository->flush();
-                    $this->computerNodeRepository->flush(); // Doesn't matter which repository flush the changes
-                }
+                $flush && $this->computerRepository->flush();
             }
         );
         $output->writeln(' Finished!');

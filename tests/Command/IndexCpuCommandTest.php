@@ -91,10 +91,10 @@ class IndexCpuCommandTest extends CommandTestCase
 
     protected function assertCpuNode(string $id, CpuVendor $vendor, string $model): void
     {
-        $result = $this->client->run('MATCH (cpu:Cpu {id: $id}) RETURN cpu', ['id' => $id])->first();
-        $cpu = $result->get('cpu');
-        $this->assertSame($vendor->value, $cpu->getProperty('vendor'));
-        $this->assertSame($model, $cpu->getProperty('model'));
+        $result = $this->graphHelper->query('MATCH (cpu:Cpu {id: $id}) RETURN cpu.vendor, cpu.model', ['id' => $id])->getResultSet();
+        $cpu = $result[0];
+        $this->assertSame($vendor->value, $cpu[0]);
+        $this->assertSame($model, $cpu[1]);
     }
 
     protected function assertRelationships(): void
@@ -109,7 +109,7 @@ class IndexCpuCommandTest extends CommandTestCase
         $args = func_get_args();
         $cpuId = reset($args);
         $probeId = end($args);
-        $result = $this->client->run('MATCH (cpu:Cpu {id: $cpuId}) MATCH (probe:Probe {id: $probeId}) RETURN exists((probe)-[:HAS_CPU]->(cpu)) as hasRelationship', ['cpuId' => $cpuId, 'probeId' => $probeId])->first();
-        $this->assertTrue($result->get('hasRelationship'));
+        $result = $this->graphHelper->query('MATCH (cpu:Cpu {id: $cpuId}) MATCH (probe:Probe {id: $probeId}) RETURN exists((probe)-[:HAS_CPU]->(cpu)) as hasRelationship', ['cpuId' => $cpuId, 'probeId' => $probeId])->getResultSet();
+        $this->assertSame('true', $result[0][0]);
     }
 }

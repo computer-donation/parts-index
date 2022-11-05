@@ -38,16 +38,12 @@ jobs:
       if: github.event_name == 'push'
 
     services:
-      neo4j:
-        image: neo4j
+      redisgraph:
+        image: redislabs/redisgraph
         ports:
-          - 7687:7687
-          - 7474:7474
-        env:
-          NEO4J_AUTH: none
+          - 6379:6379
         options: >-
-          --health-cmd "wget http://localhost:7474 || exit 1"
+          --health-cmd "redis-cli ping | grep PONG"
           --health-interval 1s
-          --health-timeout 10s
-          --health-retries 20
-          --health-start-period 3s
+          --health-timeout 3s
+          --health-retries 5

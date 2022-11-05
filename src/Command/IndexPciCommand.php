@@ -6,11 +6,11 @@ use App\Entity\EthernetPciCard;
 use App\Entity\GraphicsCard;
 use App\Entity\Printer;
 use App\Enum\ComputerType;
-use App\Neo4j\Node\EthernetPciCardRepository as EthernetPciCardNodeRepository;
-use App\Neo4j\Node\GraphicsCardRepository as GraphicsCardNodeRepository;
-use App\Neo4j\Node\PrinterRepository as PrinterNodeRepository;
-use App\Neo4j\Relationship\ProbeEthernetPciCardRepository as ProbeEthernetPciCardRelationshipRepository;
-use App\Neo4j\Relationship\ProbeGraphicsCardRepository as ProbeGraphicsCardRelationshipRepository;
+use App\Graph\Node\EthernetPciCardRepository as EthernetPciCardNodeRepository;
+use App\Graph\Node\GraphicsCardRepository as GraphicsCardNodeRepository;
+use App\Graph\Node\PrinterRepository as PrinterNodeRepository;
+use App\Graph\Relationship\ProbeEthernetPciCardRepository as ProbeEthernetPciCardRelationshipRepository;
+use App\Graph\Relationship\ProbeGraphicsCardRepository as ProbeGraphicsCardRelationshipRepository;
 use App\Repository\EthernetPciCardRepository;
 use App\Repository\GraphicsCardRepository;
 use App\Repository\PrinterRepository;
@@ -78,10 +78,7 @@ class IndexPciCommand extends Command
                 $this->indexGraphicsCard($file);
                 $this->indexPrinters($file);
                 $this->indexEthernetPciCard($file);
-                if ($flush) {
-                    $this->printerRepository->flush(); // Doesn't matter which repository flush the changes
-                    $this->printerNodeRepository->flush(); // Doesn't matter which repository flush the changes
-                }
+                $flush && $this->printerRepository->flush(); // Doesn't matter which repository flush the changes
             }
         );
         $output->writeln(' Finished!');

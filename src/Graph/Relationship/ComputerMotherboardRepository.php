@@ -1,19 +1,18 @@
 <?php
 
-namespace App\Neo4j\Relationship;
+namespace App\Graph\Relationship;
 
-use App\Neo4j\FlushTrait;
-use Laudis\Neo4j\Databags\Statement;
+use App\Graph\GraphTrait;
 
 class ComputerMotherboardRepository
 {
-    use FlushTrait;
+    use GraphTrait;
 
     public function create(string $computerId, string $motherboardId): void
     {
-        $this->addStatement(Statement::create(
+        $this->graphHelper->rawQuery(
             'MERGE (computer:Computer {id: $computerId}) MERGE (motherboard:Motherboard {id: $motherboardId}) MERGE (computer)-[r:HAS_MOTHERBOARD]->(motherboard)',
             ['computerId' => $computerId, 'motherboardId' => $motherboardId]
-        ));
+        );
     }
 }

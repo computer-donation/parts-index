@@ -1,27 +1,25 @@
 <?php
 
-namespace App\Neo4j\Node;
+namespace App\Graph\Node;
 
-use App\Neo4j\FlushTrait;
-use Laudis\Neo4j\Databags\Statement;
+use App\Graph\GraphTrait;
 
 class MotherboardRepository
 {
-    use FlushTrait;
+    use GraphTrait;
 
     public function setUp(): void
     {
-        $this->addStatements([
-            Statement::create('CREATE CONSTRAINT IF NOT EXISTS FOR (m:Motherboard) REQUIRE m.id IS UNIQUE'),
-            Statement::create('CREATE FULLTEXT INDEX searchMotherboard IF NOT EXISTS FOR (m:Motherboard) ON EACH [m.manufacturer, m.productName, m.version]'),
-        ]);
+        $this->graphHelper->rawQuery('CREATE INDEX ON :Motherboard(id)');
+        // $this->graphHelper->rawQuery('CREATE CONSTRAINT ON (m:Motherboard) ASSERT m.id IS UNIQUE');
+        $this->graphHelper->rawQuery("CALL db.idx.fulltext.createNodeIndex('Motherboard', 'manufacturer', 'productName', 'version')");
     }
 
     public function create(string $id, string $manufacturer, string $productName, string $version): void
     {
-        $this->addStatement(Statement::create(
+        $this->graphHelper->rawQuery(
             'MERGE (motherboard:Motherboard {id: $id}) ON CREATE SET motherboard += {manufacturer: $manufacturer, productName: $productName, version: $version}',
             ['id' => $id, 'manufacturer' => $manufacturer, 'productName' => $productName, 'version' => $version]
-        ));
+        );
     }
 }

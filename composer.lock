@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "91cce5b1a2a62733693bd6e5288fd537",
+    "content-hash": "dfb883805d58b30a29004a2627d32934",
     "packages": [
         {
             "name": "api-platform/core",
-            "version": "v3.0.2",
+            "version": "v3.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/api-platform/core.git",
-                "reference": "66d30970ad3449e673b824dfbe37d062599022f9"
+                "reference": "6771f53f87b25bf62dbdc7819e69bdf389810b7e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/api-platform/core/zipball/66d30970ad3449e673b824dfbe37d062599022f9",
-                "reference": "66d30970ad3449e673b824dfbe37d062599022f9",
+                "url": "https://api.github.com/repos/api-platform/core/zipball/6771f53f87b25bf62dbdc7819e69bdf389810b7e",
+                "reference": "6771f53f87b25bf62dbdc7819e69bdf389810b7e",
                 "shasum": ""
             },
             "require": {
@@ -162,7 +162,7 @@
             ],
             "support": {
                 "issues": "https://github.com/api-platform/core/issues",
-                "source": "https://github.com/api-platform/core/tree/v3.0.2"
+                "source": "https://github.com/api-platform/core/tree/v3.0.3"
             },
             "funding": [
                 {
@@ -170,73 +170,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-10-07T11:34:55+00:00"
-        },
-        {
-            "name": "clue/stream-filter",
-            "version": "v1.6.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/clue/stream-filter.git",
-                "reference": "d6169430c7731d8509da7aecd0af756a5747b78e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/clue/stream-filter/zipball/d6169430c7731d8509da7aecd0af756a5747b78e",
-                "reference": "d6169430c7731d8509da7aecd0af756a5747b78e",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^9.3 || ^5.7 || ^4.8.36"
-            },
-            "type": "library",
-            "autoload": {
-                "files": [
-                    "src/functions_include.php"
-                ],
-                "psr-4": {
-                    "Clue\\StreamFilter\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Christian Lück",
-                    "email": "christian@clue.engineering"
-                }
-            ],
-            "description": "A simple and modern approach to stream filtering in PHP",
-            "homepage": "https://github.com/clue/php-stream-filter",
-            "keywords": [
-                "bucket brigade",
-                "callback",
-                "filter",
-                "php_user_filter",
-                "stream",
-                "stream_filter_append",
-                "stream_filter_register"
-            ],
-            "support": {
-                "issues": "https://github.com/clue/stream-filter/issues",
-                "source": "https://github.com/clue/stream-filter/tree/v1.6.0"
-            },
-            "funding": [
-                {
-                    "url": "https://clue.engineering/support",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/clue",
-                    "type": "github"
-                }
-            ],
-            "time": "2022-02-21T13:15:14+00:00"
+            "time": "2022-11-04T19:08:27+00:00"
         },
         {
             "name": "doctrine/annotations",
@@ -1757,63 +1691,38 @@
             "time": "2022-09-13T10:33:30+00:00"
         },
         {
-            "name": "laudis/neo4j-php-client",
-            "version": "2.8.0",
+            "name": "mkorkmaz/redislabs-common",
+            "version": "0.2.2",
             "source": {
                 "type": "git",
-                "url": "https://github.com/neo4j-php/neo4j-php-client.git",
-                "reference": "395c13463db8c9196b8f213d451da4b453fae7ab"
+                "url": "https://github.com/mkorkmaz/redislabs-common.git",
+                "reference": "6ed9f7f49e16d45465954884cd7b92cf785c63f7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/neo4j-php/neo4j-php-client/zipball/395c13463db8c9196b8f213d451da4b453fae7ab",
-                "reference": "395c13463db8c9196b8f213d451da4b453fae7ab",
+                "url": "https://api.github.com/repos/mkorkmaz/redislabs-common/zipball/6ed9f7f49e16d45465954884cd7b92cf785c63f7",
+                "reference": "6ed9f7f49e16d45465954884cd7b92cf785c63f7",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
-                "laudis/typed-enum": "^1.3.2",
-                "php": "^7.4 || ^8.0",
-                "php-http/discovery": "^1.13",
-                "php-http/message": "^1.0",
-                "php-http/message-factory": "^1.0",
-                "psr/http-client": "^1.0",
-                "psr/http-factory": "^1.0",
-                "psr/http-message": "^1.0",
-                "psr/simple-cache": "^1.0",
-                "stefanak-michal/bolt": "^4.1",
-                "symfony/polyfill-php80": "^1.2"
-            },
-            "provide": {
-                "psr/simple-cache-implementation": "2.0|3.0"
+                "php": "^7.3 | ^8.0"
             },
             "require-dev": {
-                "cache/integration-tests": "dev-master",
-                "friendsofphp/php-cs-fixer": "3.8.0",
-                "kriswallsmith/buzz": "^1.2",
-                "lctrs/psalm-psr-container-plugin": "^1.3",
-                "monolog/monolog": "^2.2",
-                "nyholm/psr7": "^1.3",
-                "nyholm/psr7-server": "^1.0",
-                "php-di/php-di": "^6.3",
-                "phpunit/phpunit": "^9.0",
-                "psalm/plugin-phpunit": "^0.15.1",
-                "psr/container": "^1.1",
-                "psr/log": "^1.1",
-                "symfony/uid": "^5.0",
-                "symfony/var-dumper": "^5.0",
-                "vimeo/psalm": "4.29.0",
-                "vlucas/phpdotenv": "^5.0"
+                "codeception/codeception": "^4.1",
+                "codeception/module-asserts": "^1.3",
+                "ext-redis": "*",
+                "predis/predis": "^1.1",
+                "squizlabs/php_codesniffer": "^3.5"
             },
             "suggest": {
-                "composer-runtime-api": "Install composer 2 for auto detection of version in user agent",
-                "ext-bcmath": "Needed to implement bolt protocol",
-                "ext-sysvsem": "Needed for enabling connection pooling between processes"
+                "ext-redis": "If your application depends of redis extention.",
+                "predis/predis": "If your application depends on predis."
             },
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "Laudis\\Neo4j\\": "src/"
+                    "Redislabs\\": "src"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -1822,54 +1731,60 @@
             ],
             "authors": [
                 {
-                    "name": "Ghlen Nagels",
-                    "email": "ghlen@pm.me"
+                    "name": "Mehmet Korkmaz",
+                    "email": "mehmet@mkorkmaz.com"
                 }
             ],
-            "description": "Neo4j-PHP-Client is the most advanced PHP Client for Neo4j",
-            "keywords": [
-                "bolt",
-                "client",
-                "cluster",
-                "database",
-                "graph",
-                "high-availability",
-                "http",
-                "neo4j"
-            ],
+            "description": "Common library for Redislabs Modules. Contains Interfaces, General Exceptions, Abstracts and Traits",
             "support": {
-                "issues": "https://github.com/neo4j-php/neo4j-php-client/issues",
-                "source": "https://github.com/neo4j-php/neo4j-php-client/tree/2.8.0"
+                "issues": "https://github.com/mkorkmaz/redislabs-common/issues",
+                "source": "https://github.com/mkorkmaz/redislabs-common/tree/0.2.2"
             },
-            "time": "2022-10-13T11:14:03+00:00"
+            "time": "2020-11-29T10:26:17+00:00"
         },
         {
-            "name": "laudis/typed-enum",
-            "version": "1.3.2",
+            "name": "mkorkmaz/redislabs-redisgraph-php",
+            "version": "1.1.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/transistive/typed-enum.git",
-                "reference": "65cddd2ed0eedd1ff642d1ef632745ab2522c976"
+                "url": "https://github.com/mkorkmaz/redislabs-redisgraph-php.git",
+                "reference": "9f3e70196d3b0cfd24cac32619e1b167480c4b23"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/transistive/typed-enum/zipball/65cddd2ed0eedd1ff642d1ef632745ab2522c976",
-                "reference": "65cddd2ed0eedd1ff642d1ef632745ab2522c976",
+                "url": "https://api.github.com/repos/mkorkmaz/redislabs-redisgraph-php/zipball/9f3e70196d3b0cfd24cac32619e1b167480c4b23",
+                "reference": "9f3e70196d3b0cfd24cac32619e1b167480c4b23",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.4 || ^8.0"
+                "mkorkmaz/redislabs-common": "^0.2.2",
+                "php": "^7.4|^8.0",
+                "sevenecks/tableify": "^0.0.5"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "^3.3",
-                "phpunit/phpunit": "9.*",
-                "psalm/plugin-phpunit": "^0.16",
-                "vimeo/psalm": "^4.12"
+                "codeception/codeception": "^4.2.1",
+                "codeception/module-asserts": "^1.3.1",
+                "damianopetrungaro/php-commitizen": "^0.2.0",
+                "ext-redis": "*",
+                "malukenho/mcbumpface": "^1.1.5",
+                "php-coveralls/php-coveralls": "^v2.5.2",
+                "predis/predis": "^v1.1.10",
+                "roave/security-advisories": "dev-master",
+                "squizlabs/php_codesniffer": "^3.7.1",
+                "vimeo/psalm": "^4.24.0"
+            },
+            "suggest": {
+                "ext-redis": "If your application depends of redis PCEL extention.",
+                "mper/cypher-querybuilder": "A php query builder for cypher queries.",
+                "predis/predis": "If your application depends on predis."
             },
             "type": "library",
             "autoload": {
+                "files": [
+                    "src/functions.php"
+                ],
                 "psr-4": {
-                    "Laudis\\TypedEnum\\": "src/"
+                    "Redislabs\\Module\\RedisGraph\\": "src/RedisGraph"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -1878,16 +1793,16 @@
             ],
             "authors": [
                 {
-                    "name": "Ghlen Nagels",
-                    "email": "ghlen@pm.me"
+                    "name": "Mehmet Korkmaz",
+                    "email": "mehmet@mkorkmaz.com"
                 }
             ],
-            "description": "A small class allowing for typed enumerations.",
+            "description": "PHP Client for Redislabs Redis Graph Module.",
             "support": {
-                "issues": "https://github.com/transistive/typed-enum/issues",
-                "source": "https://github.com/transistive/typed-enum/tree/1.3.2"
+                "issues": "https://github.com/mkorkmaz/redislabs-redisgraph-php/issues",
+                "source": "https://github.com/mkorkmaz/redislabs-redisgraph-php/tree/1.1.1"
             },
-            "time": "2022-01-04T23:33:30+00:00"
+            "time": "2022-07-04T08:00:27+00:00"
         },
         {
             "name": "nelmio/cors-bundle",
@@ -1949,201 +1864,6 @@
                 "source": "https://github.com/nelmio/NelmioCorsBundle/tree/2.2.0"
             },
             "time": "2021-12-01T09:34:27+00:00"
-        },
-        {
-            "name": "php-http/discovery",
-            "version": "1.14.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/php-http/discovery.git",
-                "reference": "31d8ee46d0215108df16a8527c7438e96a4d7735"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/php-http/discovery/zipball/31d8ee46d0215108df16a8527c7438e96a4d7735",
-                "reference": "31d8ee46d0215108df16a8527c7438e96a4d7735",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^7.1 || ^8.0"
-            },
-            "conflict": {
-                "nyholm/psr7": "<1.0"
-            },
-            "require-dev": {
-                "graham-campbell/phpspec-skip-example-extension": "^5.0",
-                "php-http/httplug": "^1.0 || ^2.0",
-                "php-http/message-factory": "^1.0",
-                "phpspec/phpspec": "^5.1 || ^6.1"
-            },
-            "suggest": {
-                "php-http/message": "Allow to use Guzzle, Diactoros or Slim Framework factories"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.9-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Http\\Discovery\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Márk Sági-Kazár",
-                    "email": "mark.sagikazar@gmail.com"
-                }
-            ],
-            "description": "Finds installed HTTPlug implementations and PSR-7 message factories",
-            "homepage": "http://php-http.org",
-            "keywords": [
-                "adapter",
-                "client",
-                "discovery",
-                "factory",
-                "http",
-                "message",
-                "psr7"
-            ],
-            "support": {
-                "issues": "https://github.com/php-http/discovery/issues",
-                "source": "https://github.com/php-http/discovery/tree/1.14.3"
-            },
-            "time": "2022-07-11T14:04:40+00:00"
-        },
-        {
-            "name": "php-http/message",
-            "version": "1.13.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/php-http/message.git",
-                "reference": "7886e647a30a966a1a8d1dad1845b71ca8678361"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/php-http/message/zipball/7886e647a30a966a1a8d1dad1845b71ca8678361",
-                "reference": "7886e647a30a966a1a8d1dad1845b71ca8678361",
-                "shasum": ""
-            },
-            "require": {
-                "clue/stream-filter": "^1.5",
-                "php": "^7.1 || ^8.0",
-                "php-http/message-factory": "^1.0.2",
-                "psr/http-message": "^1.0"
-            },
-            "provide": {
-                "php-http/message-factory-implementation": "1.0"
-            },
-            "require-dev": {
-                "ergebnis/composer-normalize": "^2.6",
-                "ext-zlib": "*",
-                "guzzlehttp/psr7": "^1.0",
-                "laminas/laminas-diactoros": "^2.0",
-                "phpspec/phpspec": "^5.1 || ^6.3 || ^7.1",
-                "slim/slim": "^3.0"
-            },
-            "suggest": {
-                "ext-zlib": "Used with compressor/decompressor streams",
-                "guzzlehttp/psr7": "Used with Guzzle PSR-7 Factories",
-                "laminas/laminas-diactoros": "Used with Diactoros Factories",
-                "slim/slim": "Used with Slim Framework PSR-7 implementation"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.10-dev"
-                }
-            },
-            "autoload": {
-                "files": [
-                    "src/filters.php"
-                ],
-                "psr-4": {
-                    "Http\\Message\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Márk Sági-Kazár",
-                    "email": "mark.sagikazar@gmail.com"
-                }
-            ],
-            "description": "HTTP Message related tools",
-            "homepage": "http://php-http.org",
-            "keywords": [
-                "http",
-                "message",
-                "psr-7"
-            ],
-            "support": {
-                "issues": "https://github.com/php-http/message/issues",
-                "source": "https://github.com/php-http/message/tree/1.13.0"
-            },
-            "time": "2022-02-11T13:41:14+00:00"
-        },
-        {
-            "name": "php-http/message-factory",
-            "version": "v1.0.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/php-http/message-factory.git",
-                "reference": "a478cb11f66a6ac48d8954216cfed9aa06a501a1"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/php-http/message-factory/zipball/a478cb11f66a6ac48d8954216cfed9aa06a501a1",
-                "reference": "a478cb11f66a6ac48d8954216cfed9aa06a501a1",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.4",
-                "psr/http-message": "^1.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Http\\Message\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Márk Sági-Kazár",
-                    "email": "mark.sagikazar@gmail.com"
-                }
-            ],
-            "description": "Factory interfaces for PSR-7 HTTP Message",
-            "homepage": "http://php-http.org",
-            "keywords": [
-                "factory",
-                "http",
-                "message",
-                "stream",
-                "uri"
-            ],
-            "support": {
-                "issues": "https://github.com/php-http/message-factory/issues",
-                "source": "https://github.com/php-http/message-factory/tree/master"
-            },
-            "time": "2015-12-19T14:08:53+00:00"
         },
         {
             "name": "phpdocumentor/reflection-common",
@@ -2508,166 +2228,6 @@
             "time": "2019-01-08T18:20:26+00:00"
         },
         {
-            "name": "psr/http-client",
-            "version": "1.0.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/php-fig/http-client.git",
-                "reference": "2dfb5f6c5eff0e91e20e913f8c5452ed95b86621"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/http-client/zipball/2dfb5f6c5eff0e91e20e913f8c5452ed95b86621",
-                "reference": "2dfb5f6c5eff0e91e20e913f8c5452ed95b86621",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^7.0 || ^8.0",
-                "psr/http-message": "^1.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Psr\\Http\\Client\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "PHP-FIG",
-                    "homepage": "http://www.php-fig.org/"
-                }
-            ],
-            "description": "Common interface for HTTP clients",
-            "homepage": "https://github.com/php-fig/http-client",
-            "keywords": [
-                "http",
-                "http-client",
-                "psr",
-                "psr-18"
-            ],
-            "support": {
-                "source": "https://github.com/php-fig/http-client/tree/master"
-            },
-            "time": "2020-06-29T06:28:15+00:00"
-        },
-        {
-            "name": "psr/http-factory",
-            "version": "1.0.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/php-fig/http-factory.git",
-                "reference": "12ac7fcd07e5b077433f5f2bee95b3a771bf61be"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/http-factory/zipball/12ac7fcd07e5b077433f5f2bee95b3a771bf61be",
-                "reference": "12ac7fcd07e5b077433f5f2bee95b3a771bf61be",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.0.0",
-                "psr/http-message": "^1.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Psr\\Http\\Message\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "PHP-FIG",
-                    "homepage": "http://www.php-fig.org/"
-                }
-            ],
-            "description": "Common interfaces for PSR-7 HTTP message factories",
-            "keywords": [
-                "factory",
-                "http",
-                "message",
-                "psr",
-                "psr-17",
-                "psr-7",
-                "request",
-                "response"
-            ],
-            "support": {
-                "source": "https://github.com/php-fig/http-factory/tree/master"
-            },
-            "time": "2019-04-30T12:38:16+00:00"
-        },
-        {
-            "name": "psr/http-message",
-            "version": "1.0.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/php-fig/http-message.git",
-                "reference": "f6561bf28d520154e4b0ec72be95418abe6d9363"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/http-message/zipball/f6561bf28d520154e4b0ec72be95418abe6d9363",
-                "reference": "f6561bf28d520154e4b0ec72be95418abe6d9363",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Psr\\Http\\Message\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "PHP-FIG",
-                    "homepage": "http://www.php-fig.org/"
-                }
-            ],
-            "description": "Common interface for HTTP messages",
-            "homepage": "https://github.com/php-fig/http-message",
-            "keywords": [
-                "http",
-                "http-message",
-                "psr",
-                "psr-7",
-                "request",
-                "response"
-            ],
-            "support": {
-                "source": "https://github.com/php-fig/http-message/tree/master"
-            },
-            "time": "2016-08-06T14:39:51+00:00"
-        },
-        {
             "name": "psr/link",
             "version": "2.0.1",
             "source": {
@@ -2774,31 +2334,26 @@
             "time": "2021-07-14T16:46:02+00:00"
         },
         {
-            "name": "psr/simple-cache",
-            "version": "1.0.1",
+            "name": "sevenecks/ansi",
+            "version": "1.0.9",
             "source": {
                 "type": "git",
-                "url": "https://github.com/php-fig/simple-cache.git",
-                "reference": "408d5eafb83c57f6365a3ca330ff23aa4a5fa39b"
+                "url": "https://github.com/SevenEcks/ansi.git",
+                "reference": "54921aa60f78a700ab2cf8bad5ea9554e1c2c6ac"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/simple-cache/zipball/408d5eafb83c57f6365a3ca330ff23aa4a5fa39b",
-                "reference": "408d5eafb83c57f6365a3ca330ff23aa4a5fa39b",
+                "url": "https://api.github.com/repos/SevenEcks/ansi/zipball/54921aa60f78a700ab2cf8bad5ea9554e1c2c6ac",
+                "reference": "54921aa60f78a700ab2cf8bad5ea9554e1c2c6ac",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.0"
+                "php": ">=5.4"
             },
             "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0.x-dev"
-                }
-            },
             "autoload": {
                 "psr-4": {
-                    "Psr\\SimpleCache\\": "src/"
+                    "SevenEcks\\Ansi\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -2807,54 +2362,48 @@
             ],
             "authors": [
                 {
-                    "name": "PHP-FIG",
-                    "homepage": "http://www.php-fig.org/"
+                    "name": "Brendan Butts",
+                    "email": "bbutts@stormcode.net"
                 }
             ],
-            "description": "Common interfaces for simple caching",
+            "description": "This package offers an API to colorize strings of text with various ANSI colors using static methods.",
+            "homepage": "https://github.com/sevenecks",
             "keywords": [
-                "cache",
-                "caching",
-                "psr",
-                "psr-16",
-                "simple-cache"
+                "ansi",
+                "cli",
+                "color",
+                "colors",
+                "console",
+                "shell"
             ],
             "support": {
-                "source": "https://github.com/php-fig/simple-cache/tree/master"
+                "issues": "https://github.com/SevenEcks/ansi/issues",
+                "source": "https://github.com/SevenEcks/ansi/tree/1.0.9"
             },
-            "time": "2017-10-23T01:57:42+00:00"
+            "time": "2018-09-11T19:26:37+00:00"
         },
         {
-            "name": "stefanak-michal/bolt",
-            "version": "v4.1.1",
+            "name": "sevenecks/string-utils",
+            "version": "0.0.15",
             "source": {
                 "type": "git",
-                "url": "https://github.com/neo4j-php/Bolt.git",
-                "reference": "3a549564ceaf21c652ca1c9989e15b71e9044300"
+                "url": "https://github.com/SevenEcks/string-utils.git",
+                "reference": "5d5a6e3d3d90da6e4c6e50910e8b981283a423c5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/neo4j-php/Bolt/zipball/3a549564ceaf21c652ca1c9989e15b71e9044300",
-                "reference": "3a549564ceaf21c652ca1c9989e15b71e9044300",
+                "url": "https://api.github.com/repos/SevenEcks/string-utils/zipball/5d5a6e3d3d90da6e4c6e50910e8b981283a423c5",
+                "reference": "5d5a6e3d3d90da6e4c6e50910e8b981283a423c5",
                 "shasum": ""
             },
             "require": {
-                "ext-mbstring": "*",
-                "php": ">=7.4"
-            },
-            "require-dev": {
-                "phpunit/phpunit": ">=9"
-            },
-            "suggest": {
-                "ext-openssl": "Needed when using StreamSocket connection class with SSL",
-                "ext-sockets": "Needed when using Socket connection class",
-                "laudis/neo4j-php-client": "Neo4j-PHP-Client is the most advanced PHP Client for Neo4j",
-                "stefanak-michal/neo4j-bolt-wrapper": "Wrapper for Neo4j PHP Bolt library to simplify usage."
+                "php": ">=5.4",
+                "sevenecks/ansi": "^1"
             },
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "Bolt\\": "src/"
+                    "SevenEcks\\StringUtils\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -2863,31 +2412,81 @@
             ],
             "authors": [
                 {
-                    "name": "Michal Stefanak",
-                    "homepage": "https://www.linkedin.com/in/michalstefanak/",
-                    "role": "Developer"
+                    "name": "Brendan Butts",
+                    "email": "bbutts@stormcode.net"
                 }
             ],
-            "description": "PHP library for communication with Neo4j graph database over TCP socket with Bolt protocol specification",
-            "homepage": "https://github.com/neo4j-php/Bolt",
+            "description": "A collection of string utilities for PHP, loosely based on the LambdaMOO $string_utils package.",
+            "homepage": "https://github.com/sevenecks",
             "keywords": [
-                "Socket",
-                "bolt",
-                "database",
-                "neo4j"
+                "cli",
+                "command line",
+                "console",
+                "formatting",
+                "lambdamoo",
+                "shell",
+                "string"
             ],
             "support": {
-                "docs": "https://www.neo4j.com/docs/bolt/current/",
-                "issues": "https://github.com/neo4j-php/Bolt/issues",
-                "source": "https://github.com/neo4j-php/Bolt"
+                "issues": "https://github.com/SevenEcks/string-utils/issues",
+                "source": "https://github.com/SevenEcks/string-utils/tree/master"
             },
-            "funding": [
+            "time": "2018-04-03T21:49:28+00:00"
+        },
+        {
+            "name": "sevenecks/tableify",
+            "version": "0.0.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/SevenEcks/tableify.git",
+                "reference": "f6d0e205fa5b8344123b5d7ebc09eb0a457e234c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/SevenEcks/tableify/zipball/f6d0e205fa5b8344123b5d7ebc09eb0a457e234c",
+                "reference": "f6d0e205fa5b8344123b5d7ebc09eb0a457e234c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.0",
+                "sevenecks/string-utils": "^0.0.15"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "SevenEcks\\Tableify\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
                 {
-                    "url": "https://ko-fi.com/michalstefanak",
-                    "type": "ko-fi"
+                    "name": "Brendan Butts",
+                    "email": "bbutts@stormcode.net"
                 }
             ],
-            "time": "2022-07-19T10:06:56+00:00"
+            "description": "Transform a multidimensional array into a pretty table that can be echoed to the screen or logged to a file.",
+            "homepage": "https://github.com/sevenecks",
+            "keywords": [
+                "array to table",
+                "cli",
+                "command line",
+                "console",
+                "formatting",
+                "logging",
+                "php",
+                "pretty printer",
+                "shell",
+                "string",
+                "table printer"
+            ],
+            "support": {
+                "issues": "https://github.com/SevenEcks/tableify/issues",
+                "source": "https://github.com/SevenEcks/tableify/tree/master"
+            },
+            "time": "2018-04-06T17:06:43+00:00"
         },
         {
             "name": "symfony/asset",
@@ -8868,7 +8467,8 @@
     "platform": {
         "php": ">=8.1",
         "ext-ctype": "*",
-        "ext-iconv": "*"
+        "ext-iconv": "*",
+        "ext-redis": "*"
     },
     "platform-dev": [],
     "plugin-api-version": "2.3.0"

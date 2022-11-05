@@ -158,11 +158,11 @@ class IndexComputerCommandTest extends CommandTestCase
 
     protected function assertComputerNode(string $id, ComputerType $type, string $vendor, string $model): void
     {
-        $result = $this->client->run('MATCH (computer:Computer {id: $id}) RETURN computer', ['id' => $id])->first();
-        $computer = $result->get('computer');
-        $this->assertSame($type->value, $computer->getProperty('type'));
-        $this->assertSame($vendor, $computer->getProperty('vendor'));
-        $this->assertSame($model, $computer->getProperty('model'));
+        $result = $this->graphHelper->query('MATCH (computer:Computer {id: $id}) RETURN computer.type, computer.vendor, computer.model', ['id' => $id])->getResultSet();
+        $computer = $result[0];
+        $this->assertSame($type->value, $computer[0]);
+        $this->assertSame($vendor, $computer[1]);
+        $this->assertSame($model, $computer[2]);
     }
 
     protected function assertRelationships(): void
@@ -177,7 +177,7 @@ class IndexComputerCommandTest extends CommandTestCase
         $args = func_get_args();
         $computerId = reset($args);
         $probeId = end($args);
-        $result = $this->client->run('MATCH (computer:Computer {id: $computerId}) MATCH (probe:Probe {id: $probeId}) RETURN exists((probe)-[:HAS_COMPUTER]->(computer)) as hasRelationship', ['computerId' => $computerId, 'probeId' => $probeId])->first();
-        $this->assertTrue($result->get('hasRelationship'));
+        $result = $this->graphHelper->query('MATCH (computer:Computer {id: $computerId}) MATCH (probe:Probe {id: $probeId}) RETURN exists((probe)-[:HAS_COMPUTER]->(computer)) as hasRelationship', ['computerId' => $computerId, 'probeId' => $probeId])->getResultSet();
+        $this->assertSame('true', $result[0][0]);
     }
 }
