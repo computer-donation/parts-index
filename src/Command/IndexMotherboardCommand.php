@@ -64,7 +64,10 @@ class IndexMotherboardCommand extends Command
             $output,
             function (SplFileInfo $file, bool $flush) use ($output): void {
                 $this->indexMotherboard($file, $output);
-                $flush && $this->motherboardRepository->flush();
+                if ($flush) {
+                    $this->motherboardRepository->flush();
+                    $this->motherboardNodeRepository->flush(); // Doesn't matter which repository flush the changes
+                }
             }
         );
         $output->writeln(' Finished!');
