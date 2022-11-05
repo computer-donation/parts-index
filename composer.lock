@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "dfb883805d58b30a29004a2627d32934",
+    "content-hash": "8a3aa2d3f5b65be89d82fd0aa51b230f",
     "packages": [
         {
             "name": "api-platform/core",
@@ -6381,6 +6381,85 @@
                 "source": "https://github.com/webmozarts/assert/tree/1.11.0"
             },
             "time": "2022-06-03T18:03:27+00:00"
+        },
+        {
+            "name": "wikibase-solutions/php-cypher-dsl",
+            "version": "4.4.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/neo4j-php/php-cypher-dsl.git",
+                "reference": "e4cb18a346f6097c573e487790b29878ebe3364c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/neo4j-php/php-cypher-dsl/zipball/e4cb18a346f6097c573e487790b29878ebe3364c",
+                "reference": "e4cb18a346f6097c573e487790b29878ebe3364c",
+                "shasum": ""
+            },
+            "require": {
+                "ext-ctype": "*",
+                "ext-openssl": "*",
+                "php": ">=7.4"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.0",
+                "infection/infection": "^0.25.5",
+                "phpunit/phpunit": "~9.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "WikibaseSolutions\\CypherDSL\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Marijn van Wezel",
+                    "email": "marijn@wikibase.nl",
+                    "homepage": "https://wikibase-solutions.com/author/marijn",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Wout Gevaert",
+                    "email": "wout@wikibase.nl",
+                    "homepage": "https://wikibase-solutions.com/author/wout",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Ghlen Nagels",
+                    "email": "ghlen@nagels.tech",
+                    "homepage": "https://nagels.tech",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Lars Akkermans",
+                    "email": "lars@wikibase.nl",
+                    "homepage": "https://wikibase-solutions.com/author/lars",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A query builder for the Cypher query language written in PHP",
+            "homepage": "https://wikibase-solutions.com",
+            "keywords": [
+                "DSL",
+                "builder",
+                "cypher",
+                "graph",
+                "neo4j",
+                "query",
+                "querybuilder"
+            ],
+            "support": {
+                "email": "info@wikibase-solutions.com",
+                "issues": "https://github.com/WikibaseSolutions/php-cypher-dsl/issues",
+                "source": "https://github.com/WikibaseSolutions/php-cypher-dsl",
+                "wiki": "https://github.com/WikibaseSolutions/php-cypher-dsl/wiki"
+            },
+            "time": "2022-06-21T10:59:06+00:00"
         },
         {
             "name": "willdurand/negotiation",

@@ -2,24 +2,43 @@
 
 namespace App\Graph\Node;
 
-use App\Graph\GraphTrait;
+use App\Graph\GraphHelper;
+use App\Graph\QueryHelper;
+use WikibaseSolutions\CypherDSL\Clauses\SetClause;
+use WikibaseSolutions\CypherDSL\Query;
 
 class GraphicsCardRepository
 {
-    use GraphTrait;
+    public function __construct(protected QueryHelper $queryHelper, protected GraphHelper $graphHelper)
+    {
+    }
 
     public function setUp(): void
     {
         $this->graphHelper->rawQuery('CREATE INDEX ON :GraphicsCard(id)');
         // $this->graphHelper->rawQuery('CREATE CONSTRAINT ON (g:GraphicsCard) ASSERT g.id IS UNIQUE');
-        $this->graphHelper->rawQuery("CALL db.idx.fulltext.createNodeIndex('GraphicsCard', 'vendor', 'subVendor', 'device')");
+        $this->graphHelper->rawQuery("CALL db.idx.fulltext.createNodeIndex('GraphicsCard', 'subVendor', 'device')");
     }
 
-    public function create(string $id, string $vendor, ?string $subVendor, string $device): void
+    public function create(string $gpuId, string $vendor, ?string $subVendor, string $device, string $probeId): void
     {
-        $this->graphHelper->rawQuery(
-            'MERGE (gpu:GraphicsCard {id: $id}) ON CREATE SET gpu += {vendor: $vendor, subVendor: $subVendor, device: $device}',
-            ['id' => $id, 'vendor' => $vendor, 'subVendor' => $subVendor, 'device' => $device]
-        );
+        $gpuVar = Query::variable(uniqid('gpu_'));
+        $probeVar = $this->queryHelper->track('Probe', $probeId);
+
+        $set = new SetClause();
+        $set->addAssignment($gpuVar->assign(Query::map([
+            'vendor' => Query::literal($vendor),
+            'subVendor' => Query::literal($subVendor),
+            'device' => Query::literal($device),
+        ]))->setMutate());
+
+        $gpu = Query::node('GraphicsCard')
+            ->named($gpuVar)
+            ->withProperty('id', Query::literal($gpuId));
+
+        $this->queryHelper
+            ->query()
+            ->merge($gpu, $set)
+            ->merge($probeVar->relationshipTo(Query::node()->named($gpuVar), 'HAS_GPU'));
     }
 }

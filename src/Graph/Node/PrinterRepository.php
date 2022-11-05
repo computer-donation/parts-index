@@ -2,11 +2,16 @@
 
 namespace App\Graph\Node;
 
-use App\Graph\GraphTrait;
+use App\Graph\GraphHelper;
+use App\Graph\QueryHelper;
+use WikibaseSolutions\CypherDSL\Clauses\SetClause;
+use WikibaseSolutions\CypherDSL\Query;
 
 class PrinterRepository
 {
-    use GraphTrait;
+    public function __construct(protected QueryHelper $queryHelper, protected GraphHelper $graphHelper)
+    {
+    }
 
     public function setUp(): void
     {
@@ -17,9 +22,20 @@ class PrinterRepository
 
     public function create(string $id, string $vendor, string $device): void
     {
-        $this->graphHelper->rawQuery(
-            'MERGE (printer:Printer {id: $id}) ON CREATE SET printer += {vendor: $vendor, device: $device}',
-            ['id' => $id, 'vendor' => $vendor, 'device' => $device]
-        );
+        $printerVar = Query::variable(uniqid('printer_'));
+
+        $set = new SetClause();
+        $set->addAssignment($printerVar->assign(Query::map([
+            'vendor' => Query::literal($vendor),
+            'device' => Query::literal($device),
+        ]))->setMutate());
+
+        $printer = Query::node('Printer')
+            ->named($printerVar)
+            ->withProperty('id', Query::literal($id));
+
+        $this->queryHelper
+            ->query()
+            ->merge($printer, $set);
     }
 }

@@ -4,8 +4,9 @@ namespace App\Command;
 
 use App\Entity\Motherboard;
 use App\Enum\ComputerType;
+use App\Graph\GraphHelper;
+use App\Graph\Node\ComputerRepository as ComputerNodeRepository;
 use App\Graph\Node\MotherboardRepository as MotherboardNodeRepository;
-use App\Graph\Relationship\ComputerMotherboardRepository;
 use App\Repository\MotherboardRepository;
 use App\Tests\Process\VoidProcess;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -33,7 +34,8 @@ class IndexMotherboardCommand extends Command
         protected SluggerInterface $slugger,
         protected MotherboardRepository $motherboardRepository,
         protected MotherboardNodeRepository $motherboardNodeRepository,
-        protected ComputerMotherboardRepository $computerMotherboardRelationshipRepository,
+        protected ComputerNodeRepository $computerNodeRepository,
+        protected GraphHelper $graphHelper,
         #[Autowire('%app.dmi_dir%')]
         protected string $dmiDir,
         #[Autowire('%app.dmi_repo%')]
@@ -48,6 +50,7 @@ class IndexMotherboardCommand extends Command
     {
         $this->updateRepository($this->dmiRepo, $this->dmiDir, $output);
         $this->motherboardNodeRepository->setUp();
+        $this->computerNodeRepository->setUp();
         foreach (ComputerType::cases() as $type) {
             $this->indexMotherboards($type, $output);
         }
@@ -64,7 +67,10 @@ class IndexMotherboardCommand extends Command
             $output,
             function (SplFileInfo $file, bool $flush) use ($output): void {
                 $this->indexMotherboard($file, $output);
-                $flush && $this->motherboardRepository->flush();
+                if ($flush) {
+                    $this->motherboardRepository->flush();
+                    $this->graphHelper->rawQuery();
+                }
             }
         );
         $output->writeln(' Finished!');
@@ -83,8 +89,7 @@ class IndexMotherboardCommand extends Command
                 $motherboard->version = trim($version);
                 $this->motherboardRepository->add($motherboard);
             }
-            $this->motherboardNodeRepository->create($id, $manufacturer, $productName, trim($version));
-            $this->computerMotherboardRelationshipRepository->create($file->getFilename(), $id);
+            $this->motherboardNodeRepository->create($id, $manufacturer, $productName, trim($version), $file->getFilename());
         }
     }
 }
