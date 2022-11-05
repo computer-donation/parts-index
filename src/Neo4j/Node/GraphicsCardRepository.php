@@ -12,8 +12,9 @@ class GraphicsCardRepository
     public function setUp(): void
     {
         $this->addStatements([
-            Statement::create('CREATE CONSTRAINT IF NOT EXISTS FOR (g:GraphicsCard) REQUIRE g.id IS UNIQUE'),
-            Statement::create('CREATE FULLTEXT INDEX searchGraphicsCard IF NOT EXISTS FOR (g:GraphicsCard) ON EACH [g.vendor, g.subVendor, g.device]'),
+            Statement::create('CREATE INDEX ON :GraphicsCard(id)'),
+            Statement::create('CREATE CONSTRAINT ON (g:GraphicsCard) ASSERT g.id IS UNIQUE'),
+            //Statement::create('CREATE FULLTEXT INDEX searchGraphicsCard IF NOT EXISTS FOR (g:GraphicsCard) ON EACH [g.vendor, g.subVendor, g.device]'),
         ]);
     }
 

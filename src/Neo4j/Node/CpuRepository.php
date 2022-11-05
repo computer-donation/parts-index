@@ -12,8 +12,9 @@ class CpuRepository
     public function setUp(): void
     {
         $this->addStatements([
-            Statement::create('CREATE CONSTRAINT IF NOT EXISTS FOR (c:Cpu) REQUIRE c.id IS UNIQUE'),
-            Statement::create('CREATE FULLTEXT INDEX searchCpu IF NOT EXISTS FOR (c:Cpu) ON EACH [c.vendor, c.model]'),
+            Statement::create('CREATE INDEX ON :Cpu(id)'),
+            Statement::create('CREATE CONSTRAINT ON (c:Cpu) ASSERT c.id IS UNIQUE'),
+            //Statement::create('CREATE FULLTEXT INDEX searchCpu IF NOT EXISTS FOR (c:Cpu) ON EACH [c.vendor, c.model]'),
         ]);
     }
 

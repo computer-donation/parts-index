@@ -12,8 +12,9 @@ class ComputerRepository
     public function setUp(): void
     {
         $this->addStatements([
-            Statement::create('CREATE CONSTRAINT IF NOT EXISTS FOR (c:Computer) REQUIRE c.id IS UNIQUE'),
-            Statement::create('CREATE FULLTEXT INDEX searchComputer IF NOT EXISTS FOR (c:Computer) ON EACH [c.type, c.vendor, c.model]'),
+            Statement::create('CREATE INDEX ON :Computer(id)'),
+            Statement::create('CREATE CONSTRAINT ON (c:Computer) ASSERT c.id IS UNIQUE'),
+            //Statement::create('CREATE FULLTEXT INDEX searchComputer IF NOT EXISTS FOR (c:Computer) ON EACH [c.type, c.vendor, c.model]'),
         ]);
     }
 

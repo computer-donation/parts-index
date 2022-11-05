@@ -12,8 +12,9 @@ class MotherboardRepository
     public function setUp(): void
     {
         $this->addStatements([
-            Statement::create('CREATE CONSTRAINT IF NOT EXISTS FOR (m:Motherboard) REQUIRE m.id IS UNIQUE'),
-            Statement::create('CREATE FULLTEXT INDEX searchMotherboard IF NOT EXISTS FOR (m:Motherboard) ON EACH [m.manufacturer, m.productName, m.version]'),
+            Statement::create('CREATE INDEX ON :Motherboard(id)'),
+            Statement::create('CREATE CONSTRAINT ON (m:Motherboard) ASSERT m.id IS UNIQUE'),
+            //Statement::create('CREATE FULLTEXT INDEX searchMotherboard IF NOT EXISTS FOR (m:Motherboard) ON EACH [m.manufacturer, m.productName, m.version]'),
         ]);
     }
 

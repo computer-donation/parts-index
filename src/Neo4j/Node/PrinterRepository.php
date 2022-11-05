@@ -12,8 +12,9 @@ class PrinterRepository
     public function setUp(): void
     {
         $this->addStatements([
-            Statement::create('CREATE CONSTRAINT IF NOT EXISTS FOR (p:Printer) REQUIRE p.id IS UNIQUE'),
-            Statement::create('CREATE FULLTEXT INDEX searchPrinter IF NOT EXISTS FOR (p:Printer) ON EACH [p.vendor, p.device]'),
+            Statement::create('CREATE INDEX ON :Printer(id)'),
+            Statement::create('CREATE CONSTRAINT ON (p:Printer) ASSERT p.id IS UNIQUE'),
+            //Statement::create('CREATE FULLTEXT INDEX searchPrinter IF NOT EXISTS FOR (p:Printer) ON EACH [p.vendor, p.device]'),
         ]);
     }
 

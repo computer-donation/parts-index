@@ -12,8 +12,9 @@ class EthernetPciCardRepository
     public function setUp(): void
     {
         $this->addStatements([
-            Statement::create('CREATE CONSTRAINT IF NOT EXISTS FOR (e:EthernetPciCard) REQUIRE e.id IS UNIQUE'),
-            Statement::create('CREATE FULLTEXT INDEX searchEthernetPciCard IF NOT EXISTS FOR (e:EthernetPciCard) ON EACH [e.vendor, e.subVendor, e.device]'),
+            Statement::create('CREATE INDEX ON :EthernetPciCard(id)'),
+            Statement::create('CREATE CONSTRAINT ON (e:EthernetPciCard) ASSERT e.id IS UNIQUE'),
+            //Statement::create('CREATE FULLTEXT INDEX searchEthernetPciCard IF NOT EXISTS FOR (e:EthernetPciCard) ON EACH [e.vendor, e.subVendor, e.device]'),
         ]);
     }
 
