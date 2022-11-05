@@ -4,8 +4,9 @@ namespace App\Command;
 
 use App\Entity\Cpu;
 use App\Enum\CpuVendor;
+use App\Neo4j\Node\CpuRepository as CpuNodeRepository;
+use App\Neo4j\Relationship\ProbeCpuRepository;
 use App\Repository\CpuRepository;
-use App\Repository\ProbeRepository;
 use App\Tests\Process\VoidProcess;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -26,13 +27,13 @@ use function Symfony\Component\String\u;
 class IndexCpuCommand extends Command
 {
     use RepoTrait;
-    use ProbeTrait;
     use FileTrait;
 
     public function __construct(
         protected SluggerInterface $slugger,
-        protected ProbeRepository $probeRepository,
         protected CpuRepository $cpuRepository,
+        protected CpuNodeRepository $cpuNodeRepository,
+        protected ProbeCpuRepository $probeCpuRelationshipRepository,
         #[Autowire('%app.lscpu_dir%')]
         protected string $lscpuDir,
         #[Autowire('%app.lscpu_repo%')]
@@ -46,6 +47,7 @@ class IndexCpuCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->updateRepository($this->lscpuRepo, $this->lscpuDir, $output);
+        $this->cpuNodeRepository->setUp();
         foreach (CpuVendor::cases() as $vendor) {
             $this->indexCpus($vendor, $output);
         }
@@ -107,8 +109,9 @@ class IndexCpuCommand extends Command
             $cpu->minSpeed = $minSpeed ?? null;
             $cpu->l2Cache = $l2Cache ?? null;
             $cpu->l3Cache = $l3Cache ?? null;
-            $cpu->addProbe($this->getProbe($file->getFilename()));
             $this->cpuRepository->add($cpu);
         }
+        $this->cpuNodeRepository->create($id, $vendor->value, $model);
+        $this->probeCpuRelationshipRepository->create($file->getFilename(), $id);
     }
 }

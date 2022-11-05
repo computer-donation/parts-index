@@ -3,11 +3,37 @@
 namespace App\Tests\Command;
 
 use App\Entity\Cpu;
-use App\Entity\Probe;
 use App\Enum\CpuVendor;
 
 class IndexCpuCommandTest extends CommandTestCase
 {
+    protected array $data = [
+        [
+            'amd-ryzen-3-pro-1300-quad-core-processor',
+            CpuVendor::AMD,
+            'AMD Ryzen 3 PRO 1300 Quad-Core Processor',
+            4,
+            4,
+            3500,
+            1550,
+            '2 MiB',
+            '8 MiB',
+            '98D52182A0',
+        ],
+        [
+            'intel-core-i5-cpu-650-at-3-20ghz',
+            CpuVendor::INTEL,
+            'Intel(R) Core(TM) i5 CPU         650  @ 3.20GHz',
+            2,
+            4,
+            3201,
+            1200,
+            '256K',
+            '4096K',
+            '0BB0F8B0AC',
+        ],
+    ];
+
     protected function getCommand(): string
     {
         return 'app:index-cpu';
@@ -23,30 +49,9 @@ class IndexCpuCommandTest extends CommandTestCase
 
     protected function assertParts(): void
     {
-        $this->assertCpu(
-            'amd-ryzen-3-pro-1300-quad-core-processor',
-            CpuVendor::AMD,
-            'AMD Ryzen 3 PRO 1300 Quad-Core Processor',
-            4,
-            4,
-            3500,
-            1550,
-            '2 MiB',
-            '8 MiB',
-            '98D52182A0'
-        );
-        $this->assertCpu(
-            'intel-core-i5-cpu-650-at-3-20ghz',
-            CpuVendor::INTEL,
-            'Intel(R) Core(TM) i5 CPU         650  @ 3.20GHz',
-            2,
-            4,
-            3201,
-            1200,
-            '256K',
-            '4096K',
-            '0BB0F8B0AC'
-        );
+        foreach ($this->data as $cpu) {
+            $this->assertCpu(...$cpu);
+        }
     }
 
     protected function assertCpu(
@@ -58,17 +63,11 @@ class IndexCpuCommandTest extends CommandTestCase
         int $maxSpeed,
         int $minSpeed,
         string $l2Cache,
-        string $l3Cache,
-        string $probeId
+        string $l3Cache
     ) {
         $cpu = $this->entityManager
             ->getRepository(Cpu::class)
             ->find($id)
-        ;
-
-        $probe = $this->entityManager
-            ->getRepository(Probe::class)
-            ->find($probeId)
         ;
 
         $this->assertInstanceOf(Cpu::class, $cpu);
@@ -81,6 +80,36 @@ class IndexCpuCommandTest extends CommandTestCase
         $this->assertSame($minSpeed, $cpu->minSpeed);
         $this->assertSame($l2Cache, $cpu->l2Cache);
         $this->assertSame($l3Cache, $cpu->l3Cache);
-        $this->assertSame($cpu, $probe->cpu);
+    }
+
+    protected function assertNodes(): void
+    {
+        foreach ($this->data as $cpu) {
+            $this->assertCpuNode(...$cpu);
+        }
+    }
+
+    protected function assertCpuNode(string $id, CpuVendor $vendor, string $model): void
+    {
+        $result = $this->client->run('MATCH (cpu:Cpu {id: $id}) RETURN cpu', ['id' => $id])->first();
+        $cpu = $result->get('cpu');
+        $this->assertSame($vendor->value, $cpu->getProperty('vendor'));
+        $this->assertSame($model, $cpu->getProperty('model'));
+    }
+
+    protected function assertRelationships(): void
+    {
+        foreach ($this->data as $cpu) {
+            $this->assertProbeCpuRelationship(...$cpu);
+        }
+    }
+
+    protected function assertProbeCpuRelationship(): void
+    {
+        $args = func_get_args();
+        $cpuId = reset($args);
+        $probeId = end($args);
+        $result = $this->client->run('MATCH (cpu:Cpu {id: $cpuId}) MATCH (probe:Probe {id: $probeId}) RETURN exists((probe)-[:HAS_CPU]->(cpu)) as hasRelationship', ['cpuId' => $cpuId, 'probeId' => $probeId])->first();
+        $this->assertTrue($result->get('hasRelationship'));
     }
 }

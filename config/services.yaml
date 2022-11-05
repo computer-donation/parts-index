@@ -31,6 +31,10 @@ services:
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 
+    Laudis\Neo4j\Contracts\ClientInterface:
+        factory:   ['@App\Neo4j\ClientFactory', createClient]
+        arguments: ['%env(resolve:NEO4J_URL)%']
+
 when@test:
     parameters:
         app.lscpu_dir: '%kernel.project_dir%/tests/Fixtures/LsCPU'

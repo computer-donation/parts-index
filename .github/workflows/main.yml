@@ -15,7 +15,7 @@ jobs:
         tools: phpstan, php-cs-fixer:3
 
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Install
       uses: "ramsey/composer-install@v2"
@@ -36,3 +36,18 @@ jobs:
         composer global require php-coveralls/php-coveralls
         php-coveralls --coverage_clover=clover.xml -v
       if: github.event_name == 'push'
+
+    services:
+      neo4j:
+        image: neo4j
+        ports:
+          - 7687:7687
+          - 7474:7474
+        env:
+          NEO4J_AUTH: none
+        options: >-
+          --health-cmd "wget http://localhost:7474 || exit 1"
+          --health-interval 1s
+          --health-timeout 10s
+          --health-retries 20
+          --health-start-period 3s
