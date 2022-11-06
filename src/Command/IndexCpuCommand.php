@@ -4,8 +4,9 @@ namespace App\Command;
 
 use App\Entity\Cpu;
 use App\Enum\CpuVendor;
+use App\Graph\GraphHelper;
 use App\Graph\Node\CpuRepository as CpuNodeRepository;
-use App\Graph\Relationship\ProbeCpuRepository;
+use App\Graph\Node\ProbeRepository as ProbeNodeRepository;
 use App\Repository\CpuRepository;
 use App\Tests\Process\VoidProcess;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -33,7 +34,8 @@ class IndexCpuCommand extends Command
         protected SluggerInterface $slugger,
         protected CpuRepository $cpuRepository,
         protected CpuNodeRepository $cpuNodeRepository,
-        protected ProbeCpuRepository $probeCpuRelationshipRepository,
+        protected ProbeNodeRepository $probeNodeRepository,
+        protected GraphHelper $graphHelper,
         #[Autowire('%app.lscpu_dir%')]
         protected string $lscpuDir,
         #[Autowire('%app.lscpu_repo%')]
@@ -48,6 +50,7 @@ class IndexCpuCommand extends Command
     {
         $this->updateRepository($this->lscpuRepo, $this->lscpuDir, $output);
         $this->cpuNodeRepository->setUp();
+        $this->probeNodeRepository->setUp();
         foreach (CpuVendor::cases() as $vendor) {
             $this->indexCpus($vendor, $output);
         }
@@ -64,7 +67,10 @@ class IndexCpuCommand extends Command
             $output,
             function (SplFileInfo $file, bool $flush) use ($vendor, $output): void {
                 $this->indexCpu($file, $vendor, $output);
-                $flush && $this->cpuRepository->flush();
+                if ($flush) {
+                    $this->cpuRepository->flush();
+                    $this->graphHelper->rawQuery();
+                }
             }
         );
         $output->writeln(' Finished!');
@@ -111,7 +117,6 @@ class IndexCpuCommand extends Command
             $cpu->l3Cache = $l3Cache ?? null;
             $this->cpuRepository->add($cpu);
         }
-        $this->cpuNodeRepository->create($id, $vendor->value, $model);
-        $this->probeCpuRelationshipRepository->create($file->getFilename(), $id);
+        $this->cpuNodeRepository->create($id, $vendor->value, $model, $file->getFilename());
     }
 }

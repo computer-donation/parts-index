@@ -106,8 +106,7 @@ class IndexMotherboardCommandTest extends CommandTestCase
 
     protected function assertMotherboardNode(string $id, string $manufacturer, string $productName, string $version): void
     {
-        $result = $this->graphHelper->query('MATCH (motherboard:Motherboard {id: $id}) RETURN motherboard.manufacturer, motherboard.productName, motherboard.version', ['id' => $id])->getResultSet();
-        $motherboard = $result[0];
+        $motherboard = $this->getNode('Motherboard', $id, ['manufacturer', 'productName', 'version']);
         $this->assertSame($manufacturer, $motherboard[0]);
         $this->assertSame($productName, $motherboard[1]);
         $this->assertSame($version, $motherboard[2]);
@@ -125,7 +124,7 @@ class IndexMotherboardCommandTest extends CommandTestCase
         $args = func_get_args();
         $motherboardId = reset($args);
         $computerId = end($args);
-        $result = $this->graphHelper->query('MATCH (computer:Computer {id: $computerId}) MATCH (motherboard:Motherboard {id: $motherboardId}) RETURN exists((computer)-[:HAS_MOTHERBOARD]->(motherboard)) as hasRelationship', ['computerId' => $computerId, 'motherboardId' => $motherboardId])->getResultSet();
-        $this->assertSame('true', $result[0][0]);
+        $result = $this->hasRelationship('Computer', $computerId, 'Motherboard', $motherboardId, 'HAS_MOTHERBOARD');
+        $this->assertTrue($result);
     }
 }

@@ -91,8 +91,7 @@ class IndexCpuCommandTest extends CommandTestCase
 
     protected function assertCpuNode(string $id, CpuVendor $vendor, string $model): void
     {
-        $result = $this->graphHelper->query('MATCH (cpu:Cpu {id: $id}) RETURN cpu.vendor, cpu.model', ['id' => $id])->getResultSet();
-        $cpu = $result[0];
+        $cpu = $this->getNode('Cpu', $id, ['vendor', 'model']);
         $this->assertSame($vendor->value, $cpu[0]);
         $this->assertSame($model, $cpu[1]);
     }
@@ -109,7 +108,7 @@ class IndexCpuCommandTest extends CommandTestCase
         $args = func_get_args();
         $cpuId = reset($args);
         $probeId = end($args);
-        $result = $this->graphHelper->query('MATCH (cpu:Cpu {id: $cpuId}) MATCH (probe:Probe {id: $probeId}) RETURN exists((probe)-[:HAS_CPU]->(cpu)) as hasRelationship', ['cpuId' => $cpuId, 'probeId' => $probeId])->getResultSet();
-        $this->assertSame('true', $result[0][0]);
+        $result = $this->hasRelationship('Probe', $probeId, 'Cpu', $cpuId, 'HAS_CPU');
+        $this->assertTrue($result);
     }
 }

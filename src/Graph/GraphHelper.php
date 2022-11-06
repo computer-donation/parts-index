@@ -11,8 +11,12 @@ class GraphHelper
 {
     protected RedisGraph $graph;
 
-    public function __construct(string $redisGraphHost, int $redisGraphPort, protected string $redisGraphName)
-    {
+    public function __construct(
+        string $redisGraphHost,
+        int $redisGraphPort,
+        protected string $redisGraphName,
+        protected QueryHelper $queryHelper
+    ) {
         $redis = new \Redis();
         $redis->connect($redisGraphHost, $redisGraphPort);
 
@@ -26,41 +30,17 @@ class GraphHelper
         );
     }
 
-    public function query(string $queryString, array $params = []): Result
+    public function query(?string $queryString = null): Result
     {
-        $query = new Query($this->redisGraphName, $this->compileQueryString($queryString, $params));
+        $query = new Query($this->redisGraphName, $queryString ?? $this->queryHelper->build());
 
         return $this->graph->query($query);
     }
 
-    public function rawQuery(string $queryString, array $params = []): void
+    public function rawQuery(?string $queryString = null): void
     {
-        $query = new Query($this->redisGraphName, $this->compileQueryString($queryString, $params));
+        $query = new Query($this->redisGraphName, $queryString ?? $this->queryHelper->build());
 
         $this->graph->rawQuery($query);
-    }
-
-    protected function compileQueryString(string $queryString, array $params = []): string
-    {
-        if (empty($params)) {
-            return $queryString;
-        }
-
-        return strtr(
-            $queryString,
-            array_combine(
-                array_map(fn (string $key) => '$'.$key, array_keys($params)),
-                array_map(fn (string $value) => $this->quoteString($value), $params)
-            )
-        );
-    }
-
-    protected function quoteString(string $value): string
-    {
-        // Encode tabs, newlines, carriage returns and form feeds
-        $value = str_replace(["\t", "\n", "\r", "\f"], ['\\t', '\\n', '\\r', '\\f'], $value);
-
-        // Use single quotes
-        return sprintf("'%s'", str_replace("'", "\'", $value));
     }
 }

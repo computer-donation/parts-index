@@ -4,8 +4,9 @@ namespace App\Command;
 
 use App\Entity\Computer;
 use App\Enum\ComputerType;
+use App\Graph\GraphHelper;
 use App\Graph\Node\ComputerRepository as ComputerNodeRepository;
-use App\Graph\Relationship\ProbeComputerRepository;
+use App\Graph\Node\ProbeRepository as ProbeNodeRepository;
 use App\Repository\ComputerRepository;
 use App\Tests\Process\VoidProcess;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -29,7 +30,8 @@ class IndexComputerCommand extends Command
     public function __construct(
         protected ComputerRepository $computerRepository,
         protected ComputerNodeRepository $computerNodeRepository,
-        protected ProbeComputerRepository $probeComputerRelationshipRepository,
+        protected ProbeNodeRepository $probeNodeRepository,
+        protected GraphHelper $graphHelper,
         #[Autowire('%app.sensors_dir%')]
         protected string $sensorsDir,
         #[Autowire('%app.sensors_repo%')]
@@ -49,6 +51,7 @@ class IndexComputerCommand extends Command
         $this->updateRepository($this->sensorsRepo, $this->sensorsDir, $output);
         $this->updateRepository($this->hwinfoRepo, $this->hwinfoDir, $output);
         $this->computerNodeRepository->setUp();
+        $this->probeNodeRepository->setUp();
         foreach (ComputerType::cases() as $type) {
             $this->indexComputers($type, $output);
         }
@@ -68,7 +71,10 @@ class IndexComputerCommand extends Command
             $output,
             function (SplFileInfo $file, bool $flush) use ($type): void {
                 $this->indexComputer($file, $type);
-                $flush && $this->computerRepository->flush();
+                if ($flush) {
+                    $this->computerRepository->flush();
+                    $this->graphHelper->rawQuery();
+                }
             }
         );
         $output->writeln(' Finished!');
@@ -86,7 +92,6 @@ class IndexComputerCommand extends Command
             $computer->model = $model;
             $this->computerRepository->add($computer);
         }
-        $this->computerNodeRepository->create($hwid, $type->value, $vendor, $model);
-        $this->probeComputerRelationshipRepository->create($file->getFilename(), $hwid);
+        $this->computerNodeRepository->create($hwid, $type->value, $vendor, $model, $file->getFilename());
     }
 }

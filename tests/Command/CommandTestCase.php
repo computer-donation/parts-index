@@ -8,6 +8,8 @@ use Doctrine\ORM\Tools\SchemaTool;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
+use WikibaseSolutions\CypherDSL\Functions\Exists;
+use WikibaseSolutions\CypherDSL\Query;
 
 abstract class CommandTestCase extends KernelTestCase
 {
@@ -73,4 +75,40 @@ abstract class CommandTestCase extends KernelTestCase
     abstract protected function assertNodes(): void;
 
     abstract protected function assertRelationships(): void;
+
+    protected function getNode(string $label, string $id, array $properties): array
+    {
+        $variable = Query::variable('node');
+        $node = Query::node($label)
+            ->named($variable)
+            ->withProperty('id', Query::literal($id));
+
+        $statement = Query::new()
+            ->match($node)
+            ->returning(array_map(fn (string $property) => $variable->property($property), $properties))
+            ->build();
+
+        return $this->graphHelper->query($statement)->getResultSet()[0];
+    }
+
+    protected function hasRelationship(string $sourceLabel, string $sourceId, string $targetLabel, string $targetId, string $relationship): bool
+    {
+        $source = Query::variable('source');
+        $sourceNode = Query::node($sourceLabel)->withProperties([
+            'id' => Query::literal($sourceId),
+        ])->named($source);
+
+        $target = Query::variable('target');
+        $targetNode = Query::node($targetLabel)->withProperties([
+            'id' => Query::literal($targetId),
+        ])->named($target);
+
+        $statement = Query::new()
+            ->match($sourceNode)
+            ->match($targetNode)
+            ->returning((new Exists($source->relationshipTo(Query::node()->named($target), $relationship)))->alias('hasRelationship'))
+            ->build();
+
+        return 'true' === $this->graphHelper->query($statement)->getResultSet()[0][0];
+    }
 }

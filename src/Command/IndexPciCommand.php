@@ -6,11 +6,11 @@ use App\Entity\EthernetPciCard;
 use App\Entity\GraphicsCard;
 use App\Entity\Printer;
 use App\Enum\ComputerType;
+use App\Graph\GraphHelper;
 use App\Graph\Node\EthernetPciCardRepository as EthernetPciCardNodeRepository;
 use App\Graph\Node\GraphicsCardRepository as GraphicsCardNodeRepository;
 use App\Graph\Node\PrinterRepository as PrinterNodeRepository;
-use App\Graph\Relationship\ProbeEthernetPciCardRepository as ProbeEthernetPciCardRelationshipRepository;
-use App\Graph\Relationship\ProbeGraphicsCardRepository as ProbeGraphicsCardRelationshipRepository;
+use App\Graph\Node\ProbeRepository as ProbeNodeRepository;
 use App\Repository\EthernetPciCardRepository;
 use App\Repository\GraphicsCardRepository;
 use App\Repository\PrinterRepository;
@@ -40,10 +40,10 @@ class IndexPciCommand extends Command
         protected PrinterRepository $printerRepository,
         protected EthernetPciCardRepository $ethernetPciCardRepository,
         protected GraphicsCardNodeRepository $graphicsCardNodeRepository,
-        protected ProbeGraphicsCardRelationshipRepository $probeGraphicsCardRelationshipRepository,
         protected PrinterNodeRepository $printerNodeRepository,
         protected EthernetPciCardNodeRepository $ethernetPciCardNodeRepository,
-        protected ProbeEthernetPciCardRelationshipRepository $probeEthernetPciCardRelationshipRepository,
+        protected ProbeNodeRepository $probeNodeRepository,
+        protected GraphHelper $graphHelper,
         #[Autowire('%app.hwinfo_dir%')]
         protected string $hwinfoDir,
         #[Autowire('%app.hwinfo_repo%')]
@@ -60,6 +60,7 @@ class IndexPciCommand extends Command
         $this->graphicsCardNodeRepository->setUp();
         $this->printerNodeRepository->setUp();
         $this->ethernetPciCardNodeRepository->setUp();
+        $this->probeNodeRepository->setUp();
         foreach (ComputerType::cases() as $type) {
             $this->indexPciDevices($type, $output);
         }
@@ -78,7 +79,10 @@ class IndexPciCommand extends Command
                 $this->indexGraphicsCard($file);
                 $this->indexPrinters($file);
                 $this->indexEthernetPciCard($file);
-                $flush && $this->printerRepository->flush(); // Doesn't matter which repository flush the changes
+                if ($flush) {
+                    $this->printerRepository->flush(); // Doesn't matter which repository flush the changes
+                    $this->graphHelper->rawQuery();
+                }
             }
         );
         $output->writeln(' Finished!');
@@ -98,8 +102,7 @@ class IndexPciCommand extends Command
                     $graphicsCard->subVendor = $subVendor;
                     $this->graphicsCardRepository->add($graphicsCard);
                 }
-                $this->graphicsCardNodeRepository->create($id, $vendor, $subVendor, $device);
-                $this->probeGraphicsCardRelationshipRepository->create($file->getFilename(), $id);
+                $this->graphicsCardNodeRepository->create($id, $vendor, $subVendor, $device, $file->getFilename());
             }
         }
     }
@@ -136,8 +139,7 @@ class IndexPciCommand extends Command
                     $ethernetPciCard->subVendor = $subVendor;
                     $this->ethernetPciCardRepository->add($ethernetPciCard);
                 }
-                $this->ethernetPciCardNodeRepository->create($id, $vendor, $subVendor, $device);
-                $this->probeEthernetPciCardRelationshipRepository->create($file->getFilename(), $id);
+                $this->ethernetPciCardNodeRepository->create($id, $vendor, $subVendor, $device, $file->getFilename());
             }
         }
     }
