@@ -2,10 +2,10 @@
 
 namespace App\Command;
 
-use App\Csv\Repository\CpuRepository as CpuCsvRepository;
 use App\Entity\Cpu;
 use App\Enum\CpuVendor;
 use App\Repository\CpuRepository;
+use App\Service\CsvExport;
 use App\Tests\Process\VoidProcess;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -30,11 +30,12 @@ class IndexCpuCommand extends Command
     use CsvTrait;
 
     public const CPU_CSV_HEADER = ['cpuId', 'vendor', 'model', 'probeId'];
+    public const CSV_FILE_NAME = 'cpu.csv';
 
     public function __construct(
         protected SluggerInterface $slugger,
         protected CpuRepository $cpuRepository,
-        protected CpuCsvRepository $cpuCsvRepository,
+        protected CsvExport $csvExport,
         #[Autowire('%app.lscpu_dir%')]
         protected string $lscpuDir,
         #[Autowire('%app.lscpu_repo%')]
@@ -48,7 +49,7 @@ class IndexCpuCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->updateRepository($this->lscpuRepo, $this->lscpuDir, $output);
-        $this->checkCsv($this->cpuCsvRepository->getCsvPath(), static::CPU_CSV_HEADER, $input, $output);
+        $this->checkCsv($this->csvExport->getCsvPath(static::CSV_FILE_NAME), static::CPU_CSV_HEADER, $input, $output);
         foreach (CpuVendor::cases() as $vendor) {
             $this->indexCpus($vendor, $output);
         }
@@ -67,7 +68,7 @@ class IndexCpuCommand extends Command
                 $this->indexCpu($file, $vendor, $output);
                 if ($flush) {
                     $this->cpuRepository->flush();
-                    $this->cpuCsvRepository->flush();
+                    $this->csvExport->flush(static::CSV_FILE_NAME);
                 }
             }
         );
@@ -108,7 +109,7 @@ class IndexCpuCommand extends Command
                 $cpu->l3Cache = $matches[1];
             }
             $this->cpuRepository->add($cpu);
-            $this->cpuCsvRepository->addRow([$id, $vendor->value, $model, $file->getFilename()]);
+            $this->csvExport->addRow(static::CSV_FILE_NAME, [$id, $vendor->value, $model, $file->getFilename()]);
         }
     }
 }

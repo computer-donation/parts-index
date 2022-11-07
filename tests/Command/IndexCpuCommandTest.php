@@ -3,7 +3,6 @@
 namespace App\Tests\Command;
 
 use App\Command\IndexCpuCommand;
-use App\Csv\Repository\CpuRepository;
 use App\Entity\Cpu;
 use App\Enum\CpuVendor;
 
@@ -99,7 +98,7 @@ class IndexCpuCommandTest extends CommandTestCase
 
     protected function assertCsv(): void
     {
-        $this->assertEqualsCanonicalizing($this->getExpectedCsvData(), $this->loadCsv($this->fs->path('/cpu.csv')));
+        $this->assertEqualsCanonicalizing($this->getExpectedCsvData(), $this->loadCsv(IndexCpuCommand::CSV_FILE_NAME));
     }
 
     protected function getExpectedCsvData(): array
@@ -118,11 +117,6 @@ class IndexCpuCommandTest extends CommandTestCase
         ];
     }
 
-    protected function overrideCsvPath(): void
-    {
-        static::getContainer()->get(CpuRepository::class)->setCsvPath($this->fs->path('/cpu.csv'));
-    }
-
     protected function getCommandInput(): array
     {
         return [0]; // Append csv file
@@ -132,7 +126,7 @@ class IndexCpuCommandTest extends CommandTestCase
     {
         parent::setUp();
 
-        $file = fopen($this->fs->path('/cpu.csv'), 'w');
+        $file = fopen($this->csvExport->getCsvPath(IndexCpuCommand::CSV_FILE_NAME), 'w');
         fputcsv($file, IndexCpuCommand::CPU_CSV_HEADER);
         fputcsv($file, $this->existingCpu);
         fclose($file);

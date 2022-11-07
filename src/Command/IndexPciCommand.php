@@ -2,9 +2,6 @@
 
 namespace App\Command;
 
-use App\Csv\Repository\EthernetPciCardRepository as EthernetPciCardCsvRepository;
-use App\Csv\Repository\GraphicsCardRepository as GraphicsCardCsvRepository;
-use App\Csv\Repository\PrinterRepository as PrinterCsvRepository;
 use App\Entity\EthernetPciCard;
 use App\Entity\GraphicsCard;
 use App\Entity\Printer;
@@ -12,6 +9,7 @@ use App\Enum\ComputerType;
 use App\Repository\EthernetPciCardRepository;
 use App\Repository\GraphicsCardRepository;
 use App\Repository\PrinterRepository;
+use App\Service\CsvExport;
 use App\Tests\Process\VoidProcess;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -38,13 +36,15 @@ class IndexPciCommand extends Command
     public const PRINTER_CSV_HEADER = ['printerId', 'vendor', 'device'];
     public const ETHERNET_CSV_HEADER = ['ethernetId', 'vendor', 'subVendor', 'device', 'probeId'];
 
+    public const GPU_CSV_FILE_NAME = 'gpu.csv';
+    public const PRINTER_CSV_FILE_NAME = 'printer.csv';
+    public const ETHERNET_CSV_FILE_NAME = 'ethernet.csv';
+
     public function __construct(
         protected GraphicsCardRepository $graphicsCardRepository,
         protected PrinterRepository $printerRepository,
         protected EthernetPciCardRepository $ethernetPciCardRepository,
-        protected GraphicsCardCsvRepository $graphicsCardCsvRepository,
-        protected PrinterCsvRepository $printerCsvRepository,
-        protected EthernetPciCardCsvRepository $ethernetPciCardCsvRepository,
+        protected CsvExport $csvExport,
         #[Autowire('%app.hwinfo_dir%')]
         protected string $hwinfoDir,
         #[Autowire('%app.hwinfo_repo%')]
@@ -58,9 +58,9 @@ class IndexPciCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->updateRepository($this->hwinfoRepo, $this->hwinfoDir, $output);
-        $this->checkCsv($this->graphicsCardCsvRepository->getCsvPath(), static::GPU_CSV_HEADER, $input, $output);
-        $this->checkCsv($this->printerCsvRepository->getCsvPath(), static::PRINTER_CSV_HEADER, $input, $output);
-        $this->checkCsv($this->ethernetPciCardCsvRepository->getCsvPath(), static::ETHERNET_CSV_HEADER, $input, $output);
+        $this->checkCsv($this->csvExport->getCsvPath(static::GPU_CSV_FILE_NAME), static::GPU_CSV_HEADER, $input, $output);
+        $this->checkCsv($this->csvExport->getCsvPath(static::PRINTER_CSV_FILE_NAME), static::PRINTER_CSV_HEADER, $input, $output);
+        $this->checkCsv($this->csvExport->getCsvPath(static::ETHERNET_CSV_FILE_NAME), static::ETHERNET_CSV_HEADER, $input, $output);
         foreach (ComputerType::cases() as $type) {
             $this->indexPciDevices($type, $output);
         }
@@ -81,9 +81,9 @@ class IndexPciCommand extends Command
                 $this->indexEthernetPciCard($file);
                 if ($flush) {
                     $this->printerRepository->flush(); // Doesn't matter which repository flush the changes
-                    $this->graphicsCardCsvRepository->flush();
-                    $this->printerCsvRepository->flush();
-                    $this->ethernetPciCardCsvRepository->flush();
+                    $this->csvExport->flush(static::GPU_CSV_FILE_NAME);
+                    $this->csvExport->flush(static::PRINTER_CSV_FILE_NAME);
+                    $this->csvExport->flush(static::ETHERNET_CSV_FILE_NAME);
                 }
             }
         );
@@ -103,7 +103,7 @@ class IndexPciCommand extends Command
                     $graphicsCard->device = $device;
                     $graphicsCard->subVendor = $subVendor;
                     $this->graphicsCardRepository->add($graphicsCard);
-                    $this->graphicsCardCsvRepository->addRow([$id, $vendor, $subVendor, $device, $file->getFilename()]);
+                    $this->csvExport->addRow(static::GPU_CSV_FILE_NAME, [$id, $vendor, $subVendor, $device, $file->getFilename()]);
                 }
             }
         }
@@ -121,7 +121,7 @@ class IndexPciCommand extends Command
                     $printer->vendor = $vendor;
                     $printer->device = $device;
                     $this->printerRepository->add($printer);
-                    $this->printerCsvRepository->addRow([$id, $vendor, $device]);
+                    $this->csvExport->addRow(static::PRINTER_CSV_FILE_NAME, [$id, $vendor, $device]);
                 }
             }
         }
@@ -140,7 +140,7 @@ class IndexPciCommand extends Command
                     $ethernetPciCard->device = $device;
                     $ethernetPciCard->subVendor = $subVendor;
                     $this->ethernetPciCardRepository->add($ethernetPciCard);
-                    $this->ethernetPciCardCsvRepository->addRow([$id, $vendor, $subVendor, $device, $file->getFilename()]);
+                    $this->csvExport->addRow(static::ETHERNET_CSV_FILE_NAME, [$id, $vendor, $subVendor, $device, $file->getFilename()]);
                 }
             }
         }

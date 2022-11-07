@@ -2,10 +2,10 @@
 
 namespace App\Command;
 
-use App\Csv\Repository\ComputerRepository as ComputerCsvRepository;
 use App\Entity\Computer;
 use App\Enum\ComputerType;
 use App\Repository\ComputerRepository;
+use App\Service\CsvExport;
 use App\Tests\Process\VoidProcess;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -27,10 +27,11 @@ class IndexComputerCommand extends Command
     use CsvTrait;
 
     public const COMPUTER_CSV_HEADER = ['computerId', 'type', 'vendor', 'model', 'probeId'];
+    public const CSV_FILE_NAME = 'computer.csv';
 
     public function __construct(
         protected ComputerRepository $computerRepository,
-        protected ComputerCsvRepository $computerCsvRepository,
+        protected CsvExport $csvExport,
         #[Autowire('%app.sensors_dir%')]
         protected string $sensorsDir,
         #[Autowire('%app.sensors_repo%')]
@@ -49,7 +50,7 @@ class IndexComputerCommand extends Command
     {
         $this->updateRepository($this->sensorsRepo, $this->sensorsDir, $output);
         $this->updateRepository($this->hwinfoRepo, $this->hwinfoDir, $output);
-        $this->checkCsv($this->computerCsvRepository->getCsvPath(), static::COMPUTER_CSV_HEADER, $input, $output);
+        $this->checkCsv($this->csvExport->getCsvPath(static::CSV_FILE_NAME), static::COMPUTER_CSV_HEADER, $input, $output);
         foreach (ComputerType::cases() as $type) {
             $this->indexComputers($type, $output);
         }
@@ -71,7 +72,7 @@ class IndexComputerCommand extends Command
                 $this->indexComputer($file, $type);
                 if ($flush) {
                     $this->computerRepository->flush();
-                    $this->computerCsvRepository->flush();
+                    $this->csvExport->flush(static::CSV_FILE_NAME);
                 }
             }
         );
@@ -89,7 +90,7 @@ class IndexComputerCommand extends Command
             $computer->vendor = $vendor;
             $computer->model = $model;
             $this->computerRepository->add($computer);
-            $this->computerCsvRepository->addRow([$hwid, $type->value, $vendor, $model, $file->getFilename()]);
+            $this->csvExport->addRow(static::CSV_FILE_NAME, [$hwid, $type->value, $vendor, $model, $file->getFilename()]);
         }
     }
 }

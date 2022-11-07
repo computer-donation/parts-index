@@ -3,9 +3,6 @@
 namespace App\Tests\Command;
 
 use App\Command\IndexPciCommand;
-use App\Csv\Repository\EthernetPciCardRepository;
-use App\Csv\Repository\GraphicsCardRepository;
-use App\Csv\Repository\PrinterRepository;
 use App\Entity\EthernetPciCard;
 use App\Entity\GraphicsCard;
 use App\Entity\Printer;
@@ -250,15 +247,8 @@ class IndexPciCommandTest extends CommandTestCase
 
     protected function assertCsv(): void
     {
-        $this->assertEqualsCanonicalizing([IndexPciCommand::GPU_CSV_HEADER, ...$this->graphicsCards], $this->loadCsv($this->fs->path('/gpu.csv')));
-        $this->assertEqualsCanonicalizing([IndexPciCommand::ETHERNET_CSV_HEADER, ...$this->ethernetPciCards], $this->loadCsv($this->fs->path('/ethernet.csv')));
-        $this->assertEqualsCanonicalizing([IndexPciCommand::PRINTER_CSV_HEADER, ...$this->printers], $this->loadCsv($this->fs->path('/printer.csv')));
-    }
-
-    protected function overrideCsvPath(): void
-    {
-        static::getContainer()->get(GraphicsCardRepository::class)->setCsvPath($this->fs->path('/gpu.csv'));
-        static::getContainer()->get(EthernetPciCardRepository::class)->setCsvPath($this->fs->path('/ethernet.csv'));
-        static::getContainer()->get(PrinterRepository::class)->setCsvPath($this->fs->path('/printer.csv'));
+        $this->assertEqualsCanonicalizing([IndexPciCommand::GPU_CSV_HEADER, ...$this->graphicsCards], $this->loadCsv(IndexPciCommand::GPU_CSV_FILE_NAME));
+        $this->assertEqualsCanonicalizing([IndexPciCommand::ETHERNET_CSV_HEADER, ...$this->ethernetPciCards], $this->loadCsv(IndexPciCommand::ETHERNET_CSV_FILE_NAME));
+        $this->assertEqualsCanonicalizing([IndexPciCommand::PRINTER_CSV_HEADER, ...$this->printers], $this->loadCsv(IndexPciCommand::PRINTER_CSV_FILE_NAME));
     }
 }

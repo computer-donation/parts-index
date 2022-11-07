@@ -12,12 +12,7 @@ parameters:
     app.dmi_repo: 'https://github.com/linuxhw/DMI.git'
     app.sensors_dir: '%kernel.project_dir%/var/repos/Sensors'
     app.sensors_repo: 'https://github.com/linuxhw/Sensors.git'
-    app.cpu_csv_path: '%kernel.project_dir%/var/csv/cpu.csv'
-    app.computer_csv_path: '%kernel.project_dir%/var/csv/computer.csv'
-    app.motherboard_csv_path: '%kernel.project_dir%/var/csv/motherboard.csv'
-    app.ethernet_csv_path: '%kernel.project_dir%/var/csv/ethernet.csv'
-    app.gpu_csv_path: '%kernel.project_dir%/var/csv/gpu.csv'
-    app.printer_csv_path: '%kernel.project_dir%/var/csv/printer.csv'
+    app.csv_export_dir: '%env(resolve:CSV_EXPORT_DIR)%'
 
 services:
     # default configuration for services in *this* file

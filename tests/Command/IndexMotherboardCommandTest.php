@@ -3,7 +3,6 @@
 namespace App\Tests\Command;
 
 use App\Command\IndexMotherboardCommand;
-use App\Csv\Repository\MotherboardRepository;
 use App\Entity\Motherboard;
 
 class IndexMotherboardCommandTest extends CommandTestCase
@@ -101,7 +100,7 @@ class IndexMotherboardCommandTest extends CommandTestCase
 
     protected function assertCsv(): void
     {
-        $this->assertEqualsCanonicalizing($this->getExpectedCsvData(), $this->loadCsv($this->fs->path('/motherboard.csv')));
+        $this->assertEqualsCanonicalizing($this->getExpectedCsvData(), $this->loadCsv(IndexMotherboardCommand::CSV_FILE_NAME));
     }
 
     protected function getExpectedCsvData(): array
@@ -110,10 +109,5 @@ class IndexMotherboardCommandTest extends CommandTestCase
             IndexMotherboardCommand::MOTHERBOARD_CSV_HEADER,
             ...$this->data,
         ];
-    }
-
-    protected function overrideCsvPath(): void
-    {
-        static::getContainer()->get(MotherboardRepository::class)->setCsvPath($this->fs->path('/motherboard.csv'));
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Tests\Command;
 
+use App\Service\CsvExport;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
@@ -12,6 +13,7 @@ use VirtualFileSystem\FileSystem;
 abstract class CommandTestCase extends KernelTestCase
 {
     protected ?EntityManagerInterface $entityManager = null;
+    protected ?CsvExport $csvExport = null;
     protected ?FileSystem $fs = null;
 
     protected function setUp(): void
@@ -22,7 +24,7 @@ abstract class CommandTestCase extends KernelTestCase
         $this->initVirtualFileSystem();
     }
 
-    public function testExecute()
+    public function testExecute(): void
     {
         $application = new Application(self::$kernel);
 
@@ -44,6 +46,7 @@ abstract class CommandTestCase extends KernelTestCase
         // doing this is recommended to avoid memory leaks
         $this->entityManager->close();
         $this->entityManager = null;
+        $this->csvExport = null;
         $this->fs = null;
     }
 
@@ -59,11 +62,11 @@ abstract class CommandTestCase extends KernelTestCase
 
     protected function initVirtualFileSystem(): void
     {
-        $this->fs = new FileSystem();
-        $this->overrideCsvPath();
+        $container = self::getContainer();
+        $this->fs = new FileSystem(); // Keep virtual file system alive during test
+        $this->csvExport = $container->get(CsvExport::class);
+        $this->csvExport->setCsvExportDir($this->fs->path(DIRECTORY_SEPARATOR));
     }
-
-    abstract protected function overrideCsvPath(): void;
 
     abstract protected function getCommand(): string;
 
@@ -73,10 +76,10 @@ abstract class CommandTestCase extends KernelTestCase
 
     abstract protected function assertCsv(): void;
 
-    protected function loadCsv(string $path): array
+    protected function loadCsv(string $fileName): array
     {
         $rows = [];
-        $file = fopen($path, 'r');
+        $file = fopen($this->csvExport->getCsvPath($fileName), 'r');
 
         while (false !== ($row = fgetcsv($file))) {
             $rows[] = $row;

@@ -2,10 +2,10 @@
 
 namespace App\Command;
 
-use App\Csv\Repository\MotherboardRepository as MotherboardCsvRepository;
 use App\Entity\Motherboard;
 use App\Enum\ComputerType;
 use App\Repository\MotherboardRepository;
+use App\Service\CsvExport;
 use App\Tests\Process\VoidProcess;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -30,11 +30,12 @@ class IndexMotherboardCommand extends Command
     use CsvTrait;
 
     public const MOTHERBOARD_CSV_HEADER = ['motherboardId', 'manufacturer', 'productName', 'version', 'computerId'];
+    public const CSV_FILE_NAME = 'motherboard.csv';
 
     public function __construct(
         protected SluggerInterface $slugger,
         protected MotherboardRepository $motherboardRepository,
-        protected MotherboardCsvRepository $motherboardCsvRepository,
+        protected CsvExport $csvExport,
         #[Autowire('%app.dmi_dir%')]
         protected string $dmiDir,
         #[Autowire('%app.dmi_repo%')]
@@ -48,7 +49,7 @@ class IndexMotherboardCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->updateRepository($this->dmiRepo, $this->dmiDir, $output);
-        $this->checkCsv($this->motherboardCsvRepository->getCsvPath(), static::MOTHERBOARD_CSV_HEADER, $input, $output);
+        $this->checkCsv($this->csvExport->getCsvPath(static::CSV_FILE_NAME), static::MOTHERBOARD_CSV_HEADER, $input, $output);
         foreach (ComputerType::cases() as $type) {
             $this->indexMotherboards($type, $output);
         }
@@ -67,7 +68,7 @@ class IndexMotherboardCommand extends Command
                 $this->indexMotherboard($file, $output);
                 if ($flush) {
                     $this->motherboardRepository->flush();
-                    $this->motherboardCsvRepository->flush();
+                    $this->csvExport->flush(static::CSV_FILE_NAME);
                 }
             }
         );
@@ -86,7 +87,7 @@ class IndexMotherboardCommand extends Command
                 $motherboard->productName = $productName;
                 $motherboard->version = trim($version);
                 $this->motherboardRepository->add($motherboard);
-                $this->motherboardCsvRepository->addRow([$id, $manufacturer, $productName, trim($version), $file->getFilename()]);
+                $this->csvExport->addRow(static::CSV_FILE_NAME, [$id, $manufacturer, $productName, trim($version), $file->getFilename()]);
             }
         }
     }
