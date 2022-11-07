@@ -3,7 +3,6 @@
 namespace App\Tests\Command;
 
 use App\Command\IndexComputerCommand;
-use App\Csv\Repository\ComputerRepository;
 use App\Entity\Computer;
 use App\Enum\ComputerType;
 
@@ -186,7 +185,7 @@ class IndexComputerCommandTest extends CommandTestCase
 
     protected function assertCsv(): void
     {
-        $this->assertEqualsCanonicalizing($this->getExpectedCsvData(), $this->loadCsv($this->fs->path('/computer.csv')));
+        $this->assertEqualsCanonicalizing($this->getExpectedCsvData(), $this->loadCsv(IndexComputerCommand::CSV_FILE_NAME));
     }
 
     protected function getExpectedCsvData(): array
@@ -202,10 +201,5 @@ class IndexComputerCommandTest extends CommandTestCase
                 $this->data
             ),
         ];
-    }
-
-    protected function overrideCsvPath(): void
-    {
-        static::getContainer()->get(ComputerRepository::class)->setCsvPath($this->fs->path('/computer.csv'));
     }
 }
