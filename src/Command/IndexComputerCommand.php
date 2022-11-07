@@ -2,11 +2,9 @@
 
 namespace App\Command;
 
+use App\Csv\Repository\ComputerRepository as ComputerCsvRepository;
 use App\Entity\Computer;
 use App\Enum\ComputerType;
-use App\Graph\GraphHelper;
-use App\Graph\Node\ComputerRepository as ComputerNodeRepository;
-use App\Graph\Node\ProbeRepository as ProbeNodeRepository;
 use App\Repository\ComputerRepository;
 use App\Tests\Process\VoidProcess;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -26,12 +24,13 @@ class IndexComputerCommand extends Command
 {
     use RepoTrait;
     use FileTrait;
+    use CsvTrait;
+
+    public const COMPUTER_CSV_HEADER = ['computerId', 'type', 'vendor', 'model', 'probeId'];
 
     public function __construct(
         protected ComputerRepository $computerRepository,
-        protected ComputerNodeRepository $computerNodeRepository,
-        protected ProbeNodeRepository $probeNodeRepository,
-        protected GraphHelper $graphHelper,
+        protected ComputerCsvRepository $computerCsvRepository,
         #[Autowire('%app.sensors_dir%')]
         protected string $sensorsDir,
         #[Autowire('%app.sensors_repo%')]
@@ -50,8 +49,7 @@ class IndexComputerCommand extends Command
     {
         $this->updateRepository($this->sensorsRepo, $this->sensorsDir, $output);
         $this->updateRepository($this->hwinfoRepo, $this->hwinfoDir, $output);
-        $this->computerNodeRepository->setUp();
-        $this->probeNodeRepository->setUp();
+        $this->checkCsv($this->computerCsvRepository->getCsvPath(), static::COMPUTER_CSV_HEADER, $input, $output);
         foreach (ComputerType::cases() as $type) {
             $this->indexComputers($type, $output);
         }
@@ -73,7 +71,7 @@ class IndexComputerCommand extends Command
                 $this->indexComputer($file, $type);
                 if ($flush) {
                     $this->computerRepository->flush();
-                    $this->graphHelper->rawQuery();
+                    $this->computerCsvRepository->flush();
                 }
             }
         );
@@ -91,7 +89,7 @@ class IndexComputerCommand extends Command
             $computer->vendor = $vendor;
             $computer->model = $model;
             $this->computerRepository->add($computer);
+            $this->computerCsvRepository->addRow([$hwid, $type->value, $vendor, $model, $file->getFilename()]);
         }
-        $this->computerNodeRepository->create($hwid, $type->value, $vendor, $model, $file->getFilename());
     }
 }

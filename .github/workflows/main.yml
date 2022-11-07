@@ -36,14 +36,3 @@ jobs:
         composer global require php-coveralls/php-coveralls
         php-coveralls --coverage_clover=clover.xml -v
       if: github.event_name == 'push'
-
-    services:
-      redisgraph:
-        image: redislabs/redisgraph
-        ports:
-          - 6379:6379
-        options: >-
-          --health-cmd "redis-cli ping | grep PONG"
-          --health-interval 1s
-          --health-timeout 3s
-          --health-retries 5
