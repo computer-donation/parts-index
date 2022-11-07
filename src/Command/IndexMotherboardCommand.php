@@ -2,11 +2,9 @@
 
 namespace App\Command;
 
+use App\Csv\Repository\MotherboardRepository as MotherboardCsvRepository;
 use App\Entity\Motherboard;
 use App\Enum\ComputerType;
-use App\Graph\GraphHelper;
-use App\Graph\Node\ComputerRepository as ComputerNodeRepository;
-use App\Graph\Node\MotherboardRepository as MotherboardNodeRepository;
 use App\Repository\MotherboardRepository;
 use App\Tests\Process\VoidProcess;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -29,13 +27,14 @@ class IndexMotherboardCommand extends Command
 {
     use RepoTrait;
     use FileTrait;
+    use CsvTrait;
+
+    public const MOTHERBOARD_CSV_HEADER = ['motherboardId', 'manufacturer', 'productName', 'version', 'computerId'];
 
     public function __construct(
         protected SluggerInterface $slugger,
         protected MotherboardRepository $motherboardRepository,
-        protected MotherboardNodeRepository $motherboardNodeRepository,
-        protected ComputerNodeRepository $computerNodeRepository,
-        protected GraphHelper $graphHelper,
+        protected MotherboardCsvRepository $motherboardCsvRepository,
         #[Autowire('%app.dmi_dir%')]
         protected string $dmiDir,
         #[Autowire('%app.dmi_repo%')]
@@ -49,8 +48,7 @@ class IndexMotherboardCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->updateRepository($this->dmiRepo, $this->dmiDir, $output);
-        $this->motherboardNodeRepository->setUp();
-        $this->computerNodeRepository->setUp();
+        $this->checkCsv($this->motherboardCsvRepository->getCsvPath(), static::MOTHERBOARD_CSV_HEADER, $input, $output);
         foreach (ComputerType::cases() as $type) {
             $this->indexMotherboards($type, $output);
         }
@@ -69,7 +67,7 @@ class IndexMotherboardCommand extends Command
                 $this->indexMotherboard($file, $output);
                 if ($flush) {
                     $this->motherboardRepository->flush();
-                    $this->graphHelper->rawQuery();
+                    $this->motherboardCsvRepository->flush();
                 }
             }
         );
@@ -88,8 +86,8 @@ class IndexMotherboardCommand extends Command
                 $motherboard->productName = $productName;
                 $motherboard->version = trim($version);
                 $this->motherboardRepository->add($motherboard);
+                $this->motherboardCsvRepository->addRow([$id, $manufacturer, $productName, trim($version), $file->getFilename()]);
             }
-            $this->motherboardNodeRepository->create($id, $manufacturer, $productName, trim($version), $file->getFilename());
         }
     }
 }

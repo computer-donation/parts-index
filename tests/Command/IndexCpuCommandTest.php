@@ -2,6 +2,8 @@
 
 namespace App\Tests\Command;
 
+use App\Command\IndexCpuCommand;
+use App\Csv\Repository\CpuRepository;
 use App\Entity\Cpu;
 use App\Enum\CpuVendor;
 
@@ -32,6 +34,19 @@ class IndexCpuCommandTest extends CommandTestCase
             '4096K',
             '0BB0F8B0AC',
         ],
+    ];
+
+    protected array $existingCpu = [
+        'intel-atom-cpu-z3740-at-1-33ghz',
+        'Intel',
+        'Intel(R) Atom(TM) CPU  Z3740  @ 1.33GHz',
+        '4',
+        '4',
+        '1866',
+        '533',
+        '1024K',
+        '',
+        '0CA0FC90D3',
     ];
 
     protected function getCommand(): string
@@ -82,33 +97,44 @@ class IndexCpuCommandTest extends CommandTestCase
         $this->assertSame($l3Cache, $cpu->l3Cache);
     }
 
-    protected function assertNodes(): void
+    protected function assertCsv(): void
     {
-        foreach ($this->data as $cpu) {
-            $this->assertCpuNode(...$cpu);
-        }
+        $this->assertEqualsCanonicalizing($this->getExpectedCsvData(), $this->loadCsv($this->fs->path('/cpu.csv')));
     }
 
-    protected function assertCpuNode(string $id, CpuVendor $vendor, string $model): void
+    protected function getExpectedCsvData(): array
     {
-        $cpu = $this->getNode('Cpu', $id, ['vendor', 'model']);
-        $this->assertSame($vendor->value, $cpu[0]);
-        $this->assertSame($model, $cpu[1]);
+        return [
+            IndexCpuCommand::CPU_CSV_HEADER,
+            $this->existingCpu,
+            ...array_map(
+                function (array $cpu): array {
+                    list($cpuId, $vendor, $model, , , , , , , $probeId) = $cpu;
+
+                    return [$cpuId, $vendor->value, $model, $probeId];
+                },
+                $this->data
+            ),
+        ];
     }
 
-    protected function assertRelationships(): void
+    protected function overrideCsvPath(): void
     {
-        foreach ($this->data as $cpu) {
-            $this->assertProbeCpuRelationship(...$cpu);
-        }
+        static::getContainer()->get(CpuRepository::class)->setCsvPath($this->fs->path('/cpu.csv'));
     }
 
-    protected function assertProbeCpuRelationship(): void
+    protected function getCommandInput(): array
     {
-        $args = func_get_args();
-        $cpuId = reset($args);
-        $probeId = end($args);
-        $result = $this->hasRelationship('Probe', $probeId, 'Cpu', $cpuId, 'HAS_CPU');
-        $this->assertTrue($result);
+        return [0]; // Append csv file
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $file = fopen($this->fs->path('/cpu.csv'), 'w');
+        fputcsv($file, IndexCpuCommand::CPU_CSV_HEADER);
+        fputcsv($file, $this->existingCpu);
+        fclose($file);
     }
 }

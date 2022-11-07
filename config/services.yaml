@@ -12,16 +12,18 @@ parameters:
     app.dmi_repo: 'https://github.com/linuxhw/DMI.git'
     app.sensors_dir: '%kernel.project_dir%/var/repos/Sensors'
     app.sensors_repo: 'https://github.com/linuxhw/Sensors.git'
+    app.cpu_csv_path: '%kernel.project_dir%/var/csv/cpu.csv'
+    app.computer_csv_path: '%kernel.project_dir%/var/csv/computer.csv'
+    app.motherboard_csv_path: '%kernel.project_dir%/var/csv/motherboard.csv'
+    app.ethernet_csv_path: '%kernel.project_dir%/var/csv/ethernet.csv'
+    app.gpu_csv_path: '%kernel.project_dir%/var/csv/gpu.csv'
+    app.printer_csv_path: '%kernel.project_dir%/var/csv/printer.csv'
 
 services:
     # default configuration for services in *this* file
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
-        bind:
-            string $redisGraphHost: '%env(string:REDIS_GRAPH_HOST)%'
-            int $redisGraphPort: '%env(int:REDIS_GRAPH_PORT)%'
-            string $redisGraphName: '%env(string:REDIS_GRAPH_NAME)%'
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name

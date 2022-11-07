@@ -2,6 +2,10 @@
 
 namespace App\Tests\Command;
 
+use App\Command\IndexPciCommand;
+use App\Csv\Repository\EthernetPciCardRepository;
+use App\Csv\Repository\GraphicsCardRepository;
+use App\Csv\Repository\PrinterRepository;
 use App\Entity\EthernetPciCard;
 use App\Entity\GraphicsCard;
 use App\Entity\Printer;
@@ -13,70 +17,70 @@ class IndexPciCommandTest extends CommandTestCase
         [
             '1002-67df-1028-175c',
             'ATI Technologies Inc',
-            'Ellesmere [Radeon RX 470/480/570/570X/580/580X/590]',
             'Dell',
+            'Ellesmere [Radeon RX 470/480/570/570X/580/580X/590]',
             '071C584451',
         ],
         // Convertible
         [
             '8086-1616-103c-802d',
             'Intel Corporation',
-            'HD Graphics 5500',
             'Hewlett-Packard Company',
+            'HD Graphics 5500',
             '4D1880C589',
         ],
         // Desktop
         [
             '10de-0de1-1462-2304',
             'nVidia Corporation',
-            'GF108 [GeForce GT 430]',
             'Micro-Star International Co., Ltd.',
+            'GF108 [GeForce GT 430]',
             'ED9D8A148D',
         ],
         [
             '10de-1201-1019-2036',
             'nVidia Corporation',
-            'GF114 [GeForce GTX 560]',
             'Elitegroup Computer Systems',
+            'GF114 [GeForce GTX 560]',
             'EE8BDB8EC5',
         ],
         [
             '8086-0102-17aa-3070',
             'Intel Corporation',
-            '2nd Generation Core Processor Family Integrated Graphics Controller',
             'Lenovo',
+            '2nd Generation Core Processor Family Integrated Graphics Controller',
             'EE8BDB8EC5',
         ],
         // Mini PC
         [
             '8086-5a85-8086-2067',
             'Intel Corporation',
-            'HD Graphics 500',
             'Intel Corporation',
+            'HD Graphics 500',
             '4A3BB182A0',
         ],
         // Notebook
         [
             '1002-9712-1025-027d',
             'ATI Technologies Inc',
-            'RS880M [Mobility Radeon HD 4225/4250]',
             'Acer Incorporated [ALI]',
+            'RS880M [Mobility Radeon HD 4225/4250]',
             '326303D482',
         ],
         // Server
         [
             '1a03-2000-108e-484c',
             'ASPEED Technology Inc.',
-            'AST1000/2000',
             'Oracle/SUN',
+            'AST1000/2000',
             'F048AD8494',
         ],
         // Stick PC
         [
             '8086-22b0-8086-7270',
             'Intel Corporation',
-            'Atom/Celeron/Pentium Processor x5-E8000/J3xxx/N3xxx Integrated Graphics Controller',
             'Intel Corporation',
+            'Atom/Celeron/Pentium Processor x5-E8000/J3xxx/N3xxx Integrated Graphics Controller',
             '50585544F9',
         ],
     ];
@@ -86,68 +90,68 @@ class IndexPciCommandTest extends CommandTestCase
         [
             '8086-15b7-1028-075c',
             'Intel Corporation',
-            'Ethernet Connection (2) I219-LM',
             'Dell',
+            'Ethernet Connection (2) I219-LM',
             '071C584451',
         ],
         // Desktop
         [
-            '1969-10a1-1849-10a1',
-            'Qualcomm Atheros',
-            'QCA8171 Gigabit Ethernet',
-            'ASRock Incorporation',
-            'E6DB55B378',
-        ],
-        [
             '10ec-8168-1043-8385',
             'Realtek Semiconductor Co., Ltd.',
-            'RTL8111/8168 PCI Express Gigabit Ethernet controller',
             'ASUSTeK Computer Inc.',
+            'RTL8111/8168 PCI Express Gigabit Ethernet controller',
             'ED9D8A148D',
+        ],
+        [
+            '1969-10a1-1849-10a1',
+            'Qualcomm Atheros',
+            'ASRock Incorporation',
+            'QCA8171 Gigabit Ethernet',
+            'E6DB55B378',
         ],
         [
             '8086-1502-17aa-3070',
             'Intel Corporation',
-            '82579LM Gigabit Network Connection (Lewisville)',
             'Lenovo',
+            '82579LM Gigabit Network Connection (Lewisville)',
             'EE8BDB8EC5',
         ],
         // Mini PC
         [
             '10ec-8168-8086-2067',
             'Realtek Semiconductor Co., Ltd.',
-            'RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller',
             'Intel Corporation',
+            'RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller',
             '4A3BB182A0',
         ],
         // Notebook
         [
             '1969-1063-1025-027d',
             'Qualcomm Atheros',
-            'AR8131 Gigabit Ethernet',
             'Acer Incorporated [ALI]',
+            'AR8131 Gigabit Ethernet',
             '326303D482',
         ],
         [
             '1969-2062-1025-0602',
             'Qualcomm Atheros',
-            'AR8152 v2.0 Fast Ethernet',
             'Acer Incorporated [ALI]',
+            'AR8152 v2.0 Fast Ethernet',
             '15B32DE383',
         ],
         // Server
         [
             '8086-10bc-108e-11bc',
             'Intel Corporation',
-            '82571EB/82571GB Gigabit Ethernet Controller (Copper)',
             'Oracle/SUN',
+            '82571EB/82571GB Gigabit Ethernet Controller (Copper)',
             'F048AD8494',
         ],
         [
             '8086-10c9-108e-484c',
             'Intel Corporation',
-            '82576 Gigabit Network Connection',
             'Oracle/SUN',
+            '82576 Gigabit Network Connection',
             'F048AD8494',
         ],
     ];
@@ -203,7 +207,7 @@ class IndexPciCommandTest extends CommandTestCase
         }
     }
 
-    protected function assertGraphicsCard(string $id, string $vendor, string $device, string $subVendor)
+    protected function assertGraphicsCard(string $id, string $vendor, string $subVendor, string $device): void
     {
         $graphicsCard = $this->entityManager
             ->getRepository(GraphicsCard::class)
@@ -217,7 +221,7 @@ class IndexPciCommandTest extends CommandTestCase
         $this->assertSame($subVendor, $graphicsCard->subVendor);
     }
 
-    protected function assertPrinter(string $id, string $vendor, string $device)
+    protected function assertPrinter(string $id, string $vendor, string $device): void
     {
         $printer = $this->entityManager
             ->getRepository(Printer::class)
@@ -230,7 +234,7 @@ class IndexPciCommandTest extends CommandTestCase
         $this->assertSame($device, $printer->device);
     }
 
-    protected function assertEthernetPciCard(string $id, string $vendor, string $device, string $subVendor)
+    protected function assertEthernetPciCard(string $id, string $vendor, string $subVendor, string $device): void
     {
         $ethernetPciCard = $this->entityManager
             ->getRepository(EthernetPciCard::class)
@@ -244,67 +248,17 @@ class IndexPciCommandTest extends CommandTestCase
         $this->assertSame($subVendor, $ethernetPciCard->subVendor);
     }
 
-    protected function assertNodes(): void
+    protected function assertCsv(): void
     {
-        foreach ($this->graphicsCards as $graphicsCard) {
-            $this->assertGraphicsCardNode(...$graphicsCard);
-        }
-        foreach ($this->ethernetPciCards as $ethernetPciCard) {
-            $this->assertEthernetPciCardNode(...$ethernetPciCard);
-        }
-        foreach ($this->printers as $printer) {
-            $this->assertPrinterNode(...$printer);
-        }
+        $this->assertEqualsCanonicalizing([IndexPciCommand::GPU_CSV_HEADER, ...$this->graphicsCards], $this->loadCsv($this->fs->path('/gpu.csv')));
+        $this->assertEqualsCanonicalizing([IndexPciCommand::ETHERNET_CSV_HEADER, ...$this->ethernetPciCards], $this->loadCsv($this->fs->path('/ethernet.csv')));
+        $this->assertEqualsCanonicalizing([IndexPciCommand::PRINTER_CSV_HEADER, ...$this->printers], $this->loadCsv($this->fs->path('/printer.csv')));
     }
 
-    protected function assertGraphicsCardNode(string $id, string $vendor, string $device, string $subVendor): void
+    protected function overrideCsvPath(): void
     {
-        $gpu = $this->getNode('GraphicsCard', $id, ['vendor', 'device', 'subVendor']);
-        $this->assertSame($vendor, $gpu[0]);
-        $this->assertSame($device, $gpu[1]);
-        $this->assertSame($subVendor, $gpu[2]);
-    }
-
-    protected function assertEthernetPciCardNode(string $id, string $vendor, string $device, string $subVendor): void
-    {
-        $ethernet = $this->getNode('EthernetPciCard', $id, ['vendor', 'device', 'subVendor']);
-        $this->assertSame($vendor, $ethernet[0]);
-        $this->assertSame($device, $ethernet[1]);
-        $this->assertSame($subVendor, $ethernet[2]);
-    }
-
-    protected function assertPrinterNode(string $id, string $vendor, string $device): void
-    {
-        $printer = $this->getNode('Printer', $id, ['vendor', 'device']);
-        $this->assertSame($vendor, $printer[0]);
-        $this->assertSame($device, $printer[1]);
-    }
-
-    protected function assertRelationships(): void
-    {
-        foreach ($this->graphicsCards as $graphicsCard) {
-            $this->assertProbeGraphicsCardRelationship(...$graphicsCard);
-        }
-        foreach ($this->ethernetPciCards as $ethernetPciCard) {
-            $this->assertProbeEthernetPciCardRelationship(...$ethernetPciCard);
-        }
-    }
-
-    protected function assertProbeGraphicsCardRelationship(): void
-    {
-        $args = func_get_args();
-        $gpuId = reset($args);
-        $probeId = end($args);
-        $result = $this->hasRelationship('Probe', $probeId, 'GraphicsCard', $gpuId, 'HAS_GPU');
-        $this->assertTrue($result);
-    }
-
-    protected function assertProbeEthernetPciCardRelationship(): void
-    {
-        $args = func_get_args();
-        $ethernetId = reset($args);
-        $probeId = end($args);
-        $result = $this->hasRelationship('Probe', $probeId, 'EthernetPciCard', $ethernetId, 'HAS_ETHERNET_PCI');
-        $this->assertTrue($result);
+        static::getContainer()->get(GraphicsCardRepository::class)->setCsvPath($this->fs->path('/gpu.csv'));
+        static::getContainer()->get(EthernetPciCardRepository::class)->setCsvPath($this->fs->path('/ethernet.csv'));
+        static::getContainer()->get(PrinterRepository::class)->setCsvPath($this->fs->path('/printer.csv'));
     }
 }

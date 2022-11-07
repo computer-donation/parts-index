@@ -2,11 +2,9 @@
 
 namespace App\Command;
 
+use App\Csv\Repository\CpuRepository as CpuCsvRepository;
 use App\Entity\Cpu;
 use App\Enum\CpuVendor;
-use App\Graph\GraphHelper;
-use App\Graph\Node\CpuRepository as CpuNodeRepository;
-use App\Graph\Node\ProbeRepository as ProbeNodeRepository;
 use App\Repository\CpuRepository;
 use App\Tests\Process\VoidProcess;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -29,13 +27,14 @@ class IndexCpuCommand extends Command
 {
     use RepoTrait;
     use FileTrait;
+    use CsvTrait;
+
+    public const CPU_CSV_HEADER = ['cpuId', 'vendor', 'model', 'probeId'];
 
     public function __construct(
         protected SluggerInterface $slugger,
         protected CpuRepository $cpuRepository,
-        protected CpuNodeRepository $cpuNodeRepository,
-        protected ProbeNodeRepository $probeNodeRepository,
-        protected GraphHelper $graphHelper,
+        protected CpuCsvRepository $cpuCsvRepository,
         #[Autowire('%app.lscpu_dir%')]
         protected string $lscpuDir,
         #[Autowire('%app.lscpu_repo%')]
@@ -49,8 +48,7 @@ class IndexCpuCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->updateRepository($this->lscpuRepo, $this->lscpuDir, $output);
-        $this->cpuNodeRepository->setUp();
-        $this->probeNodeRepository->setUp();
+        $this->checkCsv($this->cpuCsvRepository->getCsvPath(), static::CPU_CSV_HEADER, $input, $output);
         foreach (CpuVendor::cases() as $vendor) {
             $this->indexCpus($vendor, $output);
         }
@@ -69,7 +67,7 @@ class IndexCpuCommand extends Command
                 $this->indexCpu($file, $vendor, $output);
                 if ($flush) {
                     $this->cpuRepository->flush();
-                    $this->graphHelper->rawQuery();
+                    $this->cpuCsvRepository->flush();
                 }
             }
         );
@@ -78,24 +76,6 @@ class IndexCpuCommand extends Command
 
     protected function indexCpu(SplFileInfo $file, CpuVendor $vendor, OutputInterface $output): void
     {
-        if (preg_match('/Core\(s\) per socket:\s+(\d+)/s', $file->getContents(), $matches)) {
-            $cores = $matches[1];
-        }
-        if (preg_match('/CPU\(s\):\s+(\d+)/s', $file->getContents(), $matches)) {
-            $threads = $matches[1];
-        }
-        if (preg_match('/CPU max MHz:\s+(\d+)(\.|\,)\d+/s', $file->getContents(), $matches)) {
-            $maxSpeed = $matches[1];
-        }
-        if (preg_match('/CPU min MHz:\s+(\d+)(\.|\,)\d+/s', $file->getContents(), $matches)) {
-            $minSpeed = $matches[1];
-        }
-        if (preg_match('/L2 cache:\s+([^\r\n]+)/s', $file->getContents(), $matches)) {
-            $l2Cache = $matches[1];
-        }
-        if (preg_match('/L3 cache:\s+([^\r\n]+)/s', $file->getContents(), $matches)) {
-            $l3Cache = $matches[1];
-        }
         if (preg_match('/Model name:\s+([^\r\n]+)/s', $file->getContents(), $matches)) {
             $model = $matches[1];
         } else {
@@ -109,14 +89,26 @@ class IndexCpuCommand extends Command
             $cpu->id = $id;
             $cpu->vendor = $vendor;
             $cpu->model = $model;
-            $cpu->cores = $cores ?? null;
-            $cpu->threads = $threads ?? null;
-            $cpu->maxSpeed = $maxSpeed ?? null;
-            $cpu->minSpeed = $minSpeed ?? null;
-            $cpu->l2Cache = $l2Cache ?? null;
-            $cpu->l3Cache = $l3Cache ?? null;
+            if (preg_match('/Core\(s\) per socket:\s+(\d+)/s', $file->getContents(), $matches)) {
+                $cpu->cores = $matches[1];
+            }
+            if (preg_match('/CPU\(s\):\s+(\d+)/s', $file->getContents(), $matches)) {
+                $cpu->threads = $matches[1];
+            }
+            if (preg_match('/CPU max MHz:\s+(\d+)(\.|\,)\d+/s', $file->getContents(), $matches)) {
+                $cpu->maxSpeed = $matches[1];
+            }
+            if (preg_match('/CPU min MHz:\s+(\d+)(\.|\,)\d+/s', $file->getContents(), $matches)) {
+                $cpu->minSpeed = $matches[1];
+            }
+            if (preg_match('/L2 cache:\s+([^\r\n]+)/s', $file->getContents(), $matches)) {
+                $cpu->l2Cache = $matches[1];
+            }
+            if (preg_match('/L3 cache:\s+([^\r\n]+)/s', $file->getContents(), $matches)) {
+                $cpu->l3Cache = $matches[1];
+            }
             $this->cpuRepository->add($cpu);
+            $this->cpuCsvRepository->addRow([$id, $vendor->value, $model, $file->getFilename()]);
         }
-        $this->cpuNodeRepository->create($id, $vendor->value, $model, $file->getFilename());
     }
 }

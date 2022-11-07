@@ -2,6 +2,8 @@
 
 namespace App\Tests\Command;
 
+use App\Command\IndexMotherboardCommand;
+use App\Csv\Repository\MotherboardRepository;
 use App\Entity\Motherboard;
 
 class IndexMotherboardCommandTest extends CommandTestCase
@@ -97,34 +99,21 @@ class IndexMotherboardCommandTest extends CommandTestCase
         $this->assertSame($version, $motherboard->version);
     }
 
-    protected function assertNodes(): void
+    protected function assertCsv(): void
     {
-        foreach ($this->data as $motherboard) {
-            $this->assertMotherboardNode(...$motherboard);
-        }
+        $this->assertEqualsCanonicalizing($this->getExpectedCsvData(), $this->loadCsv($this->fs->path('/motherboard.csv')));
     }
 
-    protected function assertMotherboardNode(string $id, string $manufacturer, string $productName, string $version): void
+    protected function getExpectedCsvData(): array
     {
-        $motherboard = $this->getNode('Motherboard', $id, ['manufacturer', 'productName', 'version']);
-        $this->assertSame($manufacturer, $motherboard[0]);
-        $this->assertSame($productName, $motherboard[1]);
-        $this->assertSame($version, $motherboard[2]);
+        return [
+            IndexMotherboardCommand::MOTHERBOARD_CSV_HEADER,
+            ...$this->data,
+        ];
     }
 
-    protected function assertRelationships(): void
+    protected function overrideCsvPath(): void
     {
-        foreach ($this->data as $motherboard) {
-            $this->assertComputerMotherboardRelationship(...$motherboard);
-        }
-    }
-
-    protected function assertComputerMotherboardRelationship(): void
-    {
-        $args = func_get_args();
-        $motherboardId = reset($args);
-        $computerId = end($args);
-        $result = $this->hasRelationship('Computer', $computerId, 'Motherboard', $motherboardId, 'HAS_MOTHERBOARD');
-        $this->assertTrue($result);
+        static::getContainer()->get(MotherboardRepository::class)->setCsvPath($this->fs->path('/motherboard.csv'));
     }
 }
