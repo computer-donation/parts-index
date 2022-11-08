@@ -3,12 +3,22 @@
 namespace App\Command;
 
 use App\Enum\CsvAction;
+use App\Service\CsvExport;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
+use Symfony\Contracts\Service\Attribute\Required;
 
 trait CsvTrait
 {
+    protected CsvExport $csvExport;
+
+    #[Required]
+    public function setCsvExport(CsvExport $csvExport): void
+    {
+        $this->csvExport = $csvExport;
+    }
+
     protected function checkCsv(string $path, array $expectedHeader, InputInterface $input, OutputInterface $output): void
     {
         $output->writeln(sprintf('<comment>Checking csv file %s...</comment>', $path));

@@ -5,15 +5,12 @@ namespace App\Command;
 use App\Entity\Cpu;
 use App\Enum\CpuVendor;
 use App\Repository\CpuRepository;
-use App\Service\CsvExport;
-use App\Tests\Process\VoidProcess;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Finder\SplFileInfo;
-use Symfony\Component\Process\Process;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
 use function Symfony\Component\String\u;
@@ -35,13 +32,10 @@ class IndexCpuCommand extends Command
     public function __construct(
         protected SluggerInterface $slugger,
         protected CpuRepository $cpuRepository,
-        protected CsvExport $csvExport,
         #[Autowire('%app.lscpu_dir%')]
         protected string $lscpuDir,
         #[Autowire('%app.lscpu_repo%')]
-        protected string $lscpuRepo,
-        #[Autowire(service: VoidProcess::class)]
-        protected ?Process $process = null
+        protected string $lscpuRepo
     ) {
         parent::__construct();
     }

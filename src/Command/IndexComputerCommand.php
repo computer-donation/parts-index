@@ -5,15 +5,12 @@ namespace App\Command;
 use App\Entity\Computer;
 use App\Enum\ComputerType;
 use App\Repository\ComputerRepository;
-use App\Service\CsvExport;
-use App\Tests\Process\VoidProcess;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Finder\SplFileInfo;
-use Symfony\Component\Process\Process;
 
 #[AsCommand(
     name: 'app:index-computer',
@@ -31,7 +28,6 @@ class IndexComputerCommand extends Command
 
     public function __construct(
         protected ComputerRepository $computerRepository,
-        protected CsvExport $csvExport,
         #[Autowire('%app.sensors_dir%')]
         protected string $sensorsDir,
         #[Autowire('%app.sensors_repo%')]
@@ -39,9 +35,7 @@ class IndexComputerCommand extends Command
         #[Autowire('%app.hwinfo_dir%')]
         protected string $hwinfoDir,
         #[Autowire('%app.hwinfo_repo%')]
-        protected string $hwinfoRepo,
-        #[Autowire(service: VoidProcess::class)]
-        protected ?Process $process = null
+        protected string $hwinfoRepo
     ) {
         parent::__construct();
     }
