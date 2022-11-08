@@ -5,15 +5,12 @@ namespace App\Command;
 use App\Entity\Motherboard;
 use App\Enum\ComputerType;
 use App\Repository\MotherboardRepository;
-use App\Service\CsvExport;
-use App\Tests\Process\VoidProcess;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Finder\SplFileInfo;
-use Symfony\Component\Process\Process;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
 use function Symfony\Component\String\u;
@@ -35,13 +32,10 @@ class IndexMotherboardCommand extends Command
     public function __construct(
         protected SluggerInterface $slugger,
         protected MotherboardRepository $motherboardRepository,
-        protected CsvExport $csvExport,
         #[Autowire('%app.dmi_dir%')]
         protected string $dmiDir,
         #[Autowire('%app.dmi_repo%')]
-        protected string $dmiRepo,
-        #[Autowire(service: VoidProcess::class)]
-        protected ?Process $process = null
+        protected string $dmiRepo
     ) {
         parent::__construct();
     }

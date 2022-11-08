@@ -2,13 +2,24 @@
 
 namespace App\Command;
 
+use App\Tests\Process\VoidProcess;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
+use Symfony\Contracts\Service\Attribute\Required;
 
 trait RepoTrait
 {
     protected ?Process $process;
+
+    #[Required]
+    public function setProcess(
+        #[Autowire(service: VoidProcess::class)]
+        ?Process $process = null
+    ): void {
+        $this->process = $process;
+    }
 
     protected function updateRepository(string $repo, string $dir, OutputInterface $output): void
     {
