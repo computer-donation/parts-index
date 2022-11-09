@@ -74,7 +74,7 @@ class IndexMotherboardCommand extends Command
         if (preg_match('/Base Board Information\s+Manufacturer: (.+)\s+Product Name: (.+)\s+Version: (.+)/', $file->getContents(), $matches)) {
             [, $manufacturer, $productName, $version] = $matches;
             $id = $this->slugger->slug(u('-')->join([$manufacturer, $productName, $version])->lower());
-            if (!$this->motherboardRepository->has($id)) {
+            if (!empty((string) $id) && !$this->motherboardRepository->has($id)) {
                 $motherboard = new Motherboard();
                 $motherboard->id = $id;
                 $motherboard->manufacturer = $manufacturer;
