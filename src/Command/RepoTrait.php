@@ -11,7 +11,16 @@ use Symfony\Contracts\Service\Attribute\Required;
 
 trait RepoTrait
 {
+    protected string $reposDir;
     protected ?Process $process;
+
+    #[Required]
+    public function setReposDir(
+        #[Autowire('%app.repos_dir%')]
+        string $reposDir,
+    ): void {
+        $this->reposDir = $reposDir;
+    }
 
     #[Required]
     public function setProcess(
@@ -19,6 +28,11 @@ trait RepoTrait
         ?Process $process = null
     ): void {
         $this->process = $process;
+    }
+
+    protected function getRepoDir(string $repo): string
+    {
+        return $this->reposDir.DIRECTORY_SEPARATOR.$repo;
     }
 
     protected function updateRepository(string $repo, string $dir, OutputInterface $output): void

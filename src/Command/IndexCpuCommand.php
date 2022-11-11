@@ -26,14 +26,13 @@ class IndexCpuCommand extends Command
     use FileTrait;
     use CsvTrait;
 
+    public const REPO = 'LsCPU';
     public const CPU_CSV_HEADER = ['cpuId', 'vendor', 'model', 'probeId'];
     public const CSV_FILE_NAME = 'cpu.csv';
 
     public function __construct(
         protected SluggerInterface $slugger,
         protected CpuRepository $cpuRepository,
-        #[Autowire('%app.lscpu_dir%')]
-        protected string $lscpuDir,
         #[Autowire('%app.lscpu_repo%')]
         protected string $lscpuRepo
     ) {
@@ -42,7 +41,7 @@ class IndexCpuCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->updateRepository($this->lscpuRepo, $this->lscpuDir, $output);
+        $this->updateRepository($this->lscpuRepo, $this->getRepoDir(static::REPO), $output);
         $this->checkCsv($this->csvExport->getCsvPath(static::CSV_FILE_NAME), static::CPU_CSV_HEADER, $input, $output);
         foreach (CpuVendor::cases() as $vendor) {
             $this->indexCpus($vendor, $output);
@@ -56,7 +55,7 @@ class IndexCpuCommand extends Command
     {
         $output->writeln(sprintf('Indexing cpus for vendor %s...', $vendor->value));
         $this->browseFiles(
-            $this->lscpuDir.DIRECTORY_SEPARATOR.$vendor->value,
+            $this->getRepoDir(static::REPO).DIRECTORY_SEPARATOR.$vendor->value,
             $output,
             function (SplFileInfo $file, bool $flush) use ($vendor, $output): void {
                 $this->indexCpu($file, $vendor, $output);

@@ -23,17 +23,15 @@ class IndexComputerCommand extends Command
     use FileTrait;
     use CsvTrait;
 
+    public const SENSORS_REPO = 'Sensors';
+    public const HWINFO_REPO = 'HWInfo';
     public const COMPUTER_CSV_HEADER = ['computerId', 'type', 'vendor', 'model', 'probeId'];
     public const CSV_FILE_NAME = 'computer.csv';
 
     public function __construct(
         protected ComputerRepository $computerRepository,
-        #[Autowire('%app.sensors_dir%')]
-        protected string $sensorsDir,
         #[Autowire('%app.sensors_repo%')]
         protected string $sensorsRepo,
-        #[Autowire('%app.hwinfo_dir%')]
-        protected string $hwinfoDir,
         #[Autowire('%app.hwinfo_repo%')]
         protected string $hwinfoRepo
     ) {
@@ -42,8 +40,8 @@ class IndexComputerCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->updateRepository($this->sensorsRepo, $this->sensorsDir, $output);
-        $this->updateRepository($this->hwinfoRepo, $this->hwinfoDir, $output);
+        $this->updateRepository($this->sensorsRepo, $this->getRepoDir(static::SENSORS_REPO), $output);
+        $this->updateRepository($this->hwinfoRepo, $this->getRepoDir(static::HWINFO_REPO), $output);
         $this->checkCsv($this->csvExport->getCsvPath(static::CSV_FILE_NAME), static::COMPUTER_CSV_HEADER, $input, $output);
         foreach (ComputerType::cases() as $type) {
             $this->indexComputers($type, $output);
@@ -58,8 +56,8 @@ class IndexComputerCommand extends Command
         $output->writeln(sprintf('Indexing computers for type %s...', $type->value));
         $this->browseFiles(
             [
-                $this->sensorsDir.DIRECTORY_SEPARATOR.$type->value,
-                $this->hwinfoDir.DIRECTORY_SEPARATOR.$type->value,
+                $this->getRepoDir(static::SENSORS_REPO).DIRECTORY_SEPARATOR.$type->value,
+                $this->getRepoDir(static::HWINFO_REPO).DIRECTORY_SEPARATOR.$type->value,
             ],
             $output,
             function (SplFileInfo $file, bool $flush) use ($type): void {

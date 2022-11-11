@@ -14,9 +14,9 @@ class CsvExport
     ) {
     }
 
-    public function getCsvPath(string $fileName): string
+    public function getCsvPath(string $filename): string
     {
-        return $this->csvExportDir.DIRECTORY_SEPARATOR.$fileName;
+        return $this->csvExportDir.DIRECTORY_SEPARATOR.$filename;
     }
 
     public function setCsvExportDir(string $path): void
@@ -24,22 +24,22 @@ class CsvExport
         $this->csvExportDir = $path;
     }
 
-    public function addRow(string $fileName, array $row): void
+    public function addRow(string $filename, array $row): void
     {
-        $this->rows[$fileName][] = $row;
+        $this->rows[$filename][] = $row;
     }
 
-    public function flush(string $fileName): void
+    public function flush(string $filename): void
     {
-        if (!isset($this->rows[$fileName])) {
+        if (!isset($this->rows[$filename])) {
             return;
         }
 
-        $csv = fopen($this->getCsvPath($fileName), 'a');
-        foreach ($this->rows[$fileName] as $row) {
+        $csv = fopen($this->getCsvPath($filename), 'a');
+        foreach ($this->rows[$filename] as $row) {
             fputcsv($csv, $row);
         }
         fclose($csv);
-        $this->rows[$fileName] = [];
+        $this->rows[$filename] = [];
     }
 }

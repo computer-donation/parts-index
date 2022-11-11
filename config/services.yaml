@@ -4,15 +4,12 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
-    app.lscpu_dir: '%kernel.project_dir%/var/repos/LsCPU'
     app.lscpu_repo: 'https://github.com/linuxhw/LsCPU.git'
-    app.hwinfo_dir: '%kernel.project_dir%/var/repos/HWInfo'
     app.hwinfo_repo: 'https://github.com/linuxhw/HWInfo.git'
-    app.dmi_dir: '%kernel.project_dir%/var/repos/DMI'
     app.dmi_repo: 'https://github.com/linuxhw/DMI.git'
-    app.sensors_dir: '%kernel.project_dir%/var/repos/Sensors'
     app.sensors_repo: 'https://github.com/linuxhw/Sensors.git'
     app.csv_export_dir: '%env(resolve:CSV_EXPORT_DIR)%'
+    app.repos_dir: '%env(resolve:REPOS_DIR)%'
 
 services:
     # default configuration for services in *this* file
@@ -27,14 +24,8 @@ services:
         exclude:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
+            - '../src/Resource/'
             - '../src/Kernel.php'
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
-
-when@test:
-    parameters:
-        app.lscpu_dir: '%kernel.project_dir%/tests/Fixtures/LsCPU'
-        app.hwinfo_dir: '%kernel.project_dir%/tests/Fixtures/HWInfo'
-        app.dmi_dir: '%kernel.project_dir%/tests/Fixtures/DMI'
-        app.sensors_dir: '%kernel.project_dir%/tests/Fixtures/Sensors'
