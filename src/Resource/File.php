@@ -4,8 +4,10 @@ namespace App\Resource;
 
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use App\Controller\DownloadFile;
+use App\State\FileProcessor;
 use App\State\FileProvider;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
@@ -38,6 +40,10 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
                 ],
             ],
         ]
+    ),
+    new Delete(
+        processor: FileProcessor::class,
+        provider: FileProvider::class,
     ),
 ])]
 class File
