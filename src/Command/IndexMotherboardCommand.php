@@ -26,14 +26,13 @@ class IndexMotherboardCommand extends Command
     use FileTrait;
     use CsvTrait;
 
+    public const REPO = 'DMI';
     public const MOTHERBOARD_CSV_HEADER = ['motherboardId', 'manufacturer', 'productName', 'version', 'computerId'];
     public const CSV_FILE_NAME = 'motherboard.csv';
 
     public function __construct(
         protected SluggerInterface $slugger,
         protected MotherboardRepository $motherboardRepository,
-        #[Autowire('%app.dmi_dir%')]
-        protected string $dmiDir,
         #[Autowire('%app.dmi_repo%')]
         protected string $dmiRepo
     ) {
@@ -42,7 +41,7 @@ class IndexMotherboardCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->updateRepository($this->dmiRepo, $this->dmiDir, $output);
+        $this->updateRepository($this->dmiRepo, $this->getRepoDir(static::REPO), $output);
         $this->checkCsv($this->csvExport->getCsvPath(static::CSV_FILE_NAME), static::MOTHERBOARD_CSV_HEADER, $input, $output);
         foreach (ComputerType::cases() as $type) {
             $this->indexMotherboards($type, $output);
@@ -56,7 +55,7 @@ class IndexMotherboardCommand extends Command
     {
         $output->writeln(sprintf('Indexing motherboards for type %s...', $type->value));
         $this->browseFiles(
-            $this->dmiDir.DIRECTORY_SEPARATOR.$type->value,
+            $this->getRepoDir(static::REPO).DIRECTORY_SEPARATOR.$type->value,
             $output,
             function (SplFileInfo $file, bool $flush) use ($output): void {
                 $this->indexMotherboard($file, $output);

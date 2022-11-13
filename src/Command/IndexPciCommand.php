@@ -29,6 +29,8 @@ class IndexPciCommand extends Command
     use FileTrait;
     use CsvTrait;
 
+    public const REPO = 'HWInfo';
+
     public const GPU_CSV_HEADER = ['gpuId', 'vendor', 'subVendor', 'device', 'probeId'];
     public const PRINTER_CSV_HEADER = ['printerId', 'vendor', 'device'];
     public const ETHERNET_CSV_HEADER = ['ethernetId', 'vendor', 'subVendor', 'device', 'probeId'];
@@ -41,8 +43,6 @@ class IndexPciCommand extends Command
         protected GraphicsCardRepository $graphicsCardRepository,
         protected PrinterRepository $printerRepository,
         protected EthernetPciCardRepository $ethernetPciCardRepository,
-        #[Autowire('%app.hwinfo_dir%')]
-        protected string $hwinfoDir,
         #[Autowire('%app.hwinfo_repo%')]
         protected string $hwinfoRepo
     ) {
@@ -51,7 +51,7 @@ class IndexPciCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->updateRepository($this->hwinfoRepo, $this->hwinfoDir, $output);
+        $this->updateRepository($this->hwinfoRepo, $this->getRepoDir(static::REPO), $output);
         $this->checkCsv($this->csvExport->getCsvPath(static::GPU_CSV_FILE_NAME), static::GPU_CSV_HEADER, $input, $output);
         $this->checkCsv($this->csvExport->getCsvPath(static::PRINTER_CSV_FILE_NAME), static::PRINTER_CSV_HEADER, $input, $output);
         $this->checkCsv($this->csvExport->getCsvPath(static::ETHERNET_CSV_FILE_NAME), static::ETHERNET_CSV_HEADER, $input, $output);
@@ -67,7 +67,7 @@ class IndexPciCommand extends Command
     {
         $output->writeln(sprintf('Indexing pci devices for type %s...', $type->value));
         $this->browseFiles(
-            $this->hwinfoDir.DIRECTORY_SEPARATOR.$type->value,
+            $this->getRepoDir(static::REPO).DIRECTORY_SEPARATOR.$type->value,
             $output,
             function (SplFileInfo $file, bool $flush): void {
                 $this->indexGraphicsCard($file);
