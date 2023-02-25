@@ -4,10 +4,7 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
-    app.lscpu_repo: 'https://github.com/linuxhw/LsCPU.git'
     app.hwinfo_repo: 'https://github.com/linuxhw/HWInfo.git'
-    app.dmi_repo: 'https://github.com/linuxhw/DMI.git'
-    app.sensors_repo: 'https://github.com/linuxhw/Sensors.git'
     app.csv_export_dir: '%env(resolve:CSV_EXPORT_DIR)%'
     app.repos_dir: '%env(resolve:REPOS_DIR)%'
 

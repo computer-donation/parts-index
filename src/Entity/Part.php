@@ -10,7 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity]
 #[ApiResource(operations: [new Get()])]
-class Motherboard
+class Part
 {
     #[ORM\Id]
     #[ORM\Column(type: Types::STRING, unique: true)]
@@ -19,12 +19,9 @@ class Motherboard
 
     #[ORM\Column(type: Types::STRING)]
     #[Assert\NotBlank]
-    public string $manufacturer;
+    public string $type;
 
     #[ORM\Column(type: Types::STRING)]
     #[Assert\NotBlank]
-    public string $productName;
-
-    #[ORM\Column(type: Types::STRING)]
-    public string $version;
+    public string $model;
 }

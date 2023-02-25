@@ -35,7 +35,7 @@ abstract class CommandTestCase extends KernelTestCase
         $commandTester->assertCommandIsSuccessful();
 
         $this->assertOutput($commandTester->getDisplay());
-        $this->assertParts();
+        $this->assertDatabase();
         $this->assertCsv();
     }
 
@@ -72,7 +72,7 @@ abstract class CommandTestCase extends KernelTestCase
 
     abstract protected function assertOutput(string $output): void;
 
-    abstract protected function assertParts(): void;
+    abstract protected function assertDatabase(): void;
 
     abstract protected function assertCsv(): void;
 

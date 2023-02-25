@@ -33,9 +33,4 @@ class ComputerRepository extends ServiceEntityRepository
         return $this->getEntityManager()->getUnitOfWork()->tryGetById($id, Computer::class) ||
             $this->count(['id' => $id]);
     }
-
-    public function reference(string $id): ?Computer
-    {
-        return $this->getEntityManager()->getReference(Computer::class, $id);
-    }
 }
